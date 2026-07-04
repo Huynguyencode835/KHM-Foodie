@@ -1,0 +1,5 @@
+# Claude MCP config (contains API keys)
+.claude
+venv
+stitch-assets
+KHMFoodie/.env
