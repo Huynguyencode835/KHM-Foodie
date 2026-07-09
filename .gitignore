@@ -1,5 +1,30 @@
-# Claude MCP config (contains API keys)
-.claude
-venv
-stitch-assets
-KHMFoodie/.env
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+*.db
+
+# Virtual env
+venv/
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+
+# Claude
+.claude/
+stitch-assets/
