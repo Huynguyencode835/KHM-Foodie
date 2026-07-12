@@ -17,7 +17,7 @@ class RestaurantsController:
                 "avatar": r.avatar,
                 "cover_image": r.cover_image,
                 "description": r.description,
-                "cuisine_type": r.cuisine_type.name if r.cuisine_type else None,
+                "cuisine_type": r.cuisine_type.value if r.cuisine_type else None,
                 "opening_time":
                     r.opening_time.strftime("%H:%M")
                     if r.opening_time else None,

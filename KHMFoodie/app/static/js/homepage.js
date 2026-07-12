@@ -67,18 +67,26 @@ const suggestions = [
     { 'tag': 'Món trưa bán chạy nhất', 'name': 'Combo Cơm Tấm Sườn Bì Chả Đặc Biệt', 'price': '85,000đ', 'old_price': '115,000đ', 'badge': 'HOT DEAL', 'colspan': 'lg:col-span-2', 'big': true, 'img': 'https://lh3.googleusercontent.com/aida-public/AB6AXuB114Mr47cqdjzVUCzxUD2gMDUqnN4p9K0FdQBwQRn519qUEFmkZGkGwQ-U57aTFxzm0kA8XDgTHcjbTgjTdvWZ8l0JDoP1twJosILRmCvkZQwXvedYgBPvYSm2yz93NItR7gosiL-b2wwvOhXp1UD08Mi_DUBuliPLSZhkJnKIn_vZ83aiFrLhPhHpqL3zBWQXovRboyjOPK_OdhC0P0biwQJIpa2SF4WS4VxZchxhgD0SSfYyRtTS4scy78_20gaPl1knFz1_j80', 'alt': 'Vietnamese broken rice combo' },
 ]
 
-async function loadAll(){
-    try{
-        const [cats,sugs,rests] = await Promise.all([
-            get('/api/categories'),
-            get('/api/suggestions'),
-            get('/api/restaurants')
-        ]);
-        return {cats,sugs,rests};
-    }
-    catch{
-        return {cats:categories,sugs:suggestions,rests:restaurantList};
-    }
+// async function loadAll(){
+//     try{
+//         const [cats,sugs,rests] = await Promise.all([
+//             get('http://localhost:5000/api/categories'),
+//             get('http://localhost:5000/api/suggestions'),
+//             get('http://localhost:5000/api/restaurants/')
+//         ]);
+//         return {cats,sugs,rests};
+//     }
+//     catch(error){
+//         console.error('Error loading data:', error);
+//         return {cats:categories,sugs:suggestions,rests:restaurantList};
+//     }
+//     console.log(rests);
+// }
+
+async function loadRestaurants(){
+    const res = await fetch('http://localhost:5000/api/restaurants/');
+    const data = await res.json();
+    return data.data;
 }
 
 function renderCategoryChips(containerId,data) {
@@ -128,6 +136,7 @@ function renderHeroSection(period) {
 
 }
 
+
 function renderSuggestions(containerId,data) {
     const container = document.getElementById(containerId);
     if (!container) return;
@@ -167,29 +176,28 @@ function renderRestaurantList(containerId,data){
         div.className = 'min-w-[350px] md:min-w-[380px] snap-start group bg-white rounded-2xl overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-300';
         div.innerHTML = `
             <div class="h-48 relative overflow-hidden">
-                <img class="w-full h-full object-cover" src="${r.img}" alt="${r.alt}">
+                <img class="w-full h-full object-cover" src="${r.cover_image}">
                 <div class="absolute top-3 right-3 bg-white/90 backdrop-blur shadow-sm px-2 py-1 rounded-lg flex items-center gap-1">
                     <span class="material-symbols-outlined text-[16px] text-tertiary" style="font-variation-settings: 'FILL' 1;">star</span>
-                    <span class="font-bold text-on-surface text-sm">${r.rating}</span>
+                    <span class="font-bold text-on-surface text-sm">5.0</span>
                 </div>
             </div>
             <div class="p-4 space-y-3">
                 <div>
                     <h3 class="font-headline-md text-headline-md group-hover:text-primary transition-colors">${r.name}</h3>
-                    <p class="text-secondary text-sm font-body-md italic">${r.cuisine}</p>
+                    <p class="text-secondary text-sm font-body-md italic">${r.cuisine_type}</p>
+                </div>
+                 <div>
+                    <p class="text-secondary text-sm font-body-md font-bold">${r.address}</p>
                 </div>
                 <div class="flex items-center gap-4 text-on-surface-variant text-sm border-t border-outline-variant pt-3">
                     <div class="flex items-center gap-1">
                         <span class="material-symbols-outlined text-[18px]">schedule</span>
-                        <span>${r.time}</span>
-                    </div>
-                    <div class="flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[18px]">delivery_dining</span>
-                        <span>${r.fee}</span>
+                        <span>${r.opening_time} - ${r.closing_time}</span>
                     </div>
                     <div class="flex items-center gap-1 ml-auto">
                         <span class="material-symbols-outlined text-[18px]">distance</span>
-                        <span>${r.dist}</span>
+                        <span>10.5 km</span>
                     </div>
                 </div>
             </div>`;

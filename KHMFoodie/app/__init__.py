@@ -14,6 +14,13 @@ load_dotenv()
 login_manager = LoginManager()
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    from app.models.model import User
+    return User.query.get(int(user_id))
+
+
+
 cloudinary.config(
     cloud_name= os.getenv('CLOUDINARY_CLOUD_NAME'),
     api_key=os.getenv('CLOUDINARY_API_KEY'),

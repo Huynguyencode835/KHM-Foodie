@@ -58,11 +58,8 @@
 <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 <script>
     renderHeroSection('evening');
-    loadAll().then(({cats, sugs, rests})=>{
-        renderCategoryChips('category-chips',cats);
-        renderSuggestions('suggestions',sugs);
-        renderRestaurantList('restaurant-scroll',rests);
-    })
+    
+    loadRestaurants().then(r => renderRestaurantList('restaurant-scroll', r));
 
     document.addEventListener('DOMContentLoaded', function () {
         const btnLeft = document.getElementById('scroll-left');
