@@ -153,8 +153,7 @@
 
             <!-- Right-side Actions -->
             <div class="flex items-center gap-2 md:gap-4">
-                <button
-                    class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">search</button>
+                
                 {% block itemHeader %}
                 {% endblock %}
                 <button
@@ -271,6 +270,7 @@
             </a>
         </div>
     </nav>
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
     <script>
         // Micro-interactions and Header Scroll Effect
         window.addEventListener('scroll', () => {

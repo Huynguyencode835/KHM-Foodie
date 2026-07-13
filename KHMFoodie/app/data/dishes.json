@@ -1,0 +1,3233 @@
+[
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Air fryer chicken breasts",
+    "description": "Gà ức áp chảo bằng nồi chiên không dầu, tẩm gia vị tỏi và ớt bột ngọt.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/04/Air-Fryer-Chicken-Breast-3121e78.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Healthy beef chow mein",
+    "description": "Mì xào bò kiểu healthy, ít béo, nhanh gọn.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/Beef-chow-mein-e16180c.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Quick chicken hummus bowl",
+    "description": "Bát gà và hummus nhanh gọn chỉ trong 10 phút.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/quick-chicken-and-hummus-bowl-3863168.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Panuozzo sandwich",
+    "description": "Bánh sandwich kiểu pizza với pesto tự làm, nhanh gọn cho bữa trưa.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/03/Panuozzo-sandwich-4b19929.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "15-minute chicken & halloumi burgers",
+    "description": "Burger gà và phô mai halloumi chỉ trong 15 phút.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/15-minute-chicken-halloumi-burgers-ef95d1d.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Salmon salad with sesame dressing",
+    "description": "Salad cá hồi sốt mè, giàu omega-3 và vitamin C.",
+    "category": "SIDE_DISH",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-salad-440-400-67a0abd.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Lentil & tuna salad",
+    "description": "Salad đậu lăng và cá ngừ, làm nhanh trong 15 phút.",
+    "category": "SIDE_DISH",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/07/Lentil-and-tuna-salad-76f39e2.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Chicken kiev quesadilla",
+    "description": "Quesadilla nhân gà kiểu Kiev, phô mai béo ngậy.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/quesadilla-a667fd0.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Veggie olive wraps with mustard vinaigrette",
+    "description": "Bánh cuộn rau củ và ô liu với sốt mù tạt.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/olive-wrap-c866064.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Healthy pesto eggs on toast",
+    "description": "Trứng chiên sốt pesto trên bánh mì nướng.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2023/01/Healthy-pesto-eggs-on-toast-2e7feac.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Cavolo nero orecchiette",
+    "description": "Mì orecchiette với cải xoăn cavolo nero giàu chất sắt.",
+    "category": "MAIN_COURSE",
+    "price": 64.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Cavolo-nero-orecchiette-369e36f.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Puff pastry pizzas",
+    "description": "Pizza đế bánh puff, tự chọn topping rau củ yêu thích.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/puff-pastry-pizzas-06d1019.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Ultimate chorizo ciabatta",
+    "description": "Bánh ciabatta giòn với xúc xích chorizo, pesto và ớt chuông nướng.",
+    "category": "MAIN_COURSE",
+    "price": 57.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/ultimate-chorizo-ciabatta-c3f006e.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Orecchiette with butter beans, parsley, chilli & lemon",
+    "description": "Mì orecchiette với đậu bơ, mùi tây, ớt và chanh.",
+    "category": "MAIN_COURSE",
+    "price": 53.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/Orecchiette-with-butter-beans-0872a01.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Egg & rocket pizzas",
+    "description": "Pizza đế tortilla với trứng và rau arugula, giàu protein.",
+    "category": "MAIN_COURSE",
+    "price": 55.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/eggrocketpizzas_5729-ebc7e0d.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Sweet potato toasts with curried chickpeas",
+    "description": "Bánh mì nướng khoai lang với đậu gà cà ri.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Sweet-potato-toasts-7cd74e0.jpg"
+  },
+  {
+    "restaurant_username": "quan_trua_ngon",
+    "restaurant_name": "Quán Trưa Ngon",
+    "name": "Rainbow pizzas",
+    "description": "Pizza nhiều màu sắc với rau củ tươi, hợp khẩu vị trẻ nhỏ.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/rainbow-pizzas-fac9f95.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Chicken satay salad",
+    "description": "Salad gà xiên với sốt sa tế đậu phộng đậm đà.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chicken-satay-salad-8f5b068.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Air fryer chicken breasts",
+    "description": "Gà ức áp chảo bằng nồi chiên không dầu, tẩm gia vị tỏi và ớt bột ngọt.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/04/Air-Fryer-Chicken-Breast-3121e78.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Turkey, bacon & avocado mini bagels",
+    "description": "Bagel nhỏ nhân gà tây, thịt xông khói và bơ nghiền.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/turkey-bacon-avocado-mini-bagels-5d7ddcb.png"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Vegan chickpea curry jacket potatoes",
+    "description": "Khoai tây nướng nhân cà ri đậu gà chay.",
+    "category": "MAIN_COURSE",
+    "price": 64.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sweet-potato-curry-46f4bc8.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Cumin roast veg with tahini dressing",
+    "description": "Rau củ nướng thì là với sốt tahini, đủ 5 phần rau mỗi ngày.",
+    "category": "SIDE_DISH",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/cumin-roast-vegetables-with-eggs-440-400-d4181ed.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Caesar pitta",
+    "description": "Bánh pitta nhân gà, salad và sốt Caesar tự làm, chỉ 10 phút.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/caesar-pitta-ca63652.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Falafel burgers",
+    "description": "Burger falafel giàu đạm thực vật, ít calo, no lâu.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-326597_11-b7385b9.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Roasted cauli-broc bowl with tahini hummus",
+    "description": "Bát súp lơ và bông cải nướng với hummus tahini.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/roasted-cauli-bowl-a7bb279.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Sesame, edamame & chicken noodle salad",
+    "description": "Salad mì nguyên cám, gà, đậu edamame và mè.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sesame-edamame-chicken-noodle-salad-a434625.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Spicy chicken & avocado wraps",
+    "description": "Gà áp chảo cay với chanh, tỏi cuộn cùng bơ trong bánh tortilla.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spicychickenavocadowraps_5865-4035909.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Salmon salad with sesame dressing",
+    "description": "Salad cá hồi sốt mè, giàu omega-3 và vitamin C.",
+    "category": "SIDE_DISH",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-salad-440-400-67a0abd.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Orecchiette with butter beans, parsley, chilli & lemon",
+    "description": "Mì orecchiette với đậu bơ, mùi tây, ớt và chanh.",
+    "category": "MAIN_COURSE",
+    "price": 53.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/Orecchiette-with-butter-beans-0872a01.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Cavolo nero orecchiette",
+    "description": "Mì orecchiette với cải xoăn cavolo nero giàu chất sắt.",
+    "category": "MAIN_COURSE",
+    "price": 64.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Cavolo-nero-orecchiette-369e36f.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Veggie olive wraps with mustard vinaigrette",
+    "description": "Bánh cuộn rau củ và ô liu với sốt mù tạt.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/olive-wrap-c866064.jpg"
+  },
+  {
+    "restaurant_username": "goc_trua_van_phong",
+    "restaurant_name": "Góc Trưa Văn Phòng",
+    "name": "Lemon & spinach rice with feta",
+    "description": "Cơm chanh rau bina với phô mai feta và hạt óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Greek-spinach-and-rice-d16d518.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Burrito bowl with chipotle black beans",
+    "description": "Bát burrito đầy rau củ và đậu đen chipotle.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/burrito-bowl-3629880.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Mexican-style stuffed peppers",
+    "description": "Ớt chuông nhồi cơm và đậu đen kiểu Mexico.",
+    "category": "MAIN_COURSE",
+    "price": 64.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mexican-style-stuffed-peppers-23ce35d.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Bulgur & quinoa lunch bowls",
+    "description": "Bát ngũ cốc bulgur và quinoa ăn kèm bơ, ô liu hoặc đậu gà, củ dền.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/440-400-bulgur-quinoa-lunch-bowls-dea6596.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Smoky tomato, chipotle & charred corn soup",
+    "description": "Súp cà chua khói vị chipotle và ngô nướng.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/smoky-tomato-chipotle-charred-corn-soup-4d9d7cf.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Prawn & mango salad",
+    "description": "Salad tôm và xoài nhiều màu sắc, kèm bơ và bạc hà.",
+    "category": "SIDE_DISH",
+    "price": 19.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/prawn-mango-salad-b147add.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Broccoli pasta salad with eggs & sunflower seeds",
+    "description": "Salad mì ống bông cải xanh, trứng và hạt hướng dương.",
+    "category": "SIDE_DISH",
+    "price": 22.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/broccoli-pasta-salad-with-eggs-sunflower-seeds-758d30d.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Veggie olive wraps with mustard vinaigrette",
+    "description": "Bánh cuộn rau củ và ô liu với sốt mù tạt.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/olive-wrap-c866064.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Healthy beef chow mein",
+    "description": "Mì xào bò kiểu healthy, ít béo, nhanh gọn.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/Beef-chow-mein-e16180c.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Cumin roast veg with tahini dressing",
+    "description": "Rau củ nướng thì là với sốt tahini, đủ 5 phần rau mỗi ngày.",
+    "category": "SIDE_DISH",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/cumin-roast-vegetables-with-eggs-440-400-d4181ed.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Storecupboard pasta salad",
+    "description": "Salad mì ống làm từ nguyên liệu có sẵn trong bếp.",
+    "category": "SIDE_DISH",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-663451_11-43ad8a6.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Falafel burgers",
+    "description": "Burger falafel giàu đạm thực vật, ít calo, no lâu.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-326597_11-b7385b9.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Salmon salad with sesame dressing",
+    "description": "Salad cá hồi sốt mè, giàu omega-3 và vitamin C.",
+    "category": "SIDE_DISH",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-salad-440-400-67a0abd.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Sweet potato toasts with curried chickpeas",
+    "description": "Bánh mì nướng khoai lang với đậu gà cà ri.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Sweet-potato-toasts-7cd74e0.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Panuozzo sandwich",
+    "description": "Bánh sandwich kiểu pizza với pesto tự làm, nhanh gọn cho bữa trưa.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/03/Panuozzo-sandwich-4b19929.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Lemon & spinach rice with feta",
+    "description": "Cơm chanh rau bina với phô mai feta và hạt óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Greek-spinach-and-rice-d16d518.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Ultimate chorizo ciabatta",
+    "description": "Bánh ciabatta giòn với xúc xích chorizo, pesto và ớt chuông nướng.",
+    "category": "MAIN_COURSE",
+    "price": 57.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/ultimate-chorizo-ciabatta-c3f006e.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Lentil & tuna salad",
+    "description": "Salad đậu lăng và cá ngừ, làm nhanh trong 15 phút.",
+    "category": "SIDE_DISH",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/07/Lentil-and-tuna-salad-76f39e2.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Paneer jalfrezi with cumin rice",
+    "description": "Cà ri phô mai paneer với cơm thì là, ít calo.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/paneer-jalfrezi-440-400-e63da48.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Healthy pesto eggs on toast",
+    "description": "Trứng chiên sốt pesto trên bánh mì nướng.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2023/01/Healthy-pesto-eggs-on-toast-2e7feac.jpg"
+  },
+  {
+    "restaurant_username": "bep_lunch_box",
+    "restaurant_name": "Bếp Lunch Box",
+    "name": "Cheese, Marmite & spinach pinwheels",
+    "description": "Bánh cuộn xoắn phô mai, Marmite và rau bina.",
+    "category": "SIDE_DISH",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tomato-soup-with-cheese-spinach-pinwheels_0-001bdf6.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "15-minute chicken & halloumi burgers",
+    "description": "Burger gà và phô mai halloumi chỉ trong 15 phút.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/15-minute-chicken-halloumi-burgers-ef95d1d.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Storecupboard pasta salad",
+    "description": "Salad mì ống làm từ nguyên liệu có sẵn trong bếp.",
+    "category": "SIDE_DISH",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-663451_11-43ad8a6.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Fish finger wraps with pea purée",
+    "description": "Bánh cuộn cá que với sốt đậu Hà Lan nghiền và dưa chuột muối.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fish-fingers-0af3382.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Chicken pesto wrap",
+    "description": "Bánh cuộn gà, phô mai và pesto, món trưa yêu thích của trẻ nhỏ.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chicken-pesto-wrap-b147add.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Spicy chicken & avocado wraps",
+    "description": "Gà áp chảo cay với chanh, tỏi cuộn cùng bơ trong bánh tortilla.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spicychickenavocadowraps_5865-4035909.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Lentil & tuna salad",
+    "description": "Salad đậu lăng và cá ngừ, làm nhanh trong 15 phút.",
+    "category": "SIDE_DISH",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/07/Lentil-and-tuna-salad-76f39e2.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Egg & rocket pizzas",
+    "description": "Pizza đế tortilla với trứng và rau arugula, giàu protein.",
+    "category": "MAIN_COURSE",
+    "price": 55.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/eggrocketpizzas_5729-ebc7e0d.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Burrito bowl with chipotle black beans",
+    "description": "Bát burrito đầy rau củ và đậu đen chipotle.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/burrito-bowl-3629880.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Lemon & spinach rice with feta",
+    "description": "Cơm chanh rau bina với phô mai feta và hạt óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Greek-spinach-and-rice-d16d518.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Egg & avocado open sandwich",
+    "description": "Bánh mì mở với trứng và bơ tươi, thanh đạm và bổ dưỡng.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/egg-avocado-open-sandwich-3b6ef94.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Falafel burgers",
+    "description": "Burger falafel giàu đạm thực vật, ít calo, no lâu.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-326597_11-b7385b9.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Prawn & mango salad",
+    "description": "Salad tôm và xoài nhiều màu sắc, kèm bơ và bạc hà.",
+    "category": "SIDE_DISH",
+    "price": 19.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/prawn-mango-salad-b147add.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Ultimate chorizo ciabatta",
+    "description": "Bánh ciabatta giòn với xúc xích chorizo, pesto và ớt chuông nướng.",
+    "category": "MAIN_COURSE",
+    "price": 57.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/ultimate-chorizo-ciabatta-c3f006e.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Turkey, bacon & avocado mini bagels",
+    "description": "Bagel nhỏ nhân gà tây, thịt xông khói và bơ nghiền.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/turkey-bacon-avocado-mini-bagels-5d7ddcb.png"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Cumin roast veg with tahini dressing",
+    "description": "Rau củ nướng thì là với sốt tahini, đủ 5 phần rau mỗi ngày.",
+    "category": "SIDE_DISH",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/cumin-roast-vegetables-with-eggs-440-400-d4181ed.jpg"
+  },
+  {
+    "restaurant_username": "quan_sandwich_xanh",
+    "restaurant_name": "Quán Sandwich Xanh",
+    "name": "Salmon salad with sesame dressing",
+    "description": "Salad cá hồi sốt mè, giàu omega-3 và vitamin C.",
+    "category": "SIDE_DISH",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/salmon-salad-440-400-67a0abd.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Chicken pesto wrap",
+    "description": "Bánh cuộn gà, phô mai và pesto, món trưa yêu thích của trẻ nhỏ.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chicken-pesto-wrap-b147add.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Rainbow pizzas",
+    "description": "Pizza nhiều màu sắc với rau củ tươi, hợp khẩu vị trẻ nhỏ.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/rainbow-pizzas-fac9f95.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Paneer jalfrezi with cumin rice",
+    "description": "Cà ri phô mai paneer với cơm thì là, ít calo.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/paneer-jalfrezi-440-400-e63da48.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Caesar pitta",
+    "description": "Bánh pitta nhân gà, salad và sốt Caesar tự làm, chỉ 10 phút.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/caesar-pitta-ca63652.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Veggie noodle pot",
+    "description": "Mì trộn rau củ với đậu Hà Lan và ngô bao tử.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/veggie-noodle-pot-dce5b50.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Lemon & spinach rice with feta",
+    "description": "Cơm chanh rau bina với phô mai feta và hạt óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Greek-spinach-and-rice-d16d518.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Orecchiette with butter beans, parsley, chilli & lemon",
+    "description": "Mì orecchiette với đậu bơ, mùi tây, ớt và chanh.",
+    "category": "MAIN_COURSE",
+    "price": 53.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/Orecchiette-with-butter-beans-0872a01.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Burrito bowl with chipotle black beans",
+    "description": "Bát burrito đầy rau củ và đậu đen chipotle.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/burrito-bowl-3629880.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Egg & rocket pizzas",
+    "description": "Pizza đế tortilla với trứng và rau arugula, giàu protein.",
+    "category": "MAIN_COURSE",
+    "price": 55.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/eggrocketpizzas_5729-ebc7e0d.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Flatbreads with brunch-style eggs",
+    "description": "Bánh dẹt tự làm ăn cùng trứng kiểu brunch, phô mai và cà chua.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/flatbreads-with-brunch-style-eggs-54092f0.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Sweet potato toasts with curried chickpeas",
+    "description": "Bánh mì nướng khoai lang với đậu gà cà ri.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Sweet-potato-toasts-7cd74e0.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Spicy red lentil chilli with guacamole & rice",
+    "description": "Chilli đậu lăng đỏ cay ăn kèm guacamole và cơm gạo lứt.",
+    "category": "MAIN_COURSE",
+    "price": 64.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Lentil-chilli-2158471.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Italian sub",
+    "description": "Sandwich kiểu Ý với phô mai mozzarella, salami và cà chua sấy.",
+    "category": "MAIN_COURSE",
+    "price": 53.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/italian-sub-6d78d0a.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Quick chicken hummus bowl",
+    "description": "Bát gà và hummus nhanh gọn chỉ trong 10 phút.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/quick-chicken-and-hummus-bowl-3863168.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Fish finger wraps with pea purée",
+    "description": "Bánh cuộn cá que với sốt đậu Hà Lan nghiền và dưa chuột muối.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fish-fingers-0af3382.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Roasted cauli-broc bowl with tahini hummus",
+    "description": "Bát súp lơ và bông cải nướng với hummus tahini.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/roasted-cauli-bowl-a7bb279.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Air fryer chicken breasts",
+    "description": "Gà ức áp chảo bằng nồi chiên không dầu, tẩm gia vị tỏi và ớt bột ngọt.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/04/Air-Fryer-Chicken-Breast-3121e78.jpg"
+  },
+  {
+    "restaurant_username": "tiem_mi_trua",
+    "restaurant_name": "Tiệm Mì Trưa",
+    "name": "Panuozzo sandwich",
+    "description": "Bánh sandwich kiểu pizza với pesto tự làm, nhanh gọn cho bữa trưa.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/03/Panuozzo-sandwich-4b19929.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Slow cooker ratatouille",
+    "description": "Ratatouille nấu chậm, đủ 4 phần rau, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-ratatouille-4ecd407.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Spiced lamb meatball stew",
+    "description": "Hầm viên thịt cừu tẩm gia vị với đậu gà và hạt lựu.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spiced-lamb-meatball-stew-014e307.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Indian butternut squash curry",
+    "description": "Cà ri bí đỏ kiểu Ấn Độ, ít béo, đủ 3 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-488679_11-5bfcf60.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Five-bean chilli",
+    "description": "Chilli chay 5 loại đậu, trữ đông từng phần cho tuần bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/five-bean-chilli-89538ef.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Vegan moussaka",
+    "description": "Moussaka thuần chay từ sốt ragu chay, đủ 5 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2019/01/vegan-moussaka-edb86a1.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Big-batch bolognese",
+    "description": "Sốt bolognese nấu mẻ lớn, đủ cho cả tuần hoặc trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1074456_10-1a5351d.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Microwave jambalaya",
+    "description": "Món jambalaya cay kiểu truyền thống, nấu nhanh bằng lò vi sóng.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-509_11-a7479c8.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Crusty cheddar pies",
+    "description": "Bánh pie phô mai cheddar với khoai tây nghiền, bông cải và tỏi tây.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1227451_8-a4f73b7.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Microwave banana pudding",
+    "description": "Bánh pudding chuối làm nhanh trong 20 phút bằng lò vi sóng.",
+    "category": "DESSERT",
+    "price": 21.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-424720_12-b8ffc96.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "One-pot prawn & lentil curry",
+    "description": "Cà ri tôm và đậu lăng nấu một nồi, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/01/Prawn-and-lentil-curry-a726c9f.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Veggie shepherd's pie with sweet potato mash",
+    "description": "Shepherd's pie chay với khoai lang nghiền phủ trên.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2011/02/veggie-shepherds-pie-with-sweet-potato-mash-ced560e.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Tomato, pepper & bean one pot",
+    "description": "Món hầm cà chua, ớt chuông và đậu, dễ trữ đông từng phần.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tomato-pepper-bean-one-pot-398c4b2.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Sausage ragu",
+    "description": "Sốt ragu xúc xích ăn cùng mì, có thể trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 61.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sausage-ragu-a4e1460.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Fragrant fish tagine",
+    "description": "Tagine cá thơm lừng, phù hợp cho đông người hoặc trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-699476_11-ef297b7.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Coconut & kale fish curry",
+    "description": "Cà ri cá nước cốt dừa và cải xoăn, đậm đà gia vị.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/coconut-and-kale-fish-curry-9e80eb5.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Easy vegetarian chilli",
+    "description": "Chilli chay dễ nhân đôi để trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/10/Vegetarian-chilli-206c469.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Soup maker broccoli and stilton soup",
+    "description": "Súp bông cải xanh và phô mai Stilton, dễ trữ đông.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/broccoli-and-stilton-soup-f5ab33e.jpg"
+  },
+  {
+    "restaurant_username": "bep_tiet_kiem",
+    "restaurant_name": "Bếp Tiết Kiệm",
+    "name": "Vegan bolognese",
+    "description": "Bolognese thuần chay, đủ 4 phần rau mỗi ngày, ít béo.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-bolognese-b4f9b85.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "One-pot prawn & lentil curry",
+    "description": "Cà ri tôm và đậu lăng nấu một nồi, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/01/Prawn-and-lentil-curry-a726c9f.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Crusty cheddar pies",
+    "description": "Bánh pie phô mai cheddar với khoai tây nghiền, bông cải và tỏi tây.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1227451_8-a4f73b7.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Vegan moussaka",
+    "description": "Moussaka thuần chay từ sốt ragu chay, đủ 5 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2019/01/vegan-moussaka-edb86a1.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Vegan lasagne",
+    "description": "Lasagne thuần chay dùng nhân thay thế cho thịt.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-lasagne-756ea33.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Indian butternut squash curry",
+    "description": "Cà ri bí đỏ kiểu Ấn Độ, ít béo, đủ 3 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-488679_11-5bfcf60.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Slow cooker ratatouille",
+    "description": "Ratatouille nấu chậm, đủ 4 phần rau, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-ratatouille-4ecd407.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Mexican bean soup with guacamole",
+    "description": "Súp đậu kiểu Mexico ăn kèm guacamole tươi.",
+    "category": "APPETIZER",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/wdp-lunch-mexicanguacamolesoup_02051-d1c462c.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Five-bean chilli",
+    "description": "Chilli chay 5 loại đậu, trữ đông từng phần cho tuần bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/five-bean-chilli-89538ef.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Vegetarian lasagne",
+    "description": "Lasagne chay dễ làm, dùng sốt cà chua và sốt trắng có sẵn.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/vegetarian-lasagne-5ee6162.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Celery soup",
+    "description": "Súp cần tây ít calo, thích hợp cho bữa trưa hoặc tối chay.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/celery-soup-037d05d.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Coconut cashew & butternut squash curry",
+    "description": "Cà ri bí đỏ và hạt điều nước cốt dừa, thuần chay.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/10/Cashew-Butternut-Squash-Curry-3fd87d1.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Vegetable stew",
+    "description": "Hầm rau củ kiểu Địa Trung Hải với đậu lăng và ớt chuông.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-908509_10-4d83944.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Slow cooker chicken chasseur",
+    "description": "Gà hầm kiểu Pháp nấu chậm, tiện lợi cho ngày bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chicken-chasseur-7a5a984.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Soup maker broccoli and stilton soup",
+    "description": "Súp bông cải xanh và phô mai Stilton, dễ trữ đông.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/broccoli-and-stilton-soup-f5ab33e.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Artichoke & aubergine rice",
+    "description": "Cơm atisô và cà tím, ít béo và tiết kiệm.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/artichoke-aubergine-rice-recipe-image-2e7d0a8.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Coconut & kale fish curry",
+    "description": "Cà ri cá nước cốt dừa và cải xoăn, đậm đà gia vị.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/coconut-and-kale-fish-curry-9e80eb5.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Slow cooker lamb curry",
+    "description": "Cà ri thịt cừu nấu chậm mềm thơm, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-lamb-curry-872fabb.jpg"
+  },
+  {
+    "restaurant_username": "bep_nha_ba_ngoai",
+    "restaurant_name": "Bếp Nhà Bà Ngoại",
+    "name": "Vegan ragu",
+    "description": "Sốt ragu chay dùng làm nền cho lasagne, moussaka hoặc bolognese.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-ragu-7650653.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Veggie shepherd's pie with sweet potato mash",
+    "description": "Shepherd's pie chay với khoai lang nghiền phủ trên.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2011/02/veggie-shepherds-pie-with-sweet-potato-mash-ced560e.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Microwave banana pudding",
+    "description": "Bánh pudding chuối làm nhanh trong 20 phút bằng lò vi sóng.",
+    "category": "DESSERT",
+    "price": 21.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-424720_12-b8ffc96.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Spiced lamb meatball stew",
+    "description": "Hầm viên thịt cừu tẩm gia vị với đậu gà và hạt lựu.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spiced-lamb-meatball-stew-014e307.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Coconut cashew & butternut squash curry",
+    "description": "Cà ri bí đỏ và hạt điều nước cốt dừa, thuần chay.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/10/Cashew-Butternut-Squash-Curry-3fd87d1.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Soup maker broccoli and stilton soup",
+    "description": "Súp bông cải xanh và phô mai Stilton, dễ trữ đông.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/broccoli-and-stilton-soup-f5ab33e.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Vegan moussaka",
+    "description": "Moussaka thuần chay từ sốt ragu chay, đủ 5 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2019/01/vegan-moussaka-edb86a1.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "One-pot prawn & lentil curry",
+    "description": "Cà ri tôm và đậu lăng nấu một nồi, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/01/Prawn-and-lentil-curry-a726c9f.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Vegetarian lasagne",
+    "description": "Lasagne chay dễ làm, dùng sốt cà chua và sốt trắng có sẵn.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/vegetarian-lasagne-5ee6162.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Indian butternut squash curry",
+    "description": "Cà ri bí đỏ kiểu Ấn Độ, ít béo, đủ 3 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-488679_11-5bfcf60.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Roasted sweet potato & carrot soup",
+    "description": "Súp khoai lang và cà rốt nướng mịn, đủ 2 phần rau.",
+    "category": "APPETIZER",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/roasted-sweet-potato-carrot-soup-1223acc.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Fragrant fish tagine",
+    "description": "Tagine cá thơm lừng, phù hợp cho đông người hoặc trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-699476_11-ef297b7.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Big-batch bolognese",
+    "description": "Sốt bolognese nấu mẻ lớn, đủ cho cả tuần hoặc trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1074456_10-1a5351d.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Vegan ragu",
+    "description": "Sốt ragu chay dùng làm nền cho lasagne, moussaka hoặc bolognese.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-ragu-7650653.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Slow cooker ratatouille",
+    "description": "Ratatouille nấu chậm, đủ 4 phần rau, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-ratatouille-4ecd407.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Pressure cooker beef curry",
+    "description": "Cà ri bò nấu bằng nồi áp suất, tiện cho bữa tối trong tuần.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/04/pressure-cooker-beef-curry-236a068.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Celery soup",
+    "description": "Súp cần tây ít calo, thích hợp cho bữa trưa hoặc tối chay.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/celery-soup-037d05d.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Microwave jambalaya",
+    "description": "Món jambalaya cay kiểu truyền thống, nấu nhanh bằng lò vi sóng.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-509_11-a7479c8.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Vegetable stew",
+    "description": "Hầm rau củ kiểu Địa Trung Hải với đậu lăng và ớt chuông.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-908509_10-4d83944.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Crusty cheddar pies",
+    "description": "Bánh pie phô mai cheddar với khoai tây nghiền, bông cải và tỏi tây.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1227451_8-a4f73b7.jpg"
+  },
+  {
+    "restaurant_username": "quan_com_gia_dinh",
+    "restaurant_name": "Quán Cơm Gia Đình",
+    "name": "Mexican bean soup with guacamole",
+    "description": "Súp đậu kiểu Mexico ăn kèm guacamole tươi.",
+    "category": "APPETIZER",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/wdp-lunch-mexicanguacamolesoup_02051-d1c462c.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Easy vegetable curry",
+    "description": "Cà ri rau củ dễ làm, phù hợp đãi đông người.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-402452_12-d37f0f4.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "One-pot chicken & bacon stew",
+    "description": "Hầm gà và thịt xông khói một nồi, món ưa thích của gia đình.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-513824_11-86a4347.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Roasted sweet potato & carrot soup",
+    "description": "Súp khoai lang và cà rốt nướng mịn, đủ 2 phần rau.",
+    "category": "APPETIZER",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/roasted-sweet-potato-carrot-soup-1223acc.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Veggie shepherd's pie with sweet potato mash",
+    "description": "Shepherd's pie chay với khoai lang nghiền phủ trên.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2011/02/veggie-shepherds-pie-with-sweet-potato-mash-ced560e.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Slow cooker ratatouille",
+    "description": "Ratatouille nấu chậm, đủ 4 phần rau, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-ratatouille-4ecd407.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Vegan bolognese",
+    "description": "Bolognese thuần chay, đủ 4 phần rau mỗi ngày, ít béo.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-bolognese-b4f9b85.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "No-cook veggie fajitas",
+    "description": "Fajita rau củ không cần nấu, phù hợp mùa hè.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/no-cook-veggie-fajitas-2b9de0f.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Soup maker broccoli and stilton soup",
+    "description": "Súp bông cải xanh và phô mai Stilton, dễ trữ đông.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/broccoli-and-stilton-soup-f5ab33e.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Mexican bean soup with guacamole",
+    "description": "Súp đậu kiểu Mexico ăn kèm guacamole tươi.",
+    "category": "APPETIZER",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/wdp-lunch-mexicanguacamolesoup_02051-d1c462c.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Microwave jambalaya",
+    "description": "Món jambalaya cay kiểu truyền thống, nấu nhanh bằng lò vi sóng.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-509_11-a7479c8.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Vegan moussaka",
+    "description": "Moussaka thuần chay từ sốt ragu chay, đủ 5 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2019/01/vegan-moussaka-edb86a1.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Spiced lamb meatball stew",
+    "description": "Hầm viên thịt cừu tẩm gia vị với đậu gà và hạt lựu.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spiced-lamb-meatball-stew-014e307.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Pressure cooker beef curry",
+    "description": "Cà ri bò nấu bằng nồi áp suất, tiện cho bữa tối trong tuần.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/04/pressure-cooker-beef-curry-236a068.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Indian butternut squash curry",
+    "description": "Cà ri bí đỏ kiểu Ấn Độ, ít béo, đủ 3 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-488679_11-5bfcf60.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Sausage cassoulet",
+    "description": "Món hầm xúc xích và đậu kiểu Pháp, nấu bằng nồi nấu chậm.",
+    "category": "MAIN_COURSE",
+    "price": 49.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sausage-cassoulet-f9389b5.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Vegan lasagne",
+    "description": "Lasagne thuần chay dùng nhân thay thế cho thịt.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-lasagne-756ea33.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Big-batch bolognese",
+    "description": "Sốt bolognese nấu mẻ lớn, đủ cho cả tuần hoặc trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1074456_10-1a5351d.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Tomato, pepper & bean one pot",
+    "description": "Món hầm cà chua, ớt chuông và đậu, dễ trữ đông từng phần.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tomato-pepper-bean-one-pot-398c4b2.jpg"
+  },
+  {
+    "restaurant_username": "bep_chay_xanh",
+    "restaurant_name": "Bếp Chay Xanh",
+    "name": "Artichoke & aubergine rice",
+    "description": "Cơm atisô và cà tím, ít béo và tiết kiệm.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/artichoke-aubergine-rice-recipe-image-2e7d0a8.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Vegan ragu",
+    "description": "Sốt ragu chay dùng làm nền cho lasagne, moussaka hoặc bolognese.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vegan-ragu-7650653.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Coconut cashew & butternut squash curry",
+    "description": "Cà ri bí đỏ và hạt điều nước cốt dừa, thuần chay.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/10/Cashew-Butternut-Squash-Curry-3fd87d1.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Sausage cassoulet",
+    "description": "Món hầm xúc xích và đậu kiểu Pháp, nấu bằng nồi nấu chậm.",
+    "category": "MAIN_COURSE",
+    "price": 49.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/sausage-cassoulet-f9389b5.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "One-pot chicken & bacon stew",
+    "description": "Hầm gà và thịt xông khói một nồi, món ưa thích của gia đình.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-513824_11-86a4347.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Five-bean chilli",
+    "description": "Chilli chay 5 loại đậu, trữ đông từng phần cho tuần bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/five-bean-chilli-89538ef.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Soup maker broccoli and stilton soup",
+    "description": "Súp bông cải xanh và phô mai Stilton, dễ trữ đông.",
+    "category": "APPETIZER",
+    "price": 44.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/broccoli-and-stilton-soup-f5ab33e.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Veggie shepherd's pie with sweet potato mash",
+    "description": "Shepherd's pie chay với khoai lang nghiền phủ trên.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2011/02/veggie-shepherds-pie-with-sweet-potato-mash-ced560e.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Vegetarian lasagne",
+    "description": "Lasagne chay dễ làm, dùng sốt cà chua và sốt trắng có sẵn.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/02/vegetarian-lasagne-5ee6162.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Slow cooker chicken chasseur",
+    "description": "Gà hầm kiểu Pháp nấu chậm, tiện lợi cho ngày bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chicken-chasseur-7a5a984.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Courgette & tomato soup",
+    "description": "Súp bí ngòi và cà chua, dùng nguyên liệu theo mùa.",
+    "category": "APPETIZER",
+    "price": 40.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1071455_10-9c0fd57.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Tomato, pepper & bean one pot",
+    "description": "Món hầm cà chua, ớt chuông và đậu, dễ trữ đông từng phần.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tomato-pepper-bean-one-pot-398c4b2.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Vegetarian bolognese",
+    "description": "Sốt bolognese chay từ thịt băm thực vật, ít béo.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2018/12/Veggie-bolognese-8ecf29a.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Vegan moussaka",
+    "description": "Moussaka thuần chay từ sốt ragu chay, đủ 5 phần rau.",
+    "category": "MAIN_COURSE",
+    "price": 62.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2019/01/vegan-moussaka-edb86a1.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Big-batch bolognese",
+    "description": "Sốt bolognese nấu mẻ lớn, đủ cho cả tuần hoặc trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 48.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1074456_10-1a5351d.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Mexican bean soup with guacamole",
+    "description": "Súp đậu kiểu Mexico ăn kèm guacamole tươi.",
+    "category": "APPETIZER",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/wdp-lunch-mexicanguacamolesoup_02051-d1c462c.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Microwave banana pudding",
+    "description": "Bánh pudding chuối làm nhanh trong 20 phút bằng lò vi sóng.",
+    "category": "DESSERT",
+    "price": 21.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-424720_12-b8ffc96.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Burnt aubergine veggie chilli",
+    "description": "Chilli cà tím nướng cháy cạnh, đủ 4 phần rau, ít béo.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/burnt-aubergine-chilli-afd2f29.jpg"
+  },
+  {
+    "restaurant_username": "quan_ham_mot_noi",
+    "restaurant_name": "Quán Hầm Một Nồi",
+    "name": "Slow cooker ratatouille",
+    "description": "Ratatouille nấu chậm, đủ 4 phần rau, dễ trữ đông.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/slow-cooker-ratatouille-4ecd407.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Porridge with blueberry compote",
+    "description": "Cháo yến mạch phủ mứt việt quất và sữa chua Hy Lạp.",
+    "category": "MAIN_COURSE",
+    "price": 64.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/blueberryporridge_5677-675d730.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Blueberry baked oats",
+    "description": "Yến mạch nướng với việt quất tươi và hạnh nhân giòn.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/blueberry-nut-oat-bake-4a1dd90.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Baked oats",
+    "description": "Yến mạch nướng với chuối, gia vị và socola hoặc quả mọng.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/01/Easy-Classic-Baked-Oats-b173e46.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Raspberry kefir overnight oats",
+    "description": "Yến mạch kefir tốt cho tiêu hóa, phủ quả mâm xôi và socola đen.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/07/Raspberry-kefir-overnight-oats-0e63a9b.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Vanilla & cinnamon breakfast rice",
+    "description": "Cơm bữa sáng vị vani quế, phủ mơ khô và óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/Vanilla-and-cinnamon-breakfast-rice-a4f3268.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Smoky mushroom & potato hash with oaty thins",
+    "description": "Hash nấm khoai tây kèm bánh yến mạch giòn.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Hash-with-eggs-26ad895.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Slow cooker bio yogurt",
+    "description": "Sữa chua tự làm bằng nồi nấu chậm, giàu lợi khuẩn.",
+    "category": "DESSERT",
+    "price": 36.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/liveyogurt-7a3acd3.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Healthy granola",
+    "description": "Granola tự làm giàu chất xơ với mơ khô, hạt và sữa chua đào.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/crunchy-oat-clusters-with-peach-yogurt-4-440-400-0cf467f.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Fruit & nut breakfast bowl",
+    "description": "Bát yến mạch với cam tươi, sữa chua Hy Lạp, trái cây khô và hạt.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fruitnutbreakfastbowl_5833-f6053e0.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Oat & chia porridge with prunes",
+    "description": "Cháo yến mạch và hạt chia với mận khô, tốt cho tim mạch.",
+    "category": "MAIN_COURSE",
+    "price": 53.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/oat-chia-porridge-with-prunes-82781bd.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Green eggs",
+    "description": "Trứng, rau bina và tỏi tây cho bữa sáng giàu năng lượng.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/green-eggs-1ea9f7a.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Avocado & black bean eggs",
+    "description": "Trứng, bơ và đậu đen, món sáng nhanh chỉ 10 phút.",
+    "category": "MAIN_COURSE",
+    "price": 49.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/avocado_blackbean_eggs-9b605bb.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Orange & blueberry Bircher",
+    "description": "Yến mạch Bircher ngâm với cam và việt quất.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2016/05/orange-blueberry-bircher-0b11aea.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Healthy baked oats",
+    "description": "Hũ yến mạch nhỏ phủ sữa chua và quả mọng yêu thích.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/12/Baked-Oats-5a51f8c.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Breakfast burrito",
+    "description": "Burrito chay với trứng và bơ, đủ chất béo tốt.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/breakfast-burrito-b086548.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Apricot & hazelnut muesli",
+    "description": "Ngũ cốc mơ khô và hạt phỉ, sẵn sàng chỉ trong 15 phút.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/apricot-hazelnut-muesli-440-400-8119236.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Tofu scramble",
+    "description": "Đậu hũ xào gia vị và cà chua bi, thay thế trứng chay.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tofu_scramble-eaa0c64.jpg"
+  },
+  {
+    "restaurant_username": "an_sang_khoe",
+    "restaurant_name": "Ăn Sáng Khỏe",
+    "name": "Black beans & avocado on toast",
+    "description": "Bánh mì nướng phủ đậu đen và bơ kiểu Mexico.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mexican-beans-and-avo-33f4279.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Black beans & avocado on toast",
+    "description": "Bánh mì nướng phủ đậu đen và bơ kiểu Mexico.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mexican-beans-and-avo-33f4279.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Green eggs",
+    "description": "Trứng, rau bina và tỏi tây cho bữa sáng giàu năng lượng.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/green-eggs-1ea9f7a.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Vanilla & cinnamon breakfast rice",
+    "description": "Cơm bữa sáng vị vani quế, phủ mơ khô và óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/Vanilla-and-cinnamon-breakfast-rice-a4f3268.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Apricot & hazelnut muesli",
+    "description": "Ngũ cốc mơ khô và hạt phỉ, sẵn sàng chỉ trong 15 phút.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/apricot-hazelnut-muesli-440-400-8119236.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Healthy granola",
+    "description": "Granola tự làm giàu chất xơ với mơ khô, hạt và sữa chua đào.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/crunchy-oat-clusters-with-peach-yogurt-4-440-400-0cf467f.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Budget porridge",
+    "description": "Cháo yến mạch tiết kiệm với táo bào, nho khô và quế.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Budget-porridge-b68e2f2.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Slow cooker bio yogurt",
+    "description": "Sữa chua tự làm bằng nồi nấu chậm, giàu lợi khuẩn.",
+    "category": "DESSERT",
+    "price": 36.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/liveyogurt-7a3acd3.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Herb omelette with fried tomatoes",
+    "description": "Trứng ốp la thảo mộc kèm cà chua áp chảo, giàu đạm.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/omelette-4fe3f28.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Homemade muesli with oats, dates & berries",
+    "description": "Muesli tự làm với chà là, quả mọng và hạt óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/homemade-muesli-with-oats-dates-berries-copy-f17fb44.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Slow cooker breakfast beans",
+    "description": "Đậu hầm chậm ăn cùng bánh mì nướng hoặc trứng.",
+    "category": "MAIN_COURSE",
+    "price": 53.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/smokybreakfastbeans-f4b5371.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Porridge with blueberry compote",
+    "description": "Cháo yến mạch phủ mứt việt quất và sữa chua Hy Lạp.",
+    "category": "MAIN_COURSE",
+    "price": 64.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/blueberryporridge_5677-675d730.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Healthy shakshuka",
+    "description": "Shakshuka nhẹ nhàng với cà chua, ớt chuông, rau bina và trứng.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/shakshuka-9bc1852.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Slow cooker Turkish breakfast eggs",
+    "description": "Trứng nướng kiểu Thổ Nhĩ Kỳ nấu chậm, ít calo.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/turkishbreakfasteggs-10a1988.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Salsa verde baked eggs",
+    "description": "Trứng nướng sốt salsa verde, ít calo, chỉ 15 phút.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/Salsa-verde-baked-eggs-80334f1.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Fruit & nut breakfast bowl",
+    "description": "Bát yến mạch với cam tươi, sữa chua Hy Lạp, trái cây khô và hạt.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fruitnutbreakfastbowl_5833-f6053e0.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Smoky mushroom & potato hash with oaty thins",
+    "description": "Hash nấm khoai tây kèm bánh yến mạch giòn.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Hash-with-eggs-26ad895.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Blueberry baked oats",
+    "description": "Yến mạch nướng với việt quất tươi và hạnh nhân giòn.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/blueberry-nut-oat-bake-4a1dd90.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Chia & almond overnight oats",
+    "description": "Yến mạch ngâm qua đêm với hạt chia và hạnh nhân, thuần chay.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chia-almond-overnight-oats-with-raspberries-and-blueberries-1-440-400-98ea1d8.jpg"
+  },
+  {
+    "restaurant_username": "cafe_yen_mach",
+    "restaurant_name": "Cafe Yến Mạch",
+    "name": "Banana overnight oats",
+    "description": "Yến mạch chuối và bơ hạt, tiện cho buổi sáng bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/01/Banana-Overnight-Oats-16f2208.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Orange & blueberry Bircher",
+    "description": "Yến mạch Bircher ngâm với cam và việt quất.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2016/05/orange-blueberry-bircher-0b11aea.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Pink barley porridge with vanilla yogurt",
+    "description": "Cháo lúa mạch màu hồng từ mận, ăn cùng sữa chua vani.",
+    "category": "MAIN_COURSE",
+    "price": 55.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/pink-barley-porridge-with-vanilla-yogurt-17fd180.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Healthy baked oats",
+    "description": "Hũ yến mạch nhỏ phủ sữa chua và quả mọng yêu thích.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/12/Baked-Oats-5a51f8c.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Blueberry baked oats",
+    "description": "Yến mạch nướng với việt quất tươi và hạnh nhân giòn.",
+    "category": "MAIN_COURSE",
+    "price": 51.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/blueberry-nut-oat-bake-4a1dd90.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Overnight oats",
+    "description": "Yến mạch ngâm qua đêm, có thể thêm trái cây, hạt tùy thích.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/overnight-oats-32a2747.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Chia & almond overnight oats",
+    "description": "Yến mạch ngâm qua đêm với hạt chia và hạnh nhân, thuần chay.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chia-almond-overnight-oats-with-raspberries-and-blueberries-1-440-400-98ea1d8.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Salsa verde baked eggs",
+    "description": "Trứng nướng sốt salsa verde, ít calo, chỉ 15 phút.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/Salsa-verde-baked-eggs-80334f1.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Feta & roasted tomato shakshuka",
+    "description": "Shakshuka cà chua nướng, phô mai feta và halloumi giòn.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/Feta-and-roasted-tomato-shakshuka-ce25544.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "High protein breakfast",
+    "description": "Fry-up giàu đạm với bít tết, nấm và rau bina.",
+    "category": "MAIN_COURSE",
+    "price": 49.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fry-up-e377f9d.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Healthy shakshuka",
+    "description": "Shakshuka nhẹ nhàng với cà chua, ớt chuông, rau bina và trứng.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/shakshuka-9bc1852.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Tofu scramble",
+    "description": "Đậu hũ xào gia vị và cà chua bi, thay thế trứng chay.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tofu_scramble-eaa0c64.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Banana overnight oats",
+    "description": "Yến mạch chuối và bơ hạt, tiện cho buổi sáng bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/01/Banana-Overnight-Oats-16f2208.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Budget porridge",
+    "description": "Cháo yến mạch tiết kiệm với táo bào, nho khô và quế.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Budget-porridge-b68e2f2.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Smoky mushroom & potato hash with oaty thins",
+    "description": "Hash nấm khoai tây kèm bánh yến mạch giòn.",
+    "category": "MAIN_COURSE",
+    "price": 50.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Hash-with-eggs-26ad895.jpg"
+  },
+  {
+    "restaurant_username": "quan_trung_healthy",
+    "restaurant_name": "Quán Trứng Healthy",
+    "name": "Slow cooker Turkish breakfast eggs",
+    "description": "Trứng nướng kiểu Thổ Nhĩ Kỳ nấu chậm, ít calo.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/turkishbreakfasteggs-10a1988.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Chia pudding",
+    "description": "Pudding hạt chia giàu đạm, chất chống oxy hóa và omega 3.",
+    "category": "DESSERT",
+    "price": 32.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/02/Chia-pudding-1667b59.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Breakfast super-shake",
+    "description": "Sinh tố năng lượng cao, phù hợp trước khi tập luyện cường độ mạnh.",
+    "category": "BEVERAGE",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/breakfast-super-shake-e63774c.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "High protein breakfast",
+    "description": "Fry-up giàu đạm với bít tết, nấm và rau bina.",
+    "category": "MAIN_COURSE",
+    "price": 49.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fry-up-e377f9d.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Turbo beans & cheese on toast",
+    "description": "Bánh mì nướng đậu và phô mai nâng cấp với cà chua, tỏi, ớt.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/04/220413_TURBO_BEANS_AND_CHEESE_ON_TOAST_0049_2-3edc6ea.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Chia & oat breakfast scones with yogurt and berries",
+    "description": "Bánh scone yến mạch và hạt chia ăn kèm sữa chua, quả mọng.",
+    "category": "MAIN_COURSE",
+    "price": 55.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chia_breakfast_scones_440_400-f1fe7c4.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Overnight oats",
+    "description": "Yến mạch ngâm qua đêm, có thể thêm trái cây, hạt tùy thích.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/overnight-oats-32a2747.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Slow cooker breakfast beans",
+    "description": "Đậu hầm chậm ăn cùng bánh mì nướng hoặc trứng.",
+    "category": "MAIN_COURSE",
+    "price": 53.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/smokybreakfastbeans-f4b5371.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Raspberry kefir overnight oats",
+    "description": "Yến mạch kefir tốt cho tiêu hóa, phủ quả mâm xôi và socola đen.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/07/Raspberry-kefir-overnight-oats-0e63a9b.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Homemade muesli with oats, dates & berries",
+    "description": "Muesli tự làm với chà là, quả mọng và hạt óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/homemade-muesli-with-oats-dates-berries-copy-f17fb44.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Tofu scramble",
+    "description": "Đậu hũ xào gia vị và cà chua bi, thay thế trứng chay.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tofu_scramble-eaa0c64.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Slow cooker spiced apples with barley",
+    "description": "Táo tẩm gia vị nấu chậm với lúa mạch, dùng làm món tráng miệng hoặc bữa sáng.",
+    "category": "DESSERT",
+    "price": 24.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spicedroastapples-86face5.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Feta & roasted tomato shakshuka",
+    "description": "Shakshuka cà chua nướng, phô mai feta và halloumi giòn.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/Feta-and-roasted-tomato-shakshuka-ce25544.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Vanilla & cinnamon breakfast rice",
+    "description": "Cơm bữa sáng vị vani quế, phủ mơ khô và óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/Vanilla-and-cinnamon-breakfast-rice-a4f3268.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Avocado & black bean eggs",
+    "description": "Trứng, bơ và đậu đen, món sáng nhanh chỉ 10 phút.",
+    "category": "MAIN_COURSE",
+    "price": 49.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/avocado_blackbean_eggs-9b605bb.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Cinnamon porridge with banana & berries",
+    "description": "Cháo yến mạch quế với chuối và quả mọng tươi.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1071551_11-583c548.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Herb omelette with fried tomatoes",
+    "description": "Trứng ốp la thảo mộc kèm cà chua áp chảo, giàu đạm.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/omelette-4fe3f28.jpg"
+  },
+  {
+    "restaurant_username": "goc_sang_nang_luong",
+    "restaurant_name": "Góc Sáng Năng Lượng",
+    "name": "Healthy granola",
+    "description": "Granola tự làm giàu chất xơ với mơ khô, hạt và sữa chua đào.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/crunchy-oat-clusters-with-peach-yogurt-4-440-400-0cf467f.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Salsa verde baked eggs",
+    "description": "Trứng nướng sốt salsa verde, ít calo, chỉ 15 phút.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/Salsa-verde-baked-eggs-80334f1.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Fruit & nut breakfast bowl",
+    "description": "Bát yến mạch với cam tươi, sữa chua Hy Lạp, trái cây khô và hạt.",
+    "category": "MAIN_COURSE",
+    "price": 59.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fruitnutbreakfastbowl_5833-f6053e0.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Cinnamon porridge with banana & berries",
+    "description": "Cháo yến mạch quế với chuối và quả mọng tươi.",
+    "category": "MAIN_COURSE",
+    "price": 63.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1071551_11-583c548.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Banana overnight oats",
+    "description": "Yến mạch chuối và bơ hạt, tiện cho buổi sáng bận rộn.",
+    "category": "MAIN_COURSE",
+    "price": 47.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/01/Banana-Overnight-Oats-16f2208.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Tofu scramble",
+    "description": "Đậu hũ xào gia vị và cà chua bi, thay thế trứng chay.",
+    "category": "MAIN_COURSE",
+    "price": 52.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/tofu_scramble-eaa0c64.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Pink barley porridge with vanilla yogurt",
+    "description": "Cháo lúa mạch màu hồng từ mận, ăn cùng sữa chua vani.",
+    "category": "MAIN_COURSE",
+    "price": 55.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/pink-barley-porridge-with-vanilla-yogurt-17fd180.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Crunchy peanut butter & banana pots",
+    "description": "Hũ bơ đậu phộng và chuối với yến mạch và sữa chua đậu nành.",
+    "category": "DESSERT",
+    "price": 28.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/11/Peanut-butter-and-banana-pots-ac3a464.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "High protein breakfast",
+    "description": "Fry-up giàu đạm với bít tết, nấm và rau bina.",
+    "category": "MAIN_COURSE",
+    "price": 49.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/fry-up-e377f9d.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Homemade muesli with oats, dates & berries",
+    "description": "Muesli tự làm với chà là, quả mọng và hạt óc chó.",
+    "category": "MAIN_COURSE",
+    "price": 54.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/homemade-muesli-with-oats-dates-berries-copy-f17fb44.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Breakfast muffins",
+    "description": "Muffin chuối và táo, ít ngọt, thêm việt quất và hạt.",
+    "category": "DESSERT",
+    "price": 27.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/muffins-d49653c.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Green eggs",
+    "description": "Trứng, rau bina và tỏi tây cho bữa sáng giàu năng lượng.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/green-eggs-1ea9f7a.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Slow cooker spiced apples with barley",
+    "description": "Táo tẩm gia vị nấu chậm với lúa mạch, dùng làm món tráng miệng hoặc bữa sáng.",
+    "category": "DESSERT",
+    "price": 24.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/spicedroastapples-86face5.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Healthy granola",
+    "description": "Granola tự làm giàu chất xơ với mơ khô, hạt và sữa chua đào.",
+    "category": "MAIN_COURSE",
+    "price": 56.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/crunchy-oat-clusters-with-peach-yogurt-4-440-400-0cf467f.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Chia & almond overnight oats",
+    "description": "Yến mạch ngâm qua đêm với hạt chia và hạnh nhân, thuần chay.",
+    "category": "MAIN_COURSE",
+    "price": 60.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chia-almond-overnight-oats-with-raspberries-and-blueberries-1-440-400-98ea1d8.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Raspberry kefir overnight oats",
+    "description": "Yến mạch kefir tốt cho tiêu hóa, phủ quả mâm xôi và socola đen.",
+    "category": "MAIN_COURSE",
+    "price": 45.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/07/Raspberry-kefir-overnight-oats-0e63a9b.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Overnight oats",
+    "description": "Yến mạch ngâm qua đêm, có thể thêm trái cây, hạt tùy thích.",
+    "category": "MAIN_COURSE",
+    "price": 46.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/overnight-oats-32a2747.jpg"
+  },
+  {
+    "restaurant_username": "bep_sang_gia_dinh",
+    "restaurant_name": "Bếp Sáng Gia Đình",
+    "name": "Orange & blueberry Bircher",
+    "description": "Yến mạch Bircher ngâm với cam và việt quất.",
+    "category": "MAIN_COURSE",
+    "price": 58.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2016/05/orange-blueberry-bircher-0b11aea.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Gluten-free white chocolate & raspberry cheesecake",
+    "description": "Cheesecake socola trắng và mâm xôi không gluten.",
+    "category": "DESSERT",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2023/03/Gluten-free-white-chocolate-and-raspberry-cheesecake-db2eaf5.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Passion fruit martini",
+    "description": "Cocktail chanh dây tươi mát, thêm prosecco cho đặc biệt.",
+    "category": "BEVERAGE",
+    "price": 22.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/passionfruit-pornstar-martini-df3bbfb.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Watermelon daiquiri",
+    "description": "Daiquiri dưa hấu tươi mát cho mùa hè.",
+    "category": "BEVERAGE",
+    "price": 17.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/04/Watermelon-Daiqiri-e7be7d2.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Rhubarb & custard cocktail",
+    "description": "Cocktail vodka với rượu trứng và siro trái cây tự làm.",
+    "category": "BEVERAGE",
+    "price": 19.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1243637_8-967b387.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Pink gin spritz",
+    "description": "Spritz gin hồng với rượu vải, nhẹ nhàng và tinh tế.",
+    "category": "BEVERAGE",
+    "price": 23.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pink-gin-spritz-c2be7c4.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Rhubarb gin",
+    "description": "Gin ngâm đại hoàng theo mùa, uống cùng soda mát lạnh.",
+    "category": "BEVERAGE",
+    "price": 15.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/rhubarb-gin-93e56de.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Aperol & limoncello cocktail",
+    "description": "Cocktail vodka, limoncello, Aperol và nước cam.",
+    "category": "BEVERAGE",
+    "price": 32.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/aperol_limoncello_mn-2e6f7fd.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Easy vegan chocolate cake",
+    "description": "Bánh chocolate thuần chay, không gluten, không trứng hay sữa.",
+    "category": "DESSERT",
+    "price": 37.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chocolate-avocado-cake-51c276b.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "White russian",
+    "description": "Cocktail vodka kem béo với hương cà phê Kahlúa.",
+    "category": "BEVERAGE",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/white-russian-d858c59.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Easy chocolate fudge cake",
+    "description": "Bánh fudge chocolate mềm mịn với lớp kem phủ mượt.",
+    "category": "DESSERT",
+    "price": 31.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chocolate-fudge-cake-91de17a.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Waterloo sunsets",
+    "description": "Cocktail vodka vani và rượu đào phong cách hoài cổ.",
+    "category": "BEVERAGE",
+    "price": 21.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1284621_8-39004bb.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Stem ginger & squash steamed pudding",
+    "description": "Pudding hấp gừng và bí đỏ không gluten.",
+    "category": "DESSERT",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1201700_11-09a526a.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "English garden cocktail",
+    "description": "Cocktail vườn Anh với gin, hoa cơm cháy và nước táo.",
+    "category": "BEVERAGE",
+    "price": 20.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/english-garden-386b42f.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Irish whiskey old fashioned",
+    "description": "Old fashioned biến tấu với whisky Ireland và cordial hoa cơm cháy.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/irish-whiskey-old-fashioned-a1b4d72.jpg"
+  },
+  {
+    "restaurant_username": "tiec_va_trang_mieng",
+    "restaurant_name": "Tiệc & Tráng Miệng",
+    "name": "Sea breeze",
+    "description": "Cocktail vodka, nam việt quất và bưởi cho mùa hè.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/440x400-sea-breeze-b31b188.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Long Island iced tea",
+    "description": "Cocktail pha trộn 5 loại rượu mạnh, hợp cho tiệc hè.",
+    "category": "BEVERAGE",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/long_island_iced_tea_cocktail-c97bd56-scaled.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Gin sling",
+    "description": "Gin sling thanh lịch với hương hương thảo và chanh.",
+    "category": "BEVERAGE",
+    "price": 34.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/04/gin-sling-3254030.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Gluten-free chocolate cake",
+    "description": "Bánh chocolate đậm đà không gluten cho dịp đặc biệt.",
+    "category": "DESSERT",
+    "price": 20.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/Gluten-free-chocolate-cake-eae2d2f.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "English garden cocktail",
+    "description": "Cocktail vườn Anh với gin, hoa cơm cháy và nước táo.",
+    "category": "BEVERAGE",
+    "price": 20.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/english-garden-386b42f.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Witch's brew",
+    "description": "Cocktail tím bí ẩn với vodka, rượu mâm xôi và curacao xanh.",
+    "category": "BEVERAGE",
+    "price": 24.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/09/Witchs-brew-1d3cec2.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Gluten-free lemon drizzle cake",
+    "description": "Bánh chanh không gluten, ẩm mềm nhờ khoai tây nghiền.",
+    "category": "DESSERT",
+    "price": 37.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-363662_11-2f88b3c.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Pink gin spritz",
+    "description": "Spritz gin hồng với rượu vải, nhẹ nhàng và tinh tế.",
+    "category": "BEVERAGE",
+    "price": 23.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pink-gin-spritz-c2be7c4.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Gluten-free carrot cake",
+    "description": "Bánh cà rốt không gluten, đơn giản dễ làm.",
+    "category": "DESSERT",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1201555_11-0f65d38.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Vodka & cranberry blush",
+    "description": "Cocktail vodka nam việt quất tinh tế cho bữa tiệc tối.",
+    "category": "BEVERAGE",
+    "price": 20.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-424782_11-75c4c52.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Apple & elderflower gin cocktail",
+    "description": "Cocktail gin táo và hoa cơm cháy cho tiệc hè.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2013/07/Apple-elderflower-cocktail-b81a932.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Red velvet cake",
+    "description": "Bánh red velvet cổ điển hợp cho tiệc mừng.",
+    "category": "DESSERT",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/red-velvet-cake-513716c.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Iced coffee",
+    "description": "Cà phê đá đơn giản, có thể thêm một chút siro phong.",
+    "category": "BEVERAGE",
+    "price": 16.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2016/06/IcedCoffeenew-8415cf7.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "White russian",
+    "description": "Cocktail vodka kem béo với hương cà phê Kahlúa.",
+    "category": "BEVERAGE",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/white-russian-d858c59.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Gluten-free white chocolate & raspberry cheesecake",
+    "description": "Cheesecake socola trắng và mâm xôi không gluten.",
+    "category": "DESSERT",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2023/03/Gluten-free-white-chocolate-and-raspberry-cheesecake-db2eaf5.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Vodka martini",
+    "description": "Vodka martini đơn giản với ô liu hoặc vỏ chanh.",
+    "category": "BEVERAGE",
+    "price": 24.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vodka-martini-recipe-d7e9995.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Gingered rich fruit cake",
+    "description": "Bánh trái cây vị gừng không gluten, không sữa, hợp dịp cưới hay Giáng sinh.",
+    "category": "DESSERT",
+    "price": 21.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-363610_12-518bf2f.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Bloody mary recipe",
+    "description": "Bloody mary cổ điển, có thể điều chỉnh độ cay theo ý thích.",
+    "category": "BEVERAGE",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/bloody-mary-a2983ba.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Flourless chocolate & pear cake",
+    "description": "Bánh chocolate lê không bột mì, dùng kèm creme fraiche.",
+    "category": "DESSERT",
+    "price": 39.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-363651_12-9187d6e.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Irish whiskey old fashioned",
+    "description": "Old fashioned biến tấu với whisky Ireland và cordial hoa cơm cháy.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/irish-whiskey-old-fashioned-a1b4d72.jpg"
+  },
+  {
+    "restaurant_username": "tiem_banh_khong_gluten",
+    "restaurant_name": "Tiệm Bánh Không Gluten",
+    "name": "Harvey wallbanger",
+    "description": "Cocktail vodka, Galliano và nước cam chanh.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/10/Harvey-Wallbanger-d491f7c.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Sea breeze",
+    "description": "Cocktail vodka, nam việt quất và bưởi cho mùa hè.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/440x400-sea-breeze-b31b188.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Easy vegan chocolate cake",
+    "description": "Bánh chocolate thuần chay, không gluten, không trứng hay sữa.",
+    "category": "DESSERT",
+    "price": 37.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chocolate-avocado-cake-51c276b.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Passion fruit martini",
+    "description": "Cocktail chanh dây tươi mát, thêm prosecco cho đặc biệt.",
+    "category": "BEVERAGE",
+    "price": 22.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/passionfruit-pornstar-martini-df3bbfb.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "White chocolate martini",
+    "description": "Martini socola trắng mềm mịn, trang trí vảy socola.",
+    "category": "BEVERAGE",
+    "price": 34.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/03/White-chocolate-martini-345ed5e.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Iced coffee",
+    "description": "Cà phê đá đơn giản, có thể thêm một chút siro phong.",
+    "category": "BEVERAGE",
+    "price": 16.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2016/06/IcedCoffeenew-8415cf7.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Red velvet cake",
+    "description": "Bánh red velvet cổ điển hợp cho tiệc mừng.",
+    "category": "DESSERT",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/red-velvet-cake-513716c.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Gluten-free chocolate cake",
+    "description": "Bánh chocolate đậm đà không gluten cho dịp đặc biệt.",
+    "category": "DESSERT",
+    "price": 20.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/Gluten-free-chocolate-cake-eae2d2f.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Mojito recipe",
+    "description": "Mojito cổ điển với bạc hà, rum trắng và chanh tươi.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mojito-cocktails-150961e.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Harvey wallbanger",
+    "description": "Cocktail vodka, Galliano và nước cam chanh.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/10/Harvey-Wallbanger-d491f7c.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "White russian",
+    "description": "Cocktail vodka kem béo với hương cà phê Kahlúa.",
+    "category": "BEVERAGE",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/white-russian-d858c59.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Gluten-free cupcakes",
+    "description": "Cupcake vani không gluten, đơn giản cho gia đình và bạn bè.",
+    "category": "DESSERT",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/09/GF-Cupcakes-bd4b78a.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Rhubarb & custard cocktail",
+    "description": "Cocktail vodka với rượu trứng và siro trái cây tự làm.",
+    "category": "BEVERAGE",
+    "price": 19.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1243637_8-967b387.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Vodka martini",
+    "description": "Vodka martini đơn giản với ô liu hoặc vỏ chanh.",
+    "category": "BEVERAGE",
+    "price": 24.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/vodka-martini-recipe-d7e9995.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "English garden cocktail",
+    "description": "Cocktail vườn Anh với gin, hoa cơm cháy và nước táo.",
+    "category": "BEVERAGE",
+    "price": 20.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/08/english-garden-386b42f.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Gluten-free white chocolate & raspberry cheesecake",
+    "description": "Cheesecake socola trắng và mâm xôi không gluten.",
+    "category": "DESSERT",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2023/03/Gluten-free-white-chocolate-and-raspberry-cheesecake-db2eaf5.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Bronx cocktail",
+    "description": "Cocktail martini biến tấu thêm nước cam.",
+    "category": "BEVERAGE",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/The-Bronx_02603-ebbe095.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Pink gin spritz",
+    "description": "Spritz gin hồng với rượu vải, nhẹ nhàng và tinh tế.",
+    "category": "BEVERAGE",
+    "price": 23.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pink-gin-spritz-c2be7c4.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Pink gin iced tea",
+    "description": "Trà đá pha gin hồng, rum, hoa cơm cháy và bưởi hồng.",
+    "category": "BEVERAGE",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gin_iced_tea-7addd18.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Witch's brew",
+    "description": "Cocktail tím bí ẩn với vodka, rượu mâm xôi và curacao xanh.",
+    "category": "BEVERAGE",
+    "price": 24.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/09/Witchs-brew-1d3cec2.jpg"
+  },
+  {
+    "restaurant_username": "quan_bar_cocktail",
+    "restaurant_name": "Quán Bar Cocktail",
+    "name": "Rhubarb gin",
+    "description": "Gin ngâm đại hoàng theo mùa, uống cùng soda mát lạnh.",
+    "category": "BEVERAGE",
+    "price": 15.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/rhubarb-gin-93e56de.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "White russian",
+    "description": "Cocktail vodka kem béo với hương cà phê Kahlúa.",
+    "category": "BEVERAGE",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/white-russian-d858c59.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Pink gin spritz",
+    "description": "Spritz gin hồng với rượu vải, nhẹ nhàng và tinh tế.",
+    "category": "BEVERAGE",
+    "price": 23.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pink-gin-spritz-c2be7c4.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Red velvet cake",
+    "description": "Bánh red velvet cổ điển hợp cho tiệc mừng.",
+    "category": "DESSERT",
+    "price": 33.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/red-velvet-cake-513716c.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Stem ginger & squash steamed pudding",
+    "description": "Pudding hấp gừng và bí đỏ không gluten.",
+    "category": "DESSERT",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1201700_11-09a526a.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Vodka & cranberry blush",
+    "description": "Cocktail vodka nam việt quất tinh tế cho bữa tiệc tối.",
+    "category": "BEVERAGE",
+    "price": 20.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-424782_11-75c4c52.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Fruit-filled clementine cake",
+    "description": "Bánh quýt không gluten, thơm vị cam quýt cho dịp Giáng sinh.",
+    "category": "DESSERT",
+    "price": 39.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-363642_11-6152878.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Cosmopolitan cocktail",
+    "description": "Cocktail vodka, cam và nam việt quất chua ngọt.",
+    "category": "BEVERAGE",
+    "price": 21.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/cosmopolitan-7a6874f.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Aperol & limoncello cocktail",
+    "description": "Cocktail vodka, limoncello, Aperol và nước cam.",
+    "category": "BEVERAGE",
+    "price": 32.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/aperol_limoncello_mn-2e6f7fd.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Easy chocolate fudge cake",
+    "description": "Bánh fudge chocolate mềm mịn với lớp kem phủ mượt.",
+    "category": "DESSERT",
+    "price": 31.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/chocolate-fudge-cake-91de17a.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Chocolate & hazelnut celebration cake",
+    "description": "Bánh brownie chocolate hạt phỉ với gai caramel trang trí.",
+    "category": "DESSERT",
+    "price": 39.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/john-whaite-cake-262a78a.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Iced coffee",
+    "description": "Cà phê đá đơn giản, có thể thêm một chút siro phong.",
+    "category": "BEVERAGE",
+    "price": 16.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2016/06/IcedCoffeenew-8415cf7.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Bronx cocktail",
+    "description": "Cocktail martini biến tấu thêm nước cam.",
+    "category": "BEVERAGE",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/The-Bronx_02603-ebbe095.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Pink gin 75",
+    "description": "Biến tấu cocktail cổ điển với gin hồng và prosecco.",
+    "category": "BEVERAGE",
+    "price": 27.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/04/Pink-gin-fc74582.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Hurricane cocktail",
+    "description": "Cocktail rum nhiệt đới sôi động cho bữa tiệc.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/hurricane-62b2c43.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Irish whiskey old fashioned",
+    "description": "Old fashioned biến tấu với whisky Ireland và cordial hoa cơm cháy.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/irish-whiskey-old-fashioned-a1b4d72.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Gin sling",
+    "description": "Gin sling thanh lịch với hương hương thảo và chanh.",
+    "category": "BEVERAGE",
+    "price": 34.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/04/gin-sling-3254030.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Orange & almond cake with citrus mascarpone",
+    "description": "Bánh cam hạnh nhân ẩm mềm với mascarpone cam quýt.",
+    "category": "DESSERT",
+    "price": 28.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1201476_12-74f9c1c.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Mojito recipe",
+    "description": "Mojito cổ điển với bạc hà, rum trắng và chanh tươi.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mojito-cocktails-150961e.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Gluten-free white chocolate & raspberry cheesecake",
+    "description": "Cheesecake socola trắng và mâm xôi không gluten.",
+    "category": "DESSERT",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2023/03/Gluten-free-white-chocolate-and-raspberry-cheesecake-db2eaf5.jpg"
+  },
+  {
+    "restaurant_username": "cafe_gin_tonic",
+    "restaurant_name": "Cafe Gin & Tonic",
+    "name": "Pink gin iced tea",
+    "description": "Trà đá pha gin hồng, rum, hoa cơm cháy và bưởi hồng.",
+    "category": "BEVERAGE",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gin_iced_tea-7addd18.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Harvey wallbanger",
+    "description": "Cocktail vodka, Galliano và nước cam chanh.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/10/Harvey-Wallbanger-d491f7c.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Classic G&T",
+    "description": "Gin tonic cổ điển với nhiều đá để giữ độ lạnh lâu.",
+    "category": "BEVERAGE",
+    "price": 26.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/gts-classic-b435d65.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Passion fruit martini",
+    "description": "Cocktail chanh dây tươi mát, thêm prosecco cho đặc biệt.",
+    "category": "BEVERAGE",
+    "price": 22.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/passionfruit-pornstar-martini-df3bbfb.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Mojito recipe",
+    "description": "Mojito cổ điển với bạc hà, rum trắng và chanh tươi.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/mojito-cocktails-150961e.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Hurricane cocktail",
+    "description": "Cocktail rum nhiệt đới sôi động cho bữa tiệc.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/hurricane-62b2c43.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Witch's brew",
+    "description": "Cocktail tím bí ẩn với vodka, rượu mâm xôi và curacao xanh.",
+    "category": "BEVERAGE",
+    "price": 24.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/09/Witchs-brew-1d3cec2.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Sea breeze",
+    "description": "Cocktail vodka, nam việt quất và bưởi cho mùa hè.",
+    "category": "BEVERAGE",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/440x400-sea-breeze-b31b188.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Gluten-free cupcakes",
+    "description": "Cupcake vani không gluten, đơn giản cho gia đình và bạn bè.",
+    "category": "DESSERT",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/09/GF-Cupcakes-bd4b78a.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Bronx cocktail",
+    "description": "Cocktail martini biến tấu thêm nước cam.",
+    "category": "BEVERAGE",
+    "price": 30.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/03/The-Bronx_02603-ebbe095.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Pink gin spritz",
+    "description": "Spritz gin hồng với rượu vải, nhẹ nhàng và tinh tế.",
+    "category": "BEVERAGE",
+    "price": 23.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2022/05/Pink-gin-spritz-c2be7c4.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Gin sling",
+    "description": "Gin sling thanh lịch với hương hương thảo và chanh.",
+    "category": "BEVERAGE",
+    "price": 34.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/04/gin-sling-3254030.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Rhubarb gin",
+    "description": "Gin ngâm đại hoàng theo mùa, uống cùng soda mát lạnh.",
+    "category": "BEVERAGE",
+    "price": 15.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/rhubarb-gin-93e56de.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Apple & elderflower gin cocktail",
+    "description": "Cocktail gin táo và hoa cơm cháy cho tiệc hè.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2013/07/Apple-elderflower-cocktail-b81a932.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Cosmopolitan cocktail",
+    "description": "Cocktail vodka, cam và nam việt quất chua ngọt.",
+    "category": "BEVERAGE",
+    "price": 21.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/cosmopolitan-7a6874f.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Bee's knees cocktail",
+    "description": "Cocktail gin, mật ong và chanh tươi sáng.",
+    "category": "BEVERAGE",
+    "price": 17.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2021/05/Bees-Knees-da2033e.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Irish whiskey old fashioned",
+    "description": "Old fashioned biến tấu với whisky Ireland và cordial hoa cơm cháy.",
+    "category": "BEVERAGE",
+    "price": 18.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/irish-whiskey-old-fashioned-a1b4d72.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Gluten-free carrot cake",
+    "description": "Bánh cà rốt không gluten, đơn giản dễ làm.",
+    "category": "DESSERT",
+    "price": 25.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/recipe-image-legacy-id-1201555_11-0f65d38.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Cosmopolitan",
+    "description": "Cosmopolitan cổ điển vị cam quýt ngọt thanh.",
+    "category": "BEVERAGE",
+    "price": 27.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/cosmo-3491e1f.jpg"
+  },
+  {
+    "restaurant_username": "quan_vodka_lounge",
+    "restaurant_name": "Quán Vodka Lounge",
+    "name": "Bloody mary recipe",
+    "description": "Bloody mary cổ điển, có thể điều chỉnh độ cay theo ý thích.",
+    "category": "BEVERAGE",
+    "price": 29.0,
+    "image": "https://images.immediate.co.uk/production/volatile/sites/30/2020/08/bloody-mary-a2983ba.jpg"
+  }
+]

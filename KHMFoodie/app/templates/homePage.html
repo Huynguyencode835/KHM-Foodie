@@ -1,0 +1,79 @@
+{% extends "layout/baseCustomer.html" %}
+
+{% block itemHeader %}
+    <div class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200 focus-within:border-primary focus-within:shadow-sm">
+        <span class="material-symbols-outlined text-secondary text-[18px]">search</span>
+        <input type="text" placeholder="Tìm món ăn, nhà hàng..."
+            class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full" />
+    </div>
+{% endblock %}
+
+{% block content %}
+<div id="hero-section"></div>
+
+<!-- Khám phá theo danh mục -->
+<section class="space-y-sm">
+    <div class="flex justify-between items-end">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Bạn thèm gì hôm nay?</h2>
+        <a class="text-primary font-label-md text-label-md hover:underline" href="#">Xem tất cả</a>
+    </div>
+    <div id="category-chips" class="flex gap-4 overflow-x-auto pt-4 pb-4 no-scrollbar">
+    </div>
+</section>
+<!-- Section 'Gợi ý cho bạn' -->
+<section class="space-y-sm">
+    <div class="flex items-center gap-3">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Gợi ý AI cho bạn</h2>
+        <span
+            class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-widest">Personalized</span>
+    </div>
+    <div id="suggestions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+
+    </div>
+</section>
+<!-- Section 'Nhà hàng nổi bật' -->
+<section class="space-y-sm">
+    <div class="flex justify-between items-end">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Nhà hàng nổi bật</h2>
+        <div class="flex gap-2">
+            <button id="scroll-left"
+                class="scroll-btn p-2 rounded-full border border-outline-variant hover:bg-primary-container hover:text-on-primary-container hover:border-primary hover:scale-110 active:scale-90 transition-all duration-200"><span
+                    class="material-symbols-outlined">chevron_left</span></button>
+            <button id="scroll-right"
+                class="scroll-btn p-2 rounded-full border border-outline-variant hover:bg-primary-container hover:text-on-primary-container hover:border-primary hover:scale-110 active:scale-90 transition-all duration-200"><span
+                    class="material-symbols-outlined">chevron_right</span></button>
+        </div>
+    </div>
+    <div id="restaurant-scroll"
+        class="flex overflow-x-auto gap-gutter pb-4 no-scrollbar snap-x snap-mandatory scroll-smooth">
+    </div>
+
+    <div class="flex justify-end">
+        <a class="text-primary font-label-md text-label-md flex items-center gap-1" href="#">
+            Xem thêm
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+        </a>
+    </div>
+</section>
+<script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
+<script>
+    renderHeroSection('evening');
+    
+    loadRestaurants().then(r => renderRestaurantList('restaurant-scroll', r));
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnLeft = document.getElementById('scroll-left');
+        const btnRight = document.getElementById('scroll-right');
+        const container = document.getElementById('restaurant-scroll');
+
+        if (container) {
+            btnLeft.addEventListener('click', function () {
+                container.scrollBy({ left: -400, behavior: 'smooth' });
+            });
+            btnRight.addEventListener('click', function () {
+                container.scrollBy({ left: 400, behavior: 'smooth' });
+            });
+        }
+    });
+</script>
+{% endblock %}
