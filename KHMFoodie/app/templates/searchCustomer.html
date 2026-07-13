@@ -1,0 +1,168 @@
+﻿{% extends "layout/baseCustomer.html" %}
+
+{% block itemHeader %}
+<div
+    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200 focus-within:border-primary focus-within:shadow-sm">
+    <span class="material-symbols-outlined text-secondary text-[18px]" id="header-search-icon">search</span>
+    <input type="text" id="header-search-input" value="{{ keyword if keyword else '' }}"
+        placeholder="Tìm món ăn, nhà hàng..."
+        class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full" />
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="flex flex-col md:flex-row gap-lg items-start">
+    <!-- Bộ Lọc -->
+    <aside id="filter-sidebar" class="w-full md:w-64 flex-shrink-0 space-y-lg md:sticky md:top-[160px] md:h-fit">
+        <div class="flex items-center justify-between">
+            <h2 class="font-headline-md text-headline-md">Bộ lọc</h2>
+            <button class="text-primary font-label-md hover:underline">Xóa tất cả</button>
+        </div>
+        <!-- Sắp Xếp Theo -->
+        <div class="space-y-sm">
+            <h3 class="font-label-md text-secondary-fixed-variant uppercase tracking-wider text-[11px]">Sắp xếp theo
+            </h3>
+            <div class="flex flex-col gap-xs">
+                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
+                    <input type="radio" name="sort" checked="" class="text-primary focus:ring-primary border-outline">
+                    <span class="text-body-md group-hover:text-primary transition-colors">Phù hợp nhất</span>
+                </label>
+                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
+                    <input type="radio" name="sort" class="text-primary focus:ring-primary border-outline">
+                    <span class="text-body-md group-hover:text-primary transition-colors">Đánh giá cao nhất</span>
+                </label>
+            </div>
+        </div>
+        <!-- Mức Giá - Range Slider -->
+        <div class="space-y-sm">
+            <h3 class="font-label-md text-secondary-fixed-variant uppercase tracking-wider text-[11px]">Mức giá</h3>
+            <div class="space-y-xs">
+                <div class="flex justify-between text-caption text-on-surface-variant">
+                    <span>0đ</span>
+                    <span id="price-display">50.000đ - 150.000đ</span>
+                    <span>500.000đ</span>
+                </div>
+                <div class="relative h-2 bg-surface-container-high rounded-full">
+                    <div id="price-track" class="absolute h-full bg-primary rounded-full"
+                        style="left: 10%; right: 30%;"></div>
+                    <input type="range" id="price-min" min="0" max="500" value="50" step="5"
+                        class="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
+                   [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer">
+                    <input type="range" id="price-max" min="0" max="500" value="150" step="5"
+                        class="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
+                   [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer">
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Horizontal Scroll -->
+        <div class="md:hidden overflow-x-auto flex gap-xs no-scrollbar pb-xs">
+            <span class="flex-none px-4 py-2 bg-primary text-white rounded-full font-label-md">Pizza</span>
+            <span
+                class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Healthy</span>
+            <span
+                class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Fast
+                Delivery</span>
+            <span
+                class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Promotions</span>
+        </div>
+    </aside>
+    <!-- Content Area -->
+    <div class="flex-1 min-w-0 space-y-lg">
+        <!-- Restaurant Grid -->
+        <div id="restaurant-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+            {% for r in restaurants %}
+            <div class="group bg-white rounded-xl overflow-hidden custom-shadow hover:-translate-y-1 transition-all duration-300 restaurant-card"
+                {% if loop.index> 6 %}style="display: none;"{% endif %}>
+                <div class="relative h-48">
+                    <img class="w-full h-full object-cover" src="{{ r.cover_image or r.avatar }}">
+                    <div
+                        class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg flex items-center gap-1">
+                        <span class="material-symbols-outlined text-tertiary text-[16px]"
+                            style="font-variation-settings: 'FILL' 1;">star</span>
+                        <span class="text-caption font-bold">5.0</span>
+                    </div>
+                </div>
+                <div class="p-sm space-y-xs">
+                    <h3 class="font-headline-md text-headline-md group-hover:text-primary transition-colors">{{ r.name
+                        }}</h3>
+                    <p class="text-on-surface-variant text-sm">{{ r.address }}</p>
+                    <div class="flex items-center gap-sm text-secondary font-label-md">
+                        <div class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-[18px]">schedule</span>
+                            <span>{{ r.opening_time }} - {{ r.closing_time }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <p class="col-span-full text-center py-10 text-on-surface-variant">Không tìm thấy nhà hàng nào phù hợp</p>
+            {% endfor %}
+        </div>
+        <!-- Xem Thêm Button -->
+        <div id="show-more-wrapper" class="text-center {% if restaurants|length <= 6 %}hidden{% endif %}">
+            <button id="show-more-btn" onclick="showAllRestaurants()"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200">
+                <span>Xem thêm nhà hàng</span>
+                <span class="material-symbols-outlined text-[18px]">expand_more</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function showAllRestaurants() {
+        const cards = document.querySelectorAll('.restaurant-card');
+        cards.forEach(function (card) { card.style.display = ''; });
+        document.getElementById('show-more-wrapper').classList.add('hidden');
+    }
+
+    window.addEventListener('scroll', function () {
+        const header = document.querySelector('header');
+
+        const searchBar = document.querySelector('#search-bar');
+        if (searchBar) {
+            const headerHeight = header.offsetHeight;
+            searchBar.style.top = headerHeight + 'px';
+        }
+
+        const sidebar = document.querySelector('#filter-sidebar');
+        if (sidebar && window.innerWidth >= 768) {
+            const searchBarHeight = searchBar ? searchBar.offsetHeight : 0;
+            sidebar.style.top = (header.offsetHeight + searchBarHeight) + 'px';
+        }
+    });
+
+    window.dispatchEvent(new Event('scroll'));
+
+
+    const priceMin = document.getElementById('price-min');
+    const priceMax = document.getElementById('price-max');
+    const priceDisplay = document.getElementById('price-display');
+    const priceTrack = document.getElementById('price-track');
+
+    function updatePrice() {
+        const min = parseInt(priceMin.value);
+        const max = parseInt(priceMax.value);
+
+        if (min > max) {
+            if (this === priceMin) priceMin.value = max;
+            else priceMax.value = min;
+        }
+
+        const minVal = parseInt(priceMin.value);
+        const maxVal = parseInt(priceMax.value);
+        const pMin = (minVal / 500) * 100;
+        const pMax = (maxVal / 500) * 100;
+
+        priceTrack.style.left = pMin + '%';
+        priceTrack.style.right = (100 - pMax) + '%';
+
+        const fmt = (v) => Math.round(v) + '.000đ';
+        priceDisplay.textContent = fmt(minVal) + ' - ' + fmt(maxVal);
+    }
+
+    priceMin.addEventListener('input', updatePrice);
+    priceMax.addEventListener('input', updatePrice);
+    updatePrice();
+</script>
+{% endblock %}
