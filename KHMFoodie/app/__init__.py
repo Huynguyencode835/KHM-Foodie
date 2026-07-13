@@ -10,7 +10,7 @@ import cloudinary
 
 
 load_dotenv()
-
+oauth = OAuth()
 login_manager = LoginManager()
 
 
@@ -35,6 +35,15 @@ def create_app(config_name='dev'):
 
     login_manager.init_app(app)
     db.init_app(app)
+    oauth.init_app(app)
+
+    oauth.register(
+        name='google',
+        client_id= os.getenv('CLIENT_ID_GOOGLE'),
+        client_secret=os.getenv('CLIENT_SECRET_GOOGLE'),
+        server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+        client_kwargs={'scope': 'openid email profile'}
+    )
 
     from app.routes import register_routes
     register_routes(app)
@@ -42,3 +51,7 @@ def create_app(config_name='dev'):
     route_api(app)
 
     return app
+
+
+
+

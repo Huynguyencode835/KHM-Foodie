@@ -37,6 +37,7 @@ class User(Base, UserMixin):
     email = Column(String(150), unique=True, nullable=True)
     address = Column(String(300), nullable=True)
     role = Column(Enum(UserRole), default=UserRole.CUSTOMER)
+    auth_provider = Column(String(50), default='local')
 
 
 class CuisineType(RoleEnum):
