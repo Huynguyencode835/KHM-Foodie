@@ -7,3 +7,6 @@ def index():
 
 def login_page():
     return render_template('loginPage.html')
+
+def register_page():
+    return render_template('registerPage.html')
