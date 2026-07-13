@@ -39,6 +39,17 @@ class LoginController:
         logout_user()
         return jsonify({"message": "Logged out"}), 200
 
+
+# def add_user(
+#     name,
+#     phonenumber=None,
+#     username=None,
+#     password=None,
+#     email=None,
+#     role=None,
+#     is_restaurant=False,
+#     **kwargs
+# ):
     @staticmethod
     def register():
         data = request.get_json()
@@ -61,5 +72,5 @@ class LoginController:
         if UserDao.get_by_username(username):
             return jsonify({"message": "Username already exists"}), 409
 
-        add_user(name, username, email, phone, password)
+        add_user(name, phone, username, password, email)
         return jsonify({"message": "Registration successful"}), 201
