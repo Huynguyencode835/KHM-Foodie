@@ -1,11 +1,12 @@
 {% extends "layout/baseCustomer.html" %}
 
 {% block itemHeader %}
-    <div class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200 focus-within:border-primary focus-within:shadow-sm">
-        <span class="material-symbols-outlined text-secondary text-[18px]">search</span>
-        <input type="text" placeholder="Tìm món ăn, nhà hàng..."
-            class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full" />
-    </div>
+<div
+    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200 focus-within:border-primary focus-within:shadow-sm">
+    <span id="header-search-icon" class="material-symbols-outlined text-secondary text-[18px]">search</span>
+    <input id="header-search-input" type="text" placeholder="Tìm món ăn, nhà hàng..."
+        class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full" />
+</div>
 {% endblock %}
 
 {% block content %}
@@ -58,7 +59,7 @@
 <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 <script>
     renderHeroSection('evening');
-    
+
     loadRestaurants().then(r => renderRestaurantList('restaurant-scroll', r));
 
     document.addEventListener('DOMContentLoaded', function () {

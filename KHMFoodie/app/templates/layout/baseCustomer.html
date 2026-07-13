@@ -153,7 +153,7 @@
 
             <!-- Right-side Actions -->
             <div class="flex items-center gap-2 md:gap-4">
-                
+
                 {% block itemHeader %}
                 {% endblock %}
                 <button
@@ -168,7 +168,8 @@
                     class="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:opacity-90 scale-95 transition-transform duration-150">Tài
                     khoản</button>
                 <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
-                    <span class="material-symbols-outlined text-on-surface-variant w-full h-full flex items-center justify-center">person</span>
+                    <span
+                        class="material-symbols-outlined text-on-surface-variant w-full h-full flex items-center justify-center">person</span>
                     <img class="w-full h-full object-cover" alt="Restaurant manager"
                         src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuE79fjBmxHUVv_BvdNlzIEWO9jEKjhClITdvVjkv7Q6EkuGE43EwV37stFCHCRpYHKT0jAAi7F2Hd6twj-NelJZn2Mp61A_6GRzLzV0n7oA_ebudlTpYSAMS-BWvpwuU15Y4hi6XGekAT2Emj4zf4S9lzrLUzB9bGGANOE3WDrttDxzrmDVW3essd2gi_pscfPs3Wnd3IYriEl3ZEB01wna4yewi3M2KEoCkfLLLvnilJN3pNyGwfi7eqgIcgdlapJ-4ytzQ1sT8">
                 </div>
@@ -292,6 +293,31 @@
             card.addEventListener('mouseleave', () => {
                 card.style.transform = 'translateY(0)';
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('header-search-input');
+            const searchIcon = document.getElementById('header-search-icon');
+
+            if (!searchInput) return;
+
+            function doSearch() {
+                const q = searchInput.value.trim();
+                if (q) {
+                    window.location.href = '/search_customer?q=' + encodeURIComponent(q);
+                }
+            }
+
+            searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    doSearch();
+                }
+            });
+            if (searchIcon) {
+                searchIcon.addEventListener('click', doSearch);
+            }
         });
     </script>
 </body>
