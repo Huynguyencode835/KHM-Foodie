@@ -30,6 +30,10 @@ class UserRole(RoleEnum):
 
 class User(Base, UserMixin):
     __tablename__ = 'user'
+    __mapper_args__ = {
+        'polymorphic_on': 'role',
+        'polymorphic_identity': UserRole.CUSTOMER,
+    }
     username = Column(String(150), unique=True, nullable=True)
     password = Column(String(150), nullable=True)
     phonenumber = Column(String(150), nullable=True)
@@ -68,7 +72,7 @@ class Restaurant(User):
     cover_image = Column(String(300), nullable=True)
 
     __mapper_args__ = {
-        'polymorphic_identity': 'restaurant'
+        'polymorphic_identity': UserRole.RESTAURANT
     }
 
 

@@ -12,6 +12,7 @@ import cloudinary
 load_dotenv()
 oauth = OAuth()
 login_manager = LoginManager()
+login_manager.login_view = 'login_bp.login_page'
 
 
 @login_manager.user_loader
