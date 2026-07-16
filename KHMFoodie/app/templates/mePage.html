@@ -1,0 +1,302 @@
+{% extends layout_template %}
+
+{% block page_title %}
+{% if role == "Restaurant" %}Hồ sơ nhà hàng{% elif role == "Customer" %}Hồ sơ cá nhân{% endif %}
+{% endblock %}
+
+{% block page_description %}
+{% if role == "Restaurant" %}Quản lý thông tin thương hiệu và vận hành cửa hàng của bạn tại đây.{% elif role == "Customer" %}Xem và chỉnh sửa thông tin cá nhân của bạn.{% endif %}
+{% endblock %}
+
+{% block itemHeader %}
+{% if role == "Restaurant" %}
+<div class="relative">
+    <span class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">notifications</span>
+    <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+</div>
+<div class="relative">
+    <span class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">chat</span>
+</div>
+<div class="relative">
+    <span class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">help</span>
+</div>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<div class="flex items-center space-x-3 cursor-pointer">
+    <div class="text-right hidden sm:block">
+        <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
+        <p class="text-caption text-secondary">Quản lý</p>
+    </div>
+    <a href="/me">
+    <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+        <img class="w-full h-full object-cover" alt="{{ current_user.name }}" src="{{ current_user.avatar }}">
+    </div>
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block content %}
+{% if role == "Restaurant" %}
+<div class="p-gutter max-w-5xl mx-auto w-full px-gutter">
+    <div class="mb-8">
+        <h2 class="font-headline-lg text-headline-lg text-on-background">Hồ sơ nhà hàng</h2>
+        <p class="text-body-md text-secondary">Quản lý thông tin thương hiệu và vận hành cửa hàng của bạn tại đây.</p>
+    </div>
+    <div class="space-y-gutter">
+        <!-- Section: Thương hiệu -->
+        <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] overflow-hidden">
+            <div class="p-6 border-b border-outline-variant flex justify-between items-center">
+                <h3 class="font-headline-md text-headline-md">Thương hiệu</h3>
+                <span class="material-symbols-outlined text-primary">verified</span>
+            </div>
+            <!-- Cover Photo & Logo -->
+            <div class="relative">
+                <div class="h-48 w-full relative bg-surface-container-high group">
+                    {% if current_user.cover_image %}
+                    <img class="w-full h-full object-cover" src="{{ current_user.cover_image }}" alt="Ảnh bìa nhà hàng">
+                    {% else %}
+                    <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCM3FpqMHQ3LrwOuGoX4NcogFKnyl7VCBP2ASzAO2b3981oCcqEq7vwn1A-E89i5H3rIZthDz3CXEfnsAMHRmLPqqOSMrutB9Rv9VX-wHvHOgXSIge0FcAMVbaBfOYCA3HCHkBeswOly5liMY25V0M9u3auj3Lt0P796fvlBjqN0rNhEdd2pHpH6HX9l8wSCsUnanwloJ_F8LAXbGOzIwWEIeML_jrzswGx5UGBgWHvQc-JXsofbFv3" alt="Ảnh bìa nhà hàng">
+                    {% endif %}
+                    <button class="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg flex items-center space-x-2 text-label-md font-bold hover:bg-white transition-colors shadow-lg">
+                        <span class="material-symbols-outlined text-[18px]">photo_camera</span>
+                        <span class="">Thay đổi ảnh bìa</span>
+                    </button>
+                </div>
+                <div class="absolute -bottom-12 left-8">
+                    <div class="relative group">
+                        <div class="w-32 h-32 rounded-xl bg-white p-1 shadow-xl border border-outline-variant overflow-hidden">
+                            <img class="w-full h-full object-cover rounded-lg" src="{{ current_user.avatar }}" alt="{{ current_user.name }}">
+                        </div>
+                        <button class="absolute -right-2 -bottom-2 bg-primary text-white p-2 rounded-full shadow-lg hover:scale-105 transition-transform">
+                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!-- Brand Details -->
+            <div class="pt-20 pb-8 px-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-label-md font-bold text-on-surface-variant">Tên nhà hàng</label>
+                        <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="restaurant-name" type="text" value="{{ current_user.name }}">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-label-md font-bold text-on-surface-variant">Loại hình ẩm thực</label>
+                        <select class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md appearance-none" id="restaurant-cuisine">
+                            {% for key, label in cuisine_types %}
+                            <option value="{{ key }}" {% if current_user.cuisine_type and current_user.cuisine_type.name == key %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-label-md font-bold text-on-surface-variant">Mô tả ngắn</label>
+                    <textarea class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md resize-none" id="restaurant-description" rows="3">{{ current_user.description if current_user.description else "Thương hiệu ẩm thực với nhiều năm kinh nghiệm." }}</textarea>
+                </div>
+            </div>
+        </section>
+        <!-- Section: Thông tin liên hệ -->
+        <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-8">
+            <div class="mb-6">
+                <h3 class="font-headline-md text-headline-md border-l-4 border-primary pl-4">Thông tin liên hệ</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-label-md font-bold text-on-surface-variant flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">call</span> Số điện thoại
+                    </label>
+                    <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="restaurant-phone" type="tel" value="{{ current_user.phonenumber or '090 123 4567' }}">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-label-md font-bold text-on-surface-variant flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">mail</span> Email kinh doanh
+                    </label>
+                    <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="restaurant-email" type="email" value="{{ current_user.email or 'contact@example.com' }}">
+                </div>
+                <div class="md:col-span-2 space-y-2">
+                    <label class="text-label-md font-bold text-on-surface-variant flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">location_on</span> Địa chỉ chi tiết
+                    </label>
+                    <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="restaurant-address" type="text" value="{{ current_user.address or 'Nhập địa chỉ nhà hàng' }}">
+                </div>
+            </div>
+        </section>
+        <!-- Section: Hoạt động -->
+        <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="font-headline-md text-headline-md border-l-4 border-primary pl-4">Hoạt động</h3>
+                <div class="flex items-center space-x-2 px-4 py-1.5 rounded-full bg-green-500/10">
+                    <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
+                    <span class="text-label-md font-bold text-green-500">{% if is_open %}Đang mở cửa{% else %}Đã đóng cửa{% endif %}</span>
+                </div>
+            </div>
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-primary-fixed rounded-lg">
+                            <span class="material-symbols-outlined text-primary">schedule</span>
+                        </div>
+                        <span class="text-body-md font-bold">Giờ mở cửa</span>
+                    </div>
+                    <div class="flex items-center space-x-4 md:col-span-2">
+                        <div class="flex-1">
+                            <input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="restaurant-opening-time" type="time" value="{{ opening_time }}">
+                        </div>
+                        <span class="font-bold text-secondary">Đến</span>
+                        <div class="flex-1">
+                            <input class="w-full px-4 py-2.5 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="restaurant-closing-time" type="time" value="{{ closing_time }}">
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="p-2 bg-secondary-fixed rounded-lg">
+                            <span class="material-symbols-outlined text-secondary">power_settings_new</span>
+                        </div>
+                        <span class="text-body-md font-bold">Trạng thái hiện tại</span>
+                    </div>
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-4">
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input {% if is_open %}checked=""{% endif %} class="sr-only peer" id="restaurant-status" type="checkbox">
+                                <div class="w-14 h-7 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary"></div>
+                            </label>
+                            <span class="text-label-md text-secondary italic">Tắt trạng thái này để tạm ngừng nhận đơn trên ứng dụng.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer Action -->
+        <div class="flex justify-end items-center gap-4 py-8 border-t border-outline-variant">
+            <button class="px-8 py-3 rounded-lg text-on-surface font-bold hover:bg-surface-container-high transition-colors text-label-md">Hủy bỏ</button>
+            <button id="save-btn" class="px-10 py-3 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary-container active:scale-95 transition-all text-label-md flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">save</span> Lưu thay đổi
+            </button>
+        </div>
+    </div>
+</div>
+
+{% elif role == "Customer" %}
+<div class="max-w-4xl mx-auto w-full space-y-gutter">
+    <!-- Customer Profile Header -->
+    <section class="bg-gradient-to-br from-primary to-primary-container rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div class="px-8 py-8">
+            <div class="flex flex-col sm:flex-row items-center sm:items-end gap-6">
+                <div class="w-28 h-28 rounded-2xl border-4 border-white/30 shadow-xl overflow-hidden bg-white/20">
+                    <img class="w-full h-full object-cover" src="{{ current_user.avatar }}" alt="{{ current_user.name }}">
+                </div>
+                <div class="flex-1 text-center sm:text-left">
+                    <h2 class="font-headline-lg text-headline-lg text-white">{{ current_user.name }}</h2>
+                    <p class="text-body-md text-white/80 flex items-center justify-center sm:justify-start gap-2">
+                        <span class="material-symbols-outlined text-[18px]">mail</span>
+                        {{ current_user.email or 'Chưa có email' }}
+                    </p>
+                    {% if current_user.phonenumber %}
+                    <p class="text-body-md text-white/80 flex items-center justify-center sm:justify-start gap-2">
+                        <span class="material-symbols-outlined text-[18px]">call</span>
+                        {{ current_user.phonenumber }}
+                    </p>
+                    {% endif %}
+                </div>
+                <button class="px-6 py-2.5 bg-white text-primary rounded-lg font-bold text-label-md hover:bg-white/90 active:scale-95 transition-all flex items-center gap-2">
+                    <span class="material-symbols-outlined text-[18px]">edit</span> Chỉnh sửa
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-gutter">
+        <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-6 flex items-center gap-4">
+            <div class="p-3 bg-primary-fixed rounded-xl">
+                <span class="material-symbols-outlined text-primary">shopping_bag</span>
+            </div>
+            <div>
+                <p class="text-headline-md font-bold">0</p>
+                <p class="text-caption text-secondary">Đơn hàng đã đặt</p>
+            </div>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-6 flex items-center gap-4">
+            <div class="p-3 bg-tertiary-fixed rounded-xl">
+                <span class="material-symbols-outlined text-tertiary">favorite</span>
+            </div>
+            <div>
+                <p class="text-headline-md font-bold">0</p>
+                <p class="text-caption text-secondary">Món ăn yêu thích</p>
+            </div>
+        </div>
+        <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-6 flex items-center gap-4">
+            <div class="p-3 bg-secondary-fixed rounded-xl">
+                <span class="material-symbols-outlined text-secondary">rate_review</span>
+            </div>
+            <div>
+                <p class="text-headline-md font-bold">0</p>
+                <p class="text-caption text-secondary">Đánh giá</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-8">
+        <h3 class="font-headline-md text-headline-md border-l-4 border-primary pl-4 mb-6">Hoạt động gần đây</h3>
+        <div class="text-center py-12 text-secondary">
+            <span class="material-symbols-outlined text-5xl mb-4">history</span>
+            <p class="text-body-lg mb-2">Chưa có hoạt động nào</p>
+            <p class="text-body-md">Đặt món và trải nghiệm sẽ xuất hiện tại đây.</p>
+            <a href="/" class="inline-block mt-4 px-6 py-2.5 bg-primary text-white rounded-lg font-bold text-label-md hover:opacity-90 transition-all">Khám phá ngay</a>
+        </div>
+    </section>
+
+    <!-- Customer Info -->
+    <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-8">
+        <h3 class="font-headline-md text-headline-md border-l-4 border-primary pl-4 mb-6">Thông tin cá nhân</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-2">
+                <label class="text-label-md font-bold text-on-surface-variant">Tên hiển thị</label>
+                <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="customer-name" type="text" value="{{ current_user.name }}">
+            </div>
+            <div class="space-y-2">
+                <label class="text-label-md font-bold text-on-surface-variant">Email</label>
+                <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="customer-email" type="email" value="{{ current_user.email or '' }}">
+            </div>
+            <div class="space-y-2">
+                <label class="text-label-md font-bold text-on-surface-variant">Số điện thoại</label>
+                <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="customer-phone" type="tel" value="{{ current_user.phonenumber or '' }}">
+            </div>
+            <div class="space-y-2">
+                <label class="text-label-md font-bold text-on-surface-variant">Địa chỉ</label>
+                <input class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md" id="customer-address" type="text" value="{{ current_user.address or '' }}">
+            </div>
+        </div>
+        <div class="flex justify-end gap-3 mt-6 pt-6 border-t border-outline-variant">
+            <a href="/api/auth/logout"
+               class="px-6 py-3 rounded-lg text-error font-bold hover:bg-error-container transition-all text-label-md flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">logout</span> Đăng xuất
+            </a>
+            <button id="customer-save-btn" class="px-8 py-3 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary-container active:scale-95 transition-all text-label-md flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">save</span> Lưu thay đổi
+            </button>
+        </div>
+    </section>
+</div>
+
+{% else %}
+<!-- Guest / Unknown role -->
+<div class="max-w-lg mx-auto text-center py-16">
+    <span class="material-symbols-outlined text-7xl text-primary mb-6">restaurant</span>
+    <h2 class="font-headline-lg text-headline-lg text-on-background mb-2">Chào mừng bạn đến với CraveConnect!</h2>
+    <p class="text-body-md text-secondary mb-8">Đăng nhập để xem thông tin cá nhân và quản lý tài khoản của bạn.</p>
+    <a href="/login" class="inline-block px-8 py-3 bg-primary text-white rounded-lg font-bold text-label-md hover:opacity-90 transition-all">Đăng nhập ngay</a>
+</div>
+{% endif %}
+{% endblock %}
+
+
+{% block scripts %}
+<style>
+    .input-error { border-color: #ba1a1a !important; outline-color: #ba1a1a !important; }
+</style>
+<script src="{{ url_for('static', filename='js/me.js') }}"></script>
+{% endblock %}
