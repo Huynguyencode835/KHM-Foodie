@@ -16,7 +16,8 @@
     <aside id="filter-sidebar" class="w-full md:w-64 flex-shrink-0 space-y-lg md:sticky md:top-[160px] md:h-fit">
         <div class="flex items-center justify-between">
             <h2 class="font-headline-md text-headline-md">Bộ lọc</h2>
-            <button class="text-primary font-label-md hover:underline">Xóa tất cả</button>
+            <button class="text-primary font-label-md hover:underline"
+                onclick="location.href='/search_customer?q={{ keyword }}'">Xóa tất cả</button>
         </div>
         <!-- Sắp Xếp Theo -->
         <div class="space-y-sm">
@@ -24,36 +25,33 @@
             </h3>
             <div class="flex flex-col gap-xs">
                 <label class="flex items-center gap-xs cursor-pointer group no-bounce">
-                    <input type="radio" name="sort" checked="" class="text-primary focus:ring-primary border-outline">
+                    <input type="radio" name="sort" value="best-match" checked
+                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
                     <span class="text-body-md group-hover:text-primary transition-colors">Phù hợp nhất</span>
                 </label>
                 <label class="flex items-center gap-xs cursor-pointer group no-bounce">
-                    <input type="radio" name="sort" class="text-primary focus:ring-primary border-outline">
+                    <input type="radio" name="sort" value="rating"
+                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
                     <span class="text-body-md group-hover:text-primary transition-colors">Đánh giá cao nhất</span>
+                </label>
+                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
+                    <input type="radio" name="sort" value="price-asc"
+                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
+                    <span class="text-body-md group-hover:text-primary transition-colors">Giá: Thấp → Cao</span>
+                </label>
+                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
+                    <input type="radio" name="sort" value="price-desc"
+                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
+                    <span class="text-body-md group-hover:text-primary transition-colors">Giá: Cao → Thấp</span>
                 </label>
             </div>
         </div>
-        <!-- Mức Giá - Range Slider -->
-        <div class="space-y-sm">
-            <h3 class="font-label-md text-secondary-fixed-variant uppercase tracking-wider text-[11px]">Mức giá</h3>
-            <div class="space-y-xs">
-                <div class="flex justify-between text-caption text-on-surface-variant">
-                    <span>0đ</span>
-                    <span id="price-display">50.000đ - 150.000đ</span>
-                    <span>500.000đ</span>
-                </div>
-                <div class="relative h-2 bg-surface-container-high rounded-full">
-                    <div id="price-track" class="absolute h-full bg-primary rounded-full"
-                        style="left: 10%; right: 30%;"></div>
-                    <input type="range" id="price-min" min="0" max="500" value="50" step="5"
-                        class="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
-                   [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer">
-                    <input type="range" id="price-max" min="0" max="500" value="150" step="5"
-                        class="absolute inset-0 w-full h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:cursor-pointer
-                   [&::-moz-range-thumb]:pointer-events-auto [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:bg-primary [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:cursor-pointer">
-                </div>
-            </div>
-        </div>
+
+        <button onclick="searchSubmit()"
+            class="w-full px-4 py-2 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">search</span>
+            <span>Tìm Kiếm</span>
+        </button>
         <!-- Mobile Horizontal Scroll -->
         <div class="md:hidden overflow-x-auto flex gap-xs no-scrollbar pb-xs">
             <span class="flex-none px-4 py-2 bg-primary text-white rounded-full font-label-md">Pizza</span>
@@ -83,15 +81,68 @@
             <p class="col-span-full text-center py-10 text-on-surface-variant">Không tìm thấy nhà hàng nào phù hợp</p>
             {% endfor %}
         </div>
-        <!-- Xem Thêm Button -->
-        <div id="show-more-wrapper" class="text-center {% if restaurants|length <= 6 %}hidden{% endif %}">
-            <button id="show-more-btn" onclick="showAllRestaurants()"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200">
-                <span>Xem thêm nhà hàng</span>
-                <span class="material-symbols-outlined text-[18px]">expand_more</span>
-            </button>
+
+        <!-- Nếu có dish results mới show -->
+        {% if dishes %}
+        <!-- Divider -->
+        <div class="flex items-center gap-4 my-lg">
+            <hr class="flex-1 border-outline-variant">
+            <h2 class="font-headline-md text-headline-md text-on-surface-variant whitespace-nowrap">Món ăn</h2>
+            <hr class="flex-1 border-outline-variant">
         </div>
+
+        <!-- Dish Grid -->
+        <div id="dish-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+            {% for d in dishes %}
+            <div class="group bg-white rounded-xl overflow-hidden custom-shadow hover:-translate-y-1 transition-all duration-300"
+                data-price="{{ d.price }}"">
+                <div class=" relative h-48">
+                <img class="w-full h-full object-cover" src="{{ d.image }}" alt="{{ d.name }}">
+                <!-- Price badge -->
+                <div class="absolute top-3 right-3 bg-primary text-on-primary px-2 py-1 rounded-lg font-label-md">
+                    {{ "{:,.0f}".format(d.price) }}đ
+                </div>
+                <!-- Category badge -->
+                <div
+                    class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-caption font-bold">
+                    {{ d.category.value if d.category else '' }}
+                </div>
+            </div>
+            <div class="p-sm space-y-xs">
+                <h3 class="font-headline-md text-headline-md group-hover:text-primary transition-colors">{{ d.name
+                    }}</h3>
+                <p class="text-on-surface-variant text-sm line-clamp-2">{{ d.description }}</p>
+                <!-- Restaurant info -->
+                <div class="flex items-center gap-2 pt-1">
+                    <img class="w-6 h-6 rounded-full object-cover" src="{{ d.restaurant.avatar }}">
+                    <span class="text-body-md text-secondary">{{ d.restaurant.name }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
+
+    <!-- Xem thêm cho dish -->
+    <div id="show-more-dish-wrapper" class="text-center mt-md {% if dishes|length <= 6 %}hidden{% endif %}">
+        <button id="show-more-dish-btn"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200"
+            onclick="showAllDishes()">
+            <span>Xem thêm món ăn</span>
+            <span class="material-symbols-outlined text-[18px]">expand_more</span>
+        </button>
+    </div>
+    {% endif %}
+
+
+    <!-- Xem Thêm Button -->
+    <div id="show-more-wrapper" class="text-center {% if restaurants|length <= 6 %}hidden{% endif %}">
+        <button id="show-more-btn" onclick="showAllRestaurants()"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200">
+            <span>Xem thêm nhà hàng</span>
+            <span class="material-symbols-outlined text-[18px]">expand_more</span>
+        </button>
+    </div>
+</div>
 </div>
 
 <script>
@@ -121,34 +172,48 @@
     window.dispatchEvent(new Event('scroll'));
 
 
-    const priceMin = document.getElementById('price-min');
-    const priceMax = document.getElementById('price-max');
-    const priceDisplay = document.getElementById('price-display');
-    const priceTrack = document.getElementById('price-track');
 
-    function updatePrice() {
-        const min = parseInt(priceMin.value);
-        const max = parseInt(priceMax.value);
 
-        if (min > max) {
-            if (this === priceMin) priceMin.value = max;
-            else priceMax.value = min;
-        }
-
-        const minVal = parseInt(priceMin.value);
-        const maxVal = parseInt(priceMax.value);
-        const pMin = (minVal / 500) * 100;
-        const pMax = (maxVal / 500) * 100;
-
-        priceTrack.style.left = pMin + '%';
-        priceTrack.style.right = (100 - pMax) + '%';
-
-        const fmt = (v) => Math.round(v) + '.000đ';
-        priceDisplay.textContent = fmt(minVal) + ' - ' + fmt(maxVal);
+    function showAllDishes() {
+        const cards = document.querySelectorAll('.dish-card');
+        cards.forEach(function (card) { card.style.display = ''; });
+        document.getElementById('show-more-dish-wrapper').classList.add('hidden');
     }
 
-    priceMin.addEventListener('input', updatePrice);
-    priceMax.addEventListener('input', updatePrice);
-    updatePrice();
+
+    function searchSubmit() {
+        const input = document.getElementById('header-search-input');
+        const keyword = input ? input.value.trim() : '';
+        location.href = '/search_customer?q=' + encodeURIComponent(keyword);
+    }
+
+
+    function applySort() {
+        const selected = document.querySelector('input[name="sort"]:checked');
+        if (!selected) return;
+        const value = selected.value;
+
+        const grid = document.getElementById('dish-grid');
+        if (!grid) return;
+
+        const cards = Array.from(grid.querySelectorAll('.dish-card'));
+
+        if (value === 'best-match') {
+            // reload lại trang để về thứ tự mặc định
+            location.href = '/search_customer?q={{ keyword }}';
+            return;
+        }
+
+        if (value === 'price-asc' || value === 'price-desc') {
+            cards.sort((a, b) => {
+                const pA = parseFloat(a.dataset.price);
+                const pB = parseFloat(b.dataset.price);
+                return value === 'price-asc' ? pA - pB : pB - pA;
+            });
+            cards.forEach(card => grid.appendChild(card));
+        }
+
+        // "Đánh giá cao nhất" giữ nguyên vì chưa có data rating
+    }
 </script>
 {% endblock %}

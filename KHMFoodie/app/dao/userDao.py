@@ -2,7 +2,7 @@ from app.models.model import User, hash_password
 from app.extensions import db
 import hashlib
 from app import db
-from app.models.model import User, Restaurant, UserRole
+from app.models.model import User, Restaurant, UserRole, CuisineType
 
 class UserDao:
 
@@ -13,6 +13,33 @@ class UserDao:
     @staticmethod
     def get_by_id(user_id):
         return User.query.get(int(user_id))
+
+    @staticmethod
+    def update_profile(user_id, data):
+        user = User.query.get(int(user_id))
+        if not user:
+            return None
+
+        # Base User fields (shared by Restaurant)
+        for field in ['name', 'phonenumber', 'email', 'address', 'avatar']:
+            if field in data and data[field] is not None:
+                setattr(user, field, data[field])
+
+        # Restaurant-specific fields
+        if user.role == UserRole.RESTAURANT:
+            restaurant = Restaurant.query.get(int(user_id))
+            if restaurant:
+                for field in ['description', 'cover_image', 'opening_time', 'closing_time', 'tax_code', 'status']:
+                    if field in data and data[field] is not None:
+                        setattr(restaurant, field, data[field])
+                if 'cuisine_type' in data and data['cuisine_type'] is not None:
+                    try:
+                        restaurant.cuisine_type = CuisineType[data['cuisine_type']]
+                    except (KeyError, ValueError):
+                        pass
+
+        db.session.commit()
+        return user
 
 def add_user(
     name,
