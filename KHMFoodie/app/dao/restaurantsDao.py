@@ -1,5 +1,5 @@
 from app.models.model import Restaurant
-
+from app.models.model import Dish
 
 class RestaurantsDao:
     
@@ -18,4 +18,13 @@ class RestaurantsDao:
         return Restaurant.query.filter(
             Restaurant.active == True,
             Restaurant.name.ilike(f"%{keyword}%")
+        ).all()
+
+    @staticmethod
+    def search_dishes(keyword):
+        if not keyword:
+            return []
+        return Dish.query.filter(
+            Dish.active == True,
+            Dish.name.ilike(f"%{keyword}%")
         ).all()
