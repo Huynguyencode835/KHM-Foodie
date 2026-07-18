@@ -11,8 +11,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
         rel="stylesheet">
+    {% block head %}{% endblock %}
     <!-- Đã xóa <link> Material Symbols bị trùng lặp -->
-    <!-- Tailwind Configuration -->
     <script id="tailwind-config">
         tailwind.config = {
             darkMode: "class",
@@ -153,6 +153,14 @@
             </div>
         </div>
         <nav class="flex-grow flex flex-col space-y-1">
+            {% if current_user.role.value == 'Admin' %}
+            {% set sidebar_menu_items = [
+            ('dashboard', 'Dashboard', 'dashboard', '/admin/'),
+            ('users', 'Người dùng', 'people', '/admin/user/'),
+            ('restaurants', 'Nhà hàng', 'storefront', '/admin/restaurant/'),
+            ('dishes', 'Món ăn', 'restaurant_menu', '/admin/dish/'),
+            ] %}
+            {% else %}
             {% set sidebar_menu_items = [
             ('dashboard', 'Tổng quan', 'dashboard', '#'),
             ('orders', 'Đơn hàng', 'receipt_long', '#'),
@@ -163,31 +171,31 @@
             ('chat', 'Tin nhắn', 'chat', '#'),
             ('settings', 'Cài đặt', 'settings', '#'),
             ] %}
+            {% endif %}
 
             {% for key, label, icon, endpoint  in sidebar_menu_items %}
-            <a class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-all group
-          {% if nav_active == key %}
-            bg-primary-container text-on-primary-container font-bold translate-x-1
-          {% else %}
-            text-on-surface-variant hover:bg-surface-variant
-          {% endif %}" href="{{ endpoint }}">
+            <a class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg transition-all text-on-surface-variant hover:text-on-surface-variant hover:no-underline no-underline"
+               href="{{ endpoint }}" data-sidebar-key="{{ key }}"
+               data-sidebar-endpoint="{{ endpoint }}">
                 <span class="material-symbols-outlined">{{ icon }}</span>
                 <span class="font-label-md text-label-md">{{ label }}</span>
             </a>
             {% endfor %}
         </nav>
         <div class="pt-sm border-t border-outline-variant space-y-1">
+            {% if current_user.role.value != 'Admin' %}
             <button
                 class="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-tertiary text-on-tertiary rounded-xl font-bold mb-4 hover:opacity-90 transition-opacity">
                 <span class="material-symbols-outlined text-[18px]">storefront</span>
                 <span class="text-label-md">Mở/Đóng cửa hàng</span>
             </button>
-            <a class="flex items-center space-x-3 px-4 py-2 text-on-surface-variant hover:bg-surface-variant rounded-lg transition-all"
+            {% endif %}
+            <a class="flex items-center space-x-3 px-4 py-2 text-on-surface-variant hover:text-on-surface-variant hover:no-underline no-underline hover:bg-surface-variant rounded-lg transition-all"
                 href="#">
                 <span class="material-symbols-outlined">help</span>
                 <span class="font-label-md text-label-md">Trợ giúp</span>
             </a>
-            <a class="flex items-center space-x-3 px-4 py-2 text-error hover:bg-error-container rounded-lg transition-all"
+            <a class="flex items-center space-x-3 px-4 py-2 text-error hover:text-error hover:no-underline no-underline hover:bg-error-container rounded-lg transition-all"
                 href="/api/auth/logout">
                 <span class="material-symbols-outlined">logout</span>
                 <span class="font-label-md text-label-md">Đăng xuất</span>
@@ -278,8 +286,23 @@
     </main>
 
     {% block scripts %}{% endblock %}
-    <!-- Micro-interactions Script -->
     <script>
+        // --- Active sidebar bằng JavaScript ---
+        (function () {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                var endpoint = link.dataset.sidebarEndpoint;
+                var isActive = currentPath === endpoint
+                    || currentPath.startsWith(endpoint + '/')
+                    || (endpoint !== '/admin/' && endpoint !== '#' && currentPath.startsWith(endpoint));
+
+                if (isActive) {
+                    link.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
+                    link.classList.add('bg-primary-container', 'text-on-primary-container', 'hover:text-on-primary-container', 'font-bold', 'translate-x-1');
+                }
+            });
+        })();
+
         // Simple toggle simulation for demo
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', function () {

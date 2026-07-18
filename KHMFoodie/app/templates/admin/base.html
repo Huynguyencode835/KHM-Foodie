@@ -1,0 +1,51 @@
+{% extends "layout/baseRestaurent.html" %}
+
+{% block head %}
+{% import 'admin/static.html' as admin_static with context %}
+<link href="{{ admin_static.url(filename='bootstrap/bootstrap4/css/bootstrap.min.css', v='4.6.2') }}" rel="stylesheet">
+<link href="{{ admin_static.url(filename='admin/css/bootstrap4/admin.css', v='1.1.1') }}" rel="stylesheet">
+<link href="{{ admin_static.url(filename='bootstrap/bootstrap4/css/font-awesome.min.css', v='4.7.0') }}" rel="stylesheet">
+{% block head_css %}{% endblock %}
+{% block head_tail %}{% endblock %}
+{% endblock %}
+
+{% block content %}
+{% block messages %}
+{% with messages = get_flashed_messages(with_categories=True) %}
+{% if messages %}
+<div class="px-gutter pt-4">
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% endwith %}
+{% endblock %}
+
+<div class="p-gutter w-full">
+    {% block page_title %}
+    <h4 class="font-headline-md text-headline-md mb-6">
+        {% if admin_view.category %}{{ admin_view.category }} - {% endif %}
+        {{ admin_view.name }}
+    </h4>
+    {% endblock %}
+
+    {% block body %}{% endblock %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% import 'admin/static.html' as admin_static with context %}
+<script src="{{ admin_static.url(filename='vendor/jquery.min.js', v='3.5.1') }}"></script>
+<script src="{{ admin_static.url(filename='bootstrap/bootstrap4/js/popper.min.js') }}"></script>
+<script src="{{ admin_static.url(filename='bootstrap/bootstrap4/js/bootstrap.min.js', v='4.6.2') }}"></script>
+<script src="{{ admin_static.url(filename='vendor/moment.min.js', v='2.9.4') }}"></script>
+<script src="{{ admin_static.url(filename='vendor/select2/select2.min.js', v='4.2.1') }}"></script>
+<script src="{{ admin_static.url(filename='admin/js/helpers.js', v='1.0.0') }}"></script>
+{% block tail_js %}{% endblock %}
+{% block tail %}{% endblock %}
+{% endblock %}

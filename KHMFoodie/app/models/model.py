@@ -60,6 +60,15 @@ class CuisineType(RoleEnum):
     OTHER = "Khác"
 
 
+class Admin(User):
+    __tablename__ = 'admin'
+    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+
+    __mapper_args__ = {
+        'polymorphic_identity': UserRole.ADMIN
+    }
+
+
 class Restaurant(User):
     __tablename__ = 'restaurant'
     id = Column(Integer, ForeignKey('user.id'), primary_key=True)
