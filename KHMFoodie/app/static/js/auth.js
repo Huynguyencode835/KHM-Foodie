@@ -39,7 +39,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         });
         const data = await res.json();
         if (res.ok) {
-            window.location.href = '/';
+            window.location.href = data.redirect || '/';
         } else {
             alert(data.message || 'Đăng nhập thất bại');
         }

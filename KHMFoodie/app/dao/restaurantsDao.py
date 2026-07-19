@@ -1,5 +1,6 @@
 from app.models.model import Restaurant
 from app.models.model import Dish
+from sqlalchemy import func
 
 class RestaurantsDao:
     
@@ -7,7 +8,7 @@ class RestaurantsDao:
     def get_all_restaurants():
         return Restaurant.query.with_entities(
             Restaurant.id,
-            Restaurant.cover_image,
+            func.coalesce(Restaurant.cover_image, Restaurant.avatar).label("cover_image"),
             Restaurant.name,
             Restaurant.cuisine_type,
             Restaurant.address,

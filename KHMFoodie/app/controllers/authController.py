@@ -21,18 +21,24 @@ class LoginController:
             return jsonify({"message": "Username and password required"}), 400
 
         user = UserDao.get_by_username(username)
-        if user and user.password == hash_password(password):
-            login_user(user, remember=remember)
+        check_active = UserDao.check_userActive(UserDao, user)
+        print("check_active:", check_active)
+        if check_active is False:
+            return jsonify({"message": "User account is inactive"}), 403
+        else:
+            if user and user.password == hash_password(password):
+                login_user(user, remember=remember)
+
+            redirect_url = '/admin/' if user.role == UserRole.ADMIN else '/'
             return jsonify({
                 "message": "Login successful",
+                "redirect": redirect_url,
                 "user": {
                     "id": user.id,
                     "name": user.name,
                     "role": user.role.value if user.role else None
                 }
             }), 200
-
-        return jsonify({"message": "Invalid credentials"}), 401
 
     @staticmethod
     def logout():

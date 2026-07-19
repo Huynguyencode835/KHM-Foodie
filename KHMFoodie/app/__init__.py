@@ -6,10 +6,17 @@ from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 from app.extensions import db
+from flask_admin import Admin
+from app.models.model import User, Restaurant, Dish
+from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView
+from flask_admin.theme import Bootstrap4Theme
+
 import cloudinary
 
 
 load_dotenv()
+
+# Extensions
 oauth = OAuth()
 login_manager = LoginManager()
 login_manager.login_view = 'login_bp.login_page'
@@ -21,9 +28,9 @@ def load_user(user_id):
     return User.query.get(int(user_id))
 
 
-
+# Cloudinary
 cloudinary.config(
-    cloud_name= os.getenv('CLOUDINARY_CLOUD_NAME'),
+    cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
     api_key=os.getenv('CLOUDINARY_API_KEY'),
     api_secret=os.getenv('CLOUDINARY_API_SECRET')
 )
@@ -34,25 +41,35 @@ def create_app(config_name='dev'):
 
     app.config.from_object(config_map[config_name])
 
+    # Init extensions
     login_manager.init_app(app)
     db.init_app(app)
-    oauth.init_app(app)
 
+    # Admin
+    from app.models.model import User, Restaurant, Dish
+    from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView
+    from flask_admin.theme import Bootstrap4Theme
+
+    admin = Admin(app, name='KHM Foodie Admin', theme=Bootstrap4Theme(), index_view=AdminSecureIndexView())
+    admin.add_view(UserAdmin(User, db.session))
+    admin.add_view(RestaurantAdmin(Restaurant, db.session))
+    admin.add_view(DishAdmin(Dish, db.session))
+
+    # OAuth
+    oauth.init_app(app)
     oauth.register(
         name='google',
-        client_id= os.getenv('CLIENT_ID_GOOGLE'),
+        client_id=os.getenv('CLIENT_ID_GOOGLE'),
         client_secret=os.getenv('CLIENT_SECRET_GOOGLE'),
         server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
         client_kwargs={'scope': 'openid email profile'}
     )
 
+    # Routes
     from app.routes import register_routes
     register_routes(app)
+
     from app.routes.routes_API.index import route_api
     route_api(app)
-    
+
     return app
-
-
-
-

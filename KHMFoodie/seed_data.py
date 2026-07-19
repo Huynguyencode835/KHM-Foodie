@@ -20,12 +20,13 @@ def seed():
         db.create_all()
 
         # ---------- Admin & Customer mẫu ----------
+        # Admin: username=admin, password=123456
         new_admin = User(
             name="Quản trị viên",
             username="admin",
-            password=hash_password("admin"),
+            role = UserRole.ADMIN,
+            password=hash_password("123456"),
             avatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjno7hGrNNuPZwaFZ8U8Mhr_Yq39rzd_p0YN_HVYk6KFmMETjtgd9bwl0UhU6g4xDDGg&usqp=CAU",
-            role=UserRole.ADMIN
         )
 
         new_customer = User(

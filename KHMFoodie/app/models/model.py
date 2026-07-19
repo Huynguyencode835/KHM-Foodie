@@ -31,7 +31,6 @@ class UserRole(RoleEnum):
 class User(Base, UserMixin):
     __tablename__ = 'user'
     __mapper_args__ = {
-        'polymorphic_on': 'role',
         'polymorphic_identity': UserRole.CUSTOMER,
     }
     username = Column(String(150), unique=True, nullable=True)
