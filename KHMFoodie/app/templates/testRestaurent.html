@@ -1,0 +1,23 @@
+{% extends "layout/baseRestaurent.html" %}
+{% block page_title %}Quản lý Khuyến mãi{% endblock %}
+{% block page_description %}
+    Tạo và quản lý các chương trình khuyến mãi để thu hút khách hàng và tăng doanh số bán hàng.
+{% endblock %}
+{% block itemHeader %}
+    <div class="flex items-center gap-sm">
+        <div
+            class="hidden sm:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant">
+            <span class="material-symbols-outlined text-secondary">calendar_today</span>
+            <span class="font-label-md text-label-md">01 Th10, 2023 - 31 Th10, 2023</span>
+            <span class="material-symbols-outlined text-secondary">expand_more</span>
+        </div>
+        <button
+            class="bg-primary text-on-primary px-sm py-2 rounded-lg font-label-md text-label-md flex items-center gap-2 hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined">download</span>
+            Xuất báo cáo
+        </button>
+    </div>
+{% endblock %}
+{% block content %}
+
+{% endblock %}

@@ -1,0 +1,465 @@
+﻿{% extends "layout/baseCustomer.html" %}
+
+{% block content %}
+<div class="restaurant-detail">
+    <!-- Restaurant Hero Section -->
+    <section class="relative h-[350px] md:h-[450px] overflow-hidden" style="
+    border-radius: 35px;
+">
+        <div class="absolute inset-0 bg-cover bg-center"
+            data-alt="High-resolution, appetizing close-up of a rustic artisan pizza with bubbling mozzarella, fresh basil leaves, and a slightly charred crust, sitting on a wooden peel inside a stone oven. Warm, atmospheric golden lighting creates a premium, artisanal feel. The background features a clean, modern kitchen environment with vibrant orange accents consistent with a corporate modern food delivery brand."
+            data-restaurant-hero>
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+        <div
+            class="absolute bottom-0 left-0 w-full p-gutter md:px-xl md:py-lg flex flex-col md:flex-row justify-between items-end gap-md">
+            <div class="text-white space-y-xs">
+                <h1 class="font-display-lg text-display-lg leading-tight" data-restaurant-name>Pizza Lab - Artisan Pizza
+                </h1>
+                <p class="text-body-md opacity-80" data-restaurant-cuisine></p>
+                <p class="text-body-sm opacity-70" data-restaurant-address></p>
+                <div class="flex flex-wrap items-center gap-md text-body-md opacity-90">
+                    <span class="flex items-center gap-xs"><span
+                            class="material-symbols-outlined fill-icon text-tertiary-fixed">star</span> 4.8 (500+
+                        reviews)</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+                    <span class="flex items-center gap-xs"><span class="material-symbols-outlined">schedule</span>
+                        <span data-restaurant-hours>20-30 phút</span></span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-white/40"></span>
+                    <span class="flex items-center gap-xs"><span class="material-symbols-outlined">distance</span>
+                        1.2km</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-white/40" data-status-dot></span>
+                    <span class="flex items-center gap-xs">
+                        <span data-restaurant-status
+                            class="px-sm py-base rounded-full font-label-md text-label-md"></span>
+                    </span>
+                </div>
+            </div>
+            <div class="flex gap-sm">
+                <button
+                    class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-md py-sm rounded-xl font-label-md flex items-center gap-xs hover:bg-white/20 transition-all">
+                    <span class="material-symbols-outlined">favorite</span> Yêu thích
+                </button>
+                <button
+                    class="bg-white/10 backdrop-blur-md border border-white/20 text-white px-md py-sm rounded-xl font-label-md flex items-center gap-xs hover:bg-white/20 transition-all">
+                    <span class="material-symbols-outlined">share</span> Chia sẻ
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- Content Grid -->
+    <div class="max-w-container-max mx-auto px-gutter py-lg">
+        <div class="flex gap-lg border-b border-outline-variant mb-md">
+            <div class="flex gap-lg">
+                <button class="tab-btn pb-sm border-b-2 border-primary text-primary font-label-md transition-colors"
+                    data-tab="menu">
+                    Thực đơn
+                </button>
+                <button
+                    class="tab-btn pb-sm border-b-2 border-transparent text-secondary hover:text-on-surface font-label-md transition-colors"
+                    data-tab="info">
+                    Thông tin nhà hàng
+                </button>
+                <!-- <button
+                    class="tab-btn pb-sm border-b-2 border-transparent text-secondary hover:text-on-surface font-label-md transition-colors"
+                    data-tab="reviews">
+                    Đánh giá
+                </button> -->
+            </div>
+            <div class="relative flex-grow max-w-md">
+                <span
+                    class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary">search</span>
+                <input id="dish-search-input"
+                    class="w-full pl-10 pr-4 py-2 rounded-full border border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary text-body-md"
+                    placeholder="Tìm kiếm món ăn..." type="text">
+            </div>
+        </div>
+
+        <div id="tab-menu" class="tab-panel">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+                <div class="lg:col-span-8">
+                    <div class="flex gap-sm overflow-x-auto no-scrollbar pb-xs">
+                        <button
+                            class="dish-category-btn px-md py-xs rounded-full bg-primary text-white font-label-md whitespace-nowrap"
+                            data-category="all">Tất cả</button>
+                        <button
+                            class="dish-category-btn px-md py-xs rounded-full bg-surface-container-high text-secondary hover:bg-primary-container hover:text-primary transition-colors font-label-md whitespace-nowrap"
+                            data-category="Món chính">Món chính</button>
+                        <button
+                            class="dish-category-btn px-md py-xs rounded-full bg-surface-container-high text-secondary hover:bg-primary-container hover:text-primary transition-colors font-label-md whitespace-nowrap"
+                            data-category="Món khai vị">Món khai vị</button>
+                        <button
+                            class="dish-category-btn px-md py-xs rounded-full bg-surface-container-high text-secondary hover:bg-primary-container hover:text-primary transition-colors font-label-md whitespace-nowrap"
+                            data-category="Món tráng miệng">Món tráng miệng</button>
+                        <button
+                            class="dish-category-btn px-md py-xs rounded-full bg-surface-container-high text-secondary hover:bg-primary-container hover:text-primary transition-colors font-label-md whitespace-nowrap"
+                            data-category="Đồ uống">Đồ uống</button>
+                        <button
+                            class="dish-category-btn px-md py-xs rounded-full bg-surface-container-high text-secondary hover:bg-primary-container hover:text-primary transition-colors font-label-md whitespace-nowrap"
+                            data-category="Món ăn kèm">Món ăn kèm</button>
+                    </div>
+
+                    <div id="dish-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-md pb-md">
+                        <div
+                            class="bg-surface-container-lowest rounded-xl shadow-sm border border-transparent hover:border-primary-fixed transition-all overflow-hidden group">
+                            <div class="h-40 bg-cover bg-center"
+                                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuACJFhD_CF7NsmM34jK7pncMLA0SQLdYh2lNio-dgcNQ5aZKYQB5BzdLfmvPVHRSIBJDppyMggbiGGJHIgER5VlUZDq9FARtjLb9vfauWLXu9YgZJ9Sdi6yCfXFthSxQbeGOnvtFgP83gbbAuN-qmtivL-VB6iekQXYp4BbmFaq5IQDSpUsXhbac671P3D1zwnh_077lBx1gaHAWzGK65SeHc6EMKltHi2zded75mZzs1hEgR2Yr0haKGQo_0Y-0P36eIlTR8PpjDI')">
+                            </div>
+                            <div class="p-sm">
+                                <div class="flex justify-between items-start mb-xs">
+                                    <h3 class="font-headline-md">Classic Bruschetta</h3>
+                                    <span class="font-headline-md text-primary">95.000đ</span>
+                                </div>
+                                <p class="text-body-md text-secondary line-clamp-2 mb-sm">Bánh mì nướng bơ tỏi, cà chua
+                                    bi, húng quế và sốt balsamic cô đặc.</p>
+                                <button
+                                    class="w-full py-xs bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center justify-center gap-xs"
+                                    onclick="addToCart('Bruschetta', 95000)">
+                                    <span class="material-symbols-outlined text-sm">add</span> Thêm vào giỏ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <aside class="lg:col-span-4 hidden lg:block">
+                    <div class="sticky top-24 space-y-md">
+                        <div
+                            class="bg-white rounded-2xl shadow-[0px_10px_30px_rgba(0,0,0,0.12)] p-md border border-outline-variant/20 overflow-hidden">
+                            <div class="flex items-center justify-between mb-sm">
+                                <h3 class="font-headline-md text-headline-md">Giỏ hàng của bạn</h3>
+                                <span class="material-symbols-outlined text-secondary">shopping_bag</span>
+                            </div>
+                            <div class="flex items-start gap-xs bg-surface-container-low p-sm rounded-lg mb-md">
+                                <span class="material-symbols-outlined text-sm text-primary">info</span>
+                                <p class="text-caption text-secondary">Mỗi nhà hàng có giỏ hàng riêng. Đang xem <span
+                                        data-restaurant-name-sidebar>Pizza Lab</span>.</p>
+                            </div>
+                            <div class="space-y-sm max-h-[300px] overflow-y-auto no-scrollbar mb-md" id="cart-items">
+                                <div class="flex justify-between items-center py-xs border-b border-outline-variant/10">
+                                    <div>
+                                        <p class="font-label-md">Truffle &amp; Forest Fungi</p>
+                                        <p class="text-caption text-secondary">1 x 285.000đ</p>
+                                    </div><span class="font-label-md text-on-surface">285.000đ</span>
+                                </div>
+                                <div class="flex justify-between items-center py-xs border-b border-outline-variant/10">
+                                    <div>
+                                        <p class="font-label-md">Burrata Prosciutto</p>
+                                        <p class="text-caption text-secondary">1 x 320.000đ</p>
+                                    </div><span class="font-label-md text-on-surface">320.000đ</span>
+                                </div>
+                            </div>
+                            <div class="border-t border-outline-variant pt-md space-y-xs">
+                                <div class="flex justify-between text-body-md text-secondary">
+                                    <span>Tạm tính</span>
+                                    <span id="cart-subtotal">605.000đ</span>
+                                </div>
+                                <div class="flex justify-between text-body-md text-secondary">
+                                    <span>Phí giao hàng (1.2km)</span>
+                                    <span>15.000đ</span>
+                                </div>
+                                <div
+                                    class="flex justify-between font-headline-md text-headline-md text-on-surface pt-sm">
+                                    <span>Tổng cộng</span>
+                                    <span class="text-primary" id="cart-total">620.000đ</span>
+                                </div>
+                            </div>
+                            <button
+                                class="w-full mt-md py-sm bg-primary text-white rounded-xl font-headline-md hover:bg-primary-container disabled:bg-secondary-fixed disabled:text-secondary transition-all"
+                                id="checkout-btn">
+                                Thanh toán ngay
+                            </button>
+                        </div>
+                        <div
+                            class="bg-gradient-to-br from-tertiary-container to-tertiary rounded-2xl p-md text-white relative overflow-hidden group">
+                            <div class="relative z-10">
+                                <h4 class="font-headline-md mb-xs">Giảm 20.000đ</h4>
+                                <p class="text-caption opacity-80 mb-md">Dành riêng cho đơn hàng trên 300k tại Pizza
+                                    Lab.</p>
+                                <button class="bg-white text-tertiary px-sm py-xs rounded-lg text-caption font-bold">LẤY
+                                    MÃ NGAY</button>
+                            </div>
+                            <span
+                                class="material-symbols-outlined absolute -right-4 -bottom-4 text-7xl opacity-20 transform -rotate-12 group-hover:scale-125 transition-transform">local_activity</span>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <div id="tab-info" class="tab-panel hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+                <div
+                    class="md:col-span-2 bg-surface-container-lowest p-md rounded-xl shadow-sm border border-surface-variant">
+                    <div class="flex items-center gap-xs mb-sm">
+                        <span class="material-symbols-outlined text-primary">info</span>
+                        <h2 class="font-headline-md text-headline-md">Về chúng tôi</h2>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed"
+                        data-restaurant-info-description>
+                    </p>
+                </div>
+                <div
+                    class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-surface-variant hover:border-primary/30 transition-colors">
+                    <div class="flex items-center gap-xs mb-sm">
+                        <span class="material-symbols-outlined text-primary">location_on</span>
+                        <h3 class="font-label-md text-headline-md">Địa chỉ</h3>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface" data-restaurant-info-address></p>
+                    <button class="mt-md text-primary font-label-md flex items-center gap-xs hover:underline">
+                        Xem trên bản đồ <span class="material-symbols-outlined text-sm">open_in_new</span>
+                    </button>
+                </div>
+                <div
+                    class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-surface-variant hover:border-primary/30 transition-colors">
+                    <div class="flex items-center gap-xs mb-sm">
+                        <span class="material-symbols-outlined text-primary">schedule</span>
+                        <h3 class="font-label-md text-headline-md">Giờ mở cửa</h3>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface" data-restaurant-info-hours></p>
+                </div>
+                <div
+                    class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-surface-variant hover:border-primary/30 transition-colors">
+                    <div class="flex items-center gap-xs mb-sm">
+                        <span class="material-symbols-outlined text-primary">call</span>
+                        <h3 class="font-label-md text-headline-md">Số điện thoại</h3>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface" data-restaurant-info-phone></p>
+                </div>
+                <div
+                    class="bg-surface-container-lowest p-md rounded-xl shadow-sm border border-surface-variant hover:border-primary/30 transition-colors">
+                    <div class="flex items-center gap-xs mb-sm">
+                        <span class="material-symbols-outlined text-primary">mail</span>
+                        <h3 class="font-label-md text-headline-md">Email</h3>
+                    </div>
+                    <p class="font-body-md text-body-md text-on-surface" data-restaurant-info-email></p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tab-reviews" class="tab-panel hidden">
+        </div>
+
+    </div>
+    </main>
+
+    <nav
+        class="fixed bottom-0 w-full rounded-t-xl z-50 md:hidden bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-md shadow-[0px_-4px_16px_rgba(0,0,0,0.08)] flex justify-around items-center h-16 px-sm pb-safe">
+        <div class="flex flex-col items-center justify-center text-on-secondary-container">
+            <span class="material-symbols-outlined" data-icon="explore">explore</span>
+            <span class="font-caption text-caption">Khám phá</span>
+        </div>
+        <div class="flex flex-col items-center justify-center text-on-secondary-container">
+            <span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+            <span class="font-caption text-caption">Yêu thích</span>
+        </div>
+        <div class="flex flex-col items-center justify-center text-on-secondary-container">
+            <span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+            <span class="font-caption text-caption">Giỏ hàng</span>
+        </div>
+        <div
+            class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1">
+            <span class="material-symbols-outlined" data-icon="person">person</span>
+            <span class="font-caption text-caption">Tôi</span>
+        </div>
+    </nav>
+</div>
+</div>
+</div>
+<!-- Mobile Sticky Cart -->
+<div class="lg:hidden fixed bottom-0 left-0 w-full p-sm bg-white border-t border-outline-variant z-50 shadow-2xl">
+    <button
+        class="w-full bg-primary text-white py-sm px-md rounded-xl flex justify-between items-center active:scale-95 transition-transform">
+        <div class="flex items-center gap-sm">
+            <span class="bg-white/20 w-8 h-8 rounded-full flex items-center justify-center font-bold"
+                id="mobile-cart-count">0</span>
+            <span class="font-headline-md">Xem giỏ hàng</span>
+        </div>
+        <span class="font-headline-md" id="mobile-cart-total">0đ</span>
+    </button>
+</div>
+
+<script>
+    async function fetchRestaurantData(id) {
+        const res = await fetch(`/api/restaurants/${id}`);
+        if (!res.ok) return null;
+        return res.json();
+    }
+
+    async function fetchDishesData(id) {
+        const res = await fetch(`/api/restaurants/${id}/dishes`);
+        if (!res.ok) return [];
+        const json = await res.json();
+        return json.data || [];
+    }
+
+    function renderRestaurantDetail(data) {
+        if (!data) return;
+
+        let el;
+
+        el = document.querySelector('[data-restaurant-name]');
+        if (el) el.textContent = data.name;
+        el = document.querySelector('[data-restaurant-hero]');
+        if (el) el.style.backgroundImage = `url('${data.cover_image || data.avatar}')`;
+        el = document.querySelector('[data-restaurant-address]');
+        if (el) el.textContent = data.address;
+        el = document.querySelector('[data-restaurant-cuisine]');
+        if (el) el.textContent = data.cuisine_type;
+        el = document.querySelector('[data-restaurant-hours]');
+        if (el && data.opening_time) el.textContent = `${data.opening_time} - ${data.closing_time}`;
+
+        el = document.querySelector('[data-restaurant-name-sidebar]');
+        if (el) el.textContent = data.name;
+
+        el = document.querySelector('[data-restaurant-info-description]');
+        if (el) el.textContent = data.description;
+        el = document.querySelector('[data-restaurant-info-address]');
+        if (el) el.textContent = data.address;
+        el = document.querySelector('[data-restaurant-info-hours]');
+        if (el && data.opening_time) el.textContent = `${data.opening_time} - ${data.closing_time}`;
+        el = document.querySelector('[data-restaurant-info-phone]');
+        if (el) el.textContent = data.phonenumber;
+        el = document.querySelector('[data-restaurant-info-email]');
+        if (el) el.textContent = data.email;
+
+        el = document.querySelector('[data-restaurant-status]');
+        if (el && data.opening_time) {
+            const now = new Date();
+            const [openH, openM] = data.opening_time.split(':').map(Number);
+            const [closeH, closeM] = data.closing_time.split(':').map(Number);
+            const open = openH * 60 + openM;
+            const close = closeH * 60 + closeM;
+            const current = now.getHours() * 60 + now.getMinutes();
+            const isOpen = current >= open && current < close;
+            el.textContent = isOpen ? 'Đang mở' : 'Đã đóng';
+            el.className = `px-sm py-base rounded-full font-label-md text-label-md ${isOpen ? 'bg-green-500/20 text-green-300' : 'bg-red-500/20 text-red-300'}`;
+        }
+
+        if (data.distance_km) {
+            el = document.querySelector('[data-restaurant-distance]');
+            if (el) el.textContent = data.distance_km;
+        }
+        if (data.delivery_fee) {
+            el = document.querySelector('[data-restaurant-fee]');
+            if (el) el.textContent = data.delivery_fee;
+        }
+
+        document.title = `${data.name} - CraveConnect`;
+
+    }
+
+    function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào') {
+        const container = document.getElementById('dish-grid');
+        if (!container) return;
+
+        if (!dishes || dishes.length === 0) {
+            container.innerHTML = `
+            <div class="col-span-full text-center py-xl text-on-surface-variant">
+                <span class="material-symbols-outlined text-5xl mb-sm">restaurant_menu</span>
+                <p class="text-body-md">${emptyMessage}</p>
+            </div>`;
+            return;
+        }
+
+        container.innerHTML = dishes.map(d => `
+        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-transparent hover:border-primary-fixed hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden group flex flex-col">
+            <div class="h-40 bg-cover bg-center relative" style="background-image: url('${d.image || ''}')">
+                <img src="${d.image || ''}" onerror="this.parentElement.style.backgroundImage='url(https://png.pngtree.com/png-vector/20210623/ourmid/pngtree-pho-noodle-vietnamese-food-png-png-image_3508276.jpg)'" class="hidden">
+            </div>
+            <div class="p-sm flex flex-col flex-1">
+                <h3 class="font-headline-lg font-bold line-clamp-1">${d.name}</h3>
+                <span class="text-caption text-secondary mb-xs">${d.category || ''}</span>
+                <p class="text-sm text-gray-500 italic line-clamp-2 mb-sm flex-1">${d.description || ''}</p>
+                <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
+                    <span class="font-headline-md text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>
+                    <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
+                        onclick="addToCart('${(d.name || '').replace(/'/g, "\\'")}', ${d.price || 0})">
+                        <span class="material-symbols-outlined text-sm">add</span> Thêm
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    }
+
+    let allDishes = [];
+    let currentCategory = 'all';
+
+    function applyDishFilters() {
+        const dishSearchInput = document.getElementById('dish-search-input');
+        const keyword = dishSearchInput ? dishSearchInput.value.trim().toLowerCase() : '';
+
+        const filteredDishes = allDishes.filter(d => {
+            const name = (d.name || '').toLowerCase();
+            const description = (d.description || '').toLowerCase();
+            const category = d.category || '';
+
+            const matchesKeyword =
+                !keyword ||
+                name.includes(keyword) ||
+                description.includes(keyword) ||
+                category.toLowerCase().includes(keyword);
+
+            const matchesCategory =
+                currentCategory === 'all' ||
+                category === currentCategory;
+
+            return matchesKeyword && matchesCategory;
+        });
+
+        renderDishes(filteredDishes, 'Không tìm thấy món ăn phù hợp');
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        const pathParts = window.location.pathname.split('/');
+        const id = pathParts[pathParts.length - 1];
+        if (!id) return;
+
+        const [data, dishes] = await Promise.all([
+            fetchRestaurantData(id),
+            fetchDishesData(id)
+        ]);
+        renderRestaurantDetail(data);
+        allDishes = dishes;
+        renderDishes(allDishes);
+
+        const dishSearchInput = document.getElementById('dish-search-input');
+
+        if (dishSearchInput) {
+            dishSearchInput.addEventListener('input', applyDishFilters);
+        }
+
+        document.querySelectorAll('.dish-category-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                currentCategory = this.dataset.category;
+
+                document.querySelectorAll('.dish-category-btn').forEach(b => {
+                    b.classList.remove('bg-primary', 'text-white');
+                    b.classList.add('bg-surface-container-high', 'text-secondary');
+                });
+
+                this.classList.remove('bg-surface-container-high', 'text-secondary');
+                this.classList.add('bg-primary', 'text-white');
+
+                applyDishFilters();
+            });
+        });
+    });
+
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const tab = this.dataset.tab;
+
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                b.classList.remove('border-primary', 'text-primary');
+                b.classList.add('border-transparent', 'text-secondary');
+            });
+            this.classList.remove('border-transparent', 'text-secondary');
+            this.classList.add('border-primary', 'text-primary');
+
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+            document.getElementById('tab-' + tab).classList.remove('hidden');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>CraveConnect - Khám phá ẩm thực</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#fffbff",
+                        "on-primary-fixed": "#3a0b00",
+                        "secondary-container": "#e4e2e1",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "inverse-on-surface": "#f0f1f2",
+                        "surface-container": "#edeeef",
+                        "on-secondary-container": "#656464",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "on-tertiary-fixed-variant": "#5e4200",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#ffdbd0",
+                        "outline": "#916f65",
+                        "inverse-primary": "#ffb59e",
+                        "tertiary-fixed": "#ffdea8",
+                        "on-tertiary-fixed": "#271900",
+                        "tertiary": "#795600",
+                        "on-surface-variant": "#5c4037",
+                        "surface": "#f8f9fa",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#2e3132",
+                        "tertiary-fixed-dim": "#ffba20",
+                        "surface-bright": "#f8f9fa",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#ffb59e",
+                        "on-primary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "background": "#f8f9fa",
+                        "on-secondary": "#ffffff",
+                        "primary-container": "#d34000",
+                        "surface-tint": "#ad3300",
+                        "secondary-fixed": "#e4e2e1",
+                        "outline-variant": "#e6beb2",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-surface": "#191c1d",
+                        "surface-container-high": "#e7e8e9",
+                        "secondary": "#5f5e5e",
+                        "on-background": "#191c1d",
+                        "primary": "#a93100",
+                        "on-primary-container": "#fffbff",
+                        "on-primary-fixed-variant": "#842500",
+                        "on-tertiary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "sm": "16px",
+                        "xs": "8px",
+                        "xl": "64px",
+                        "lg": "40px",
+                        "gutter": "24px",
+                        "container-max": "1280px",
+                        "base": "4px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8f9fa;
+            color: #191c1d;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+
+<body class="bg-surface">
+    <!-- TopNavBar -->
+    <header
+        class="bg-surface dark:bg-surface-dim docked full-width top-0 z-50 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] sticky transition-all duration-300">
+        <div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-20">
+            <!-- Brand Logo -->
+            <div class="flex items-center shrink-0" onclick="window.location.href='/'">
+                <span
+                    class="font-display-lg text-headline-lg-mobile text-primary dark:text-primary-fixed italic font-black">CraveConnect</span>
+            </div>
+
+            <!-- Central Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8">
+                <a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
+                    href="#">Khám phá</a>
+                <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
+                    href="#">Ưu đãi</a>
+                <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
+                    href="#">Đơn hàng</a>
+            </nav>
+
+            <!-- Right-side Actions -->
+            <div class="flex items-center gap-2 md:gap-4">
+
+                {% block itemHeader %}
+                {% endblock %}
+                <button
+                    class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">notifications</button>
+                <div class="relative">
+                    <button
+                        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">shopping_cart</button>
+                    <span
+                        class="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+                </div>
+                {% if current_user.is_authenticated %}
+
+                <a href="/me">
+                <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+                    <img class="w-full h-full object-cover" alt="{{ current_user.name }}"
+                        src="{{ current_user.avatar }}">
+                </div>
+                </a>
+                {% else %}
+                <a href="/login"
+                    class="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:opacity-90 scale-95 hover:scale-100 transition-transform duration-150">Tài
+                    khoản</a>
+                <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+                    <a href="/login" class="material-symbols-outlined text-on-surface-variant w-full h-full flex items-center justify-center">person</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    <main class="max-w-container-max mx-auto px-gutter py-md space-y-xl">
+        <!-- Hero Section: AI suggestions based on time of day -->
+        {% block content %}{% endblock %}
+    </main>
+    <!-- Footer -->
+    <footer class="bg-secondary-fixed dark:bg-inverse-surface w-full py-lg mt-xl shadow-none">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-gutter max-w-container-max mx-auto">
+            <div class="space-y-4">
+                <span class="font-headline-md text-headline-md text-on-secondary-fixed font-bold">CraveConnect</span>
+                <p class="font-body-md text-body-md text-on-secondary-fixed-variant max-w-xs">Giao hàng nhanh chóng,
+                    niềm vui trọn vẹn. Khám phá hàng ngàn món ngon từ các nhà hàng uy tín nhất.</p>
+                <div class="flex space-x-4">
+                    <a class="text-on-secondary-fixed hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100"
+                        href="#"><span class="material-symbols-outlined">public</span></a>
+                    <a class="text-on-secondary-fixed hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100"
+                        href="#"><span class="material-symbols-outlined">smart_display</span></a>
+                    <a class="text-on-secondary-fixed hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100"
+                        href="#"><span class="material-symbols-outlined">group</span></a>
+                </div>
+            </div>
+            <div class="space-y-4">
+                <h4 class="font-headline-md text-headline-md text-on-secondary-fixed">Về chúng tôi</h4>
+                <ul class="space-y-2">
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Về chúng tôi</a></li>
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Cơ hội nghề nghiệp</a></li>
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Blog ẩm thực</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h4 class="font-headline-md text-headline-md text-on-secondary-fixed">Dành cho đối tác</h4>
+                <ul class="space-y-2">
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Trở thành đối tác nhà hàng</a></li>
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Trở thành tài xế giao hàng</a></li>
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Quảng cáo nhà hàng</a></li>
+                </ul>
+            </div>
+            <div class="space-y-4">
+                <h4 class="font-headline-md text-headline-md text-on-secondary-fixed">Hỗ trợ</h4>
+                <ul class="space-y-2">
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Trung tâm hỗ trợ</a></li>
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Điều khoản dịch vụ</a></li>
+                    <li class=""><a
+                            class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                            href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+        </div>
+        <div
+            class="max-w-container-max mx-auto px-gutter mt-lg pt-lg border-t border-on-secondary-fixed/10 text-center">
+            <p class="font-caption text-caption text-on-secondary-fixed-variant">© 2024 CraveConnect. Giao hàng nhanh
+                chóng, niềm vui trọn vẹn.</p>
+        </div>
+    </footer>
+    <!-- BottomNavBar (Mobile Only) -->
+    <nav
+        class="fixed bottom-0 w-full rounded-t-xl z-50 md:hidden bg-surface/90 dark:bg-surface-dim/90 backdrop-blur-md shadow-[0px_-4px_16px_rgba(0,0,0,0.08)]">
+        <div class="flex justify-around items-center h-16 px-sm pb-safe">
+            <a class="flex flex-col items-center justify-center bg-primary-container text-on-primary-container rounded-full px-4 py-1 scale-90 active:scale-100 transition-transform"
+                href="#">
+                <span class="material-symbols-outlined">explore</span>
+                <span class="font-caption text-caption">Khám phá</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-secondary-container scale-90 active:scale-100 transition-transform"
+                href="#">
+                <span class="material-symbols-outlined">favorite</span>
+                <span class="font-caption text-caption">Yêu thích</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-secondary-container scale-90 active:scale-100 transition-transform"
+                href="#">
+                <span class="material-symbols-outlined">shopping_bag</span>
+                <span class="font-caption text-caption">Giỏ hàng</span>
+            </a>
+            <a class="flex flex-col items-center justify-center text-on-secondary-container scale-90 active:scale-100 transition-transform"
+                href="/login">
+                <span class="material-symbols-outlined">person</span>
+                <span class="font-caption text-caption">Tôi</span>
+            </a>
+        </div>
+    </nav>
+    {% block scripts %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script>
+        // Micro-interactions and Header Scroll Effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('py-2', 'shadow-md');
+                header.classList.remove('h-20');
+            } else {
+                header.classList.remove('py-2', 'shadow-md');
+                header.classList.add('h-20');
+            }
+        });
+
+        // Add some subtle animation to card on hover
+        document.querySelectorAll('.group').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px)';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.getElementById('header-search-input');
+            const searchIcon = document.getElementById('header-search-icon');
+
+            if (!searchInput) return;
+
+            function doSearch() {
+                const q = searchInput.value.trim();
+                if (q) {
+                    window.location.href = '/search_customer?q=' + encodeURIComponent(q);
+                }
+            }
+
+            searchInput.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    doSearch();
+                }
+            });
+            if (searchIcon) {
+                searchIcon.addEventListener('click', doSearch);
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+
+<html class="light" lang="vi"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Đăng nhập | CraveConnect</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "on-secondary-fixed-variant": "#474747",
+                    "inverse-primary": "#ffb59e",
+                    "on-tertiary": "#ffffff",
+                    "outline": "#916f65",
+                    "on-tertiary-fixed": "#271900",
+                    "error": "#ba1a1a",
+                    "surface-tint": "#ad3300",
+                    "surface-bright": "#f8f9fa",
+                    "primary": "#a93100",
+                    "error-container": "#ffdad6",
+                    "on-primary-fixed": "#3a0b00",
+                    "inverse-on-surface": "#f0f1f2",
+                    "tertiary": "#795600",
+                    "outline-variant": "#e6beb2",
+                    "surface-variant": "#e1e3e4",
+                    "surface-dim": "#d9dadb",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#656464",
+                    "on-tertiary-fixed-variant": "#5e4200",
+                    "surface-container": "#edeeef",
+                    "tertiary-fixed": "#ffdea8",
+                    "on-secondary-fixed": "#1b1c1c",
+                    "on-secondary": "#ffffff",
+                    "on-primary-container": "#fffbff",
+                    "background": "#f8f9fa",
+                    "surface-container-low": "#f3f4f5",
+                    "surface-container-lowest": "#ffffff",
+                    "surface": "#f8f9fa",
+                    "primary-container": "#d34000",
+                    "on-primary-fixed-variant": "#842500",
+                    "primary-fixed-dim": "#ffb59e",
+                    "surface-container-high": "#e7e8e9",
+                    "tertiary-fixed-dim": "#ffba20",
+                    "on-surface-variant": "#5c4037",
+                    "primary-fixed": "#ffdbd0",
+                    "on-tertiary-container": "#fffbff",
+                    "on-surface": "#191c1d",
+                    "secondary-container": "#e4e2e1",
+                    "tertiary-container": "#986d00",
+                    "surface-container-highest": "#e1e3e4",
+                    "secondary-fixed-dim": "#c8c6c6",
+                    "secondary": "#5f5e5e",
+                    "inverse-surface": "#2e3132",
+                    "secondary-fixed": "#e4e2e1",
+                    "on-background": "#191c1d",
+                    "on-primary": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "sm": "16px",
+                    "gutter": "24px",
+                    "xl": "64px",
+                    "lg": "40px",
+                    "xs": "8px",
+                    "base": "4px",
+                    "container-max": "1280px",
+                    "md": "24px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "caption": ["Plus Jakarta Sans"],
+                    "label-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "display-lg": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "headline-md": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                    "caption": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 flex items-center justify-between px-sm h-12 bg-surface shadow-sm">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary" style="font-size: 22px;">restaurant_menu</span>
+<span class="font-display-lg text-headline-md text-primary tracking-tight">CraveConnect</span>
+</div>
+<div class="hidden md:flex items-center gap-md">
+<button class="text-on-surface-variant font-label-md text-label-md hover:opacity-80 transition-opacity">Help</button>
+</div>
+</header>
+<main class="flex-grow flex items-center justify-center pt-12 pb-xl px-gutter relative overflow-hidden">
+<!-- Decorative Background Element -->
+<div class="absolute -top-24 -right-24 w-96 h-96 bg-primary opacity-5 rounded-full blur-3xl"></div>
+<div class="absolute -bottom-24 -left-24 w-96 h-96 bg-tertiary opacity-10 rounded-full blur-3xl"></div>
+<!-- Login Container -->
+<div class="w-full max-w-[1100px] grid grid-cols-1 lg:grid-cols-2 bg-surface-container-lowest rounded-xl shadow-lg overflow-hidden border border-outline-variant my-lg">
+<!-- Branding/Image Section (Visible on LG up) -->
+<div class="hidden lg:block relative">
+<div class="absolute inset-0 z-10 bg-gradient-to-t from-primary/80 to-transparent flex flex-col justify-end p-lg">
+<h1 class="font-display-lg text-headline-lg text-on-primary mb-xs">Chào mừng trở lại!</h1>
+<p class="font-body-lg text-body-lg text-on-primary/90">Khám phá thế giới ẩm thực tinh hoa và dịch vụ giao hàng chuyên nghiệp ngay hôm nay.</p>
+</div>
+<img class="w-full h-full object-cover" data-alt="A cinematic, high-resolution shot of a gourmet burger and fresh salad with vibrant natural colors, set on a dark rustic wooden table. The lighting is warm and directional, emphasizing textures and fresh ingredients. The overall mood is appetizing and premium, perfectly reflecting the CraveConnect brand identity of food discovery and high-quality logistics." src="https://static.vecteezy.com/system/resources/previews/027/230/186/large_2x/fast-food-and-drinks-on-a-table-with-a-hamburger-fries-chicken-and-soda-ai-generated-free-photo.jpg"/>
+</div>
+<!-- Form Section -->
+<div class="p-md md:p-xl flex flex-col justify-center">
+<div class="mb-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-base">Đăng nhập</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Vui lòng nhập thông tin tài khoản của bạn</p>
+</div>
+<form id="loginForm" class="space-y-sm">
+<!-- Email/Phone Field -->
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="identity">Username</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline-variant">person</span>
+<input class="w-full pl-xl pr-sm py-sm bg-surface rounded-lg border-outline-variant focus:ring-primary focus:border-primary font-body-md text-body-md transition-all outline-none" id="identity" name="identity" placeholder="Username" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-base">
+<label class="font-label-md text-label-md text-on-surface-variant block" for="password">Mật khẩu</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline-variant">lock</span>
+<input class="w-full pl-xl pr-xl py-sm bg-surface rounded-lg border-outline-variant focus:ring-primary focus:border-primary font-body-md text-body-md transition-all outline-none" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-sm top-1/2 -translate-y-1/2 text-outline-variant hover:text-primary transition-colors" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Options Row -->
+<div class="flex items-center justify-between py-base">
+<label class="flex items-center gap-xs cursor-pointer group">
+<input class="w-5 h-5 rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors">Ghi nhớ đăng nhập</span>
+</label>
+<a class="font-label-md text-label-md text-primary hover:underline transition-all" href="#">Quên mật khẩu?</a>
+</div>
+<!-- Primary Login Button -->
+<button class="w-full bg-primary text-on-primary py-sm rounded-lg font-headline-md text-headline-md hover:opacity-90 active:scale-[0.98] transition-all shadow-md mt-sm" type="submit">
+                        Đăng nhập
+                    </button>
+<!-- Divider -->
+<div class="relative py-md">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-outline-variant"></div>
+</div>
+<div class="relative flex justify-center text-caption font-caption">
+<span class="bg-surface-container-lowest px-sm text-on-surface-variant uppercase tracking-wider">Hoặc tiếp tục với</span>
+</div>
+</div>
+<!-- Social Login Buttons -->
+<div class="grid grid-cols-1 gap-sm">
+<a href="/auth/login/google" class="flex items-center justify-center gap-xs py-sm border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container transition-colors">
+<svg class="w-5 h-5" viewbox="0 0 24 24">
+<path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"></path>
+<path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"></path>
+<path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"></path>
+<path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"></path>
+</svg>
+                            Google
+                        </a>
+</div>
+</form>
+<div class="mt-xl text-center">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Chưa có tài khoản?
+                        <a class="text-primary font-headline-md text-label-md ml-xs hover:underline transition-all" href="/register">Đăng ký ngay</a>
+</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-lg px-gutter flex flex-col md:flex-row justify-between items-center gap-md bg-surface-container-lowest border-t border-outline-variant">
+<div class="flex flex-col items-center md:items-start">
+<span class="font-headline-md text-headline-md text-primary mb-base">CraveConnect</span>
+<p class="font-body-md text-body-md text-secondary">© 2024 CraveConnect. Logistics &amp; Food Discovery.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors cursor-pointer" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors cursor-pointer" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors cursor-pointer" href="#">Partner Support</a>
+<a class="font-body-md text-body-md text-secondary hover:text-primary transition-colors cursor-pointer" href="#">Contact</a>
+</div>
+</footer>
+<script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body></html>

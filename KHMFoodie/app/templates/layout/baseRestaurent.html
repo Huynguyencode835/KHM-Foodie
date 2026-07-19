@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>CraveConnect - Quản lý Thực đơn</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    {% block head %}{% endblock %}
+    <!-- Đã xóa <link> Material Symbols bị trùng lặp -->
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#e6beb2",
+                        "on-secondary-fixed-variant": "#474747",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#ad3300",
+                        "surface-container": "#edeeef",
+                        "on-primary-fixed": "#3a0b00",
+                        "on-error-container": "#93000a",
+                        "inverse-primary": "#ffb59e",
+                        "primary-fixed-dim": "#ffb59e",
+                        "on-tertiary-fixed-variant": "#5e4200",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "tertiary": "#795600",
+                        "primary-fixed": "#ffdbd0",
+                        "on-surface-variant": "#5c4037",
+                        "on-secondary": "#ffffff",
+                        "tertiary-fixed-dim": "#ffba20",
+                        "on-surface": "#191c1d",
+                        "surface-container-low": "#f3f4f5",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-highest": "#e1e3e4",
+                        "surface-bright": "#f8f9fa",
+                        "primary-container": "#d34000",
+                        "on-secondary-container": "#656464",
+                        "on-primary": "#ffffff",
+                        "background": "#f8f9fa",
+                        "secondary": "#5f5e5e",
+                        "tertiary-fixed": "#ffdea8",
+                        "outline": "#916f65",
+                        "error": "#ba1a1a",
+                        "inverse-surface": "#2e3132",
+                        "secondary-container": "#e4e2e1",
+                        "surface-variant": "#e1e3e4",
+                        "on-primary-container": "#fffbff",
+                        "secondary-fixed": "#e4e2e1",
+                        "on-primary-fixed-variant": "#842500",
+                        "error-container": "#ffdad6",
+                        "surface": "#f8f9fa",
+                        "on-tertiary-fixed": "#271900",
+                        "tertiary-container": "#986d00",
+                        "surface-dim": "#d9dadb",
+                        "on-error": "#ffffff",
+                        "surface-container-high": "#e7e8e9",
+                        "on-background": "#191c1d",
+                        "secondary-fixed-dim": "#c8c6c6",
+                        "inverse-on-surface": "#f0f1f2",
+                        "primary": "#a93100",
+                        "on-tertiary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "64px",
+                        "md": "24px",
+                        "xs": "8px",
+                        "gutter": "24px",
+                        "base": "4px",
+                        "lg": "40px",
+                        "container-max": "1280px",
+                        "sm": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Plus Jakarta Sans"],
+                        "headline-lg-mobile": ["Plus Jakarta Sans"],
+                        "display-lg": ["Plus Jakarta Sans"],
+                        "caption": ["Plus Jakarta Sans"],
+                        "body-md": ["Plus Jakarta Sans"],
+                        "label-md": ["Plus Jakarta Sans"],
+                        "body-lg": ["Plus Jakarta Sans"],
+                        "headline-md": ["Plus Jakarta Sans"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                        "headline-lg-mobile": ["24px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800" }],
+                        "caption": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                        "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+
+        .active-nav-item {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e6beb2;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body class="bg-background text-on-surface min-h-screen flex">
+    <!-- SideNavBar (Consistent with SCREEN_2) -->
+    <aside
+        class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col p-sm space-y-base z-50">
+        <div class="px-sm py-md">
+            <div class="flex items-center space-x-3 mb-xs">
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined">restaurant</span>
+                </div>
+                <div>
+                    <a href="/"><h2 class="font-headline-md text-headline-md text-primary font-bold">CraveConnect</h2></a>
+                    <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Trung tâm điều
+                        hành</p>
+                </div>
+            </div>
+        </div>
+        <nav class="flex-grow flex flex-col space-y-1">
+            {% if current_user.role.value == 'Admin' %}
+            {% set sidebar_menu_items = [
+            ('dashboard', 'Dashboard', 'dashboard', '/admin/'),
+            ('users', 'Người dùng', 'people', '/admin/user/'),
+            ('restaurants', 'Nhà hàng', 'storefront', '/admin/restaurant/'),
+            ('dishes', 'Món ăn', 'restaurant_menu', '/admin/dish/'),
+            ] %}
+            {% else %}
+            {% set sidebar_menu_items = [
+            ('dashboard', 'Tổng quan', 'dashboard', '#'),
+            ('orders', 'Đơn hàng', 'receipt_long', '#'),
+            ('menu', 'Thực đơn', 'restaurant_menu', '#'),
+            ('reviews', 'Đánh giá', 'star', '#'),
+            ('promotions', 'Khuyến mãi', 'local_offer', '#'),
+            ('analytics', 'Thống kê', 'insights', '#'),
+            ('chat', 'Tin nhắn', 'chat', '#'),
+            ('settings', 'Cài đặt', 'settings', '#'),
+            ] %}
+            {% endif %}
+
+            {% for key, label, icon, endpoint  in sidebar_menu_items %}
+            <a class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg transition-all text-on-surface-variant hover:text-on-surface-variant hover:no-underline no-underline"
+               href="{{ endpoint }}" data-sidebar-key="{{ key }}"
+               data-sidebar-endpoint="{{ endpoint }}">
+                <span class="material-symbols-outlined">{{ icon }}</span>
+                <span class="font-label-md text-label-md">{{ label }}</span>
+            </a>
+            {% endfor %}
+        </nav>
+        <div class="pt-sm border-t border-outline-variant space-y-1">
+            {% if current_user.role.value != 'Admin' %}
+            <button
+                class="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-tertiary text-on-tertiary rounded-xl font-bold mb-4 hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-[18px]">storefront</span>
+                <span class="text-label-md">Mở/Đóng cửa hàng</span>
+            </button>
+            {% endif %}
+            <a class="flex items-center space-x-3 px-4 py-2 text-on-surface-variant hover:text-on-surface-variant hover:no-underline no-underline hover:bg-surface-variant rounded-lg transition-all"
+                href="#">
+                <span class="material-symbols-outlined">help</span>
+                <span class="font-label-md text-label-md">Trợ giúp</span>
+            </a>
+            <a class="flex items-center space-x-3 px-4 py-2 text-error hover:text-error hover:no-underline no-underline hover:bg-error-container rounded-lg transition-all"
+                href="/api/auth/logout">
+                <span class="material-symbols-outlined">logout</span>
+                <span class="font-label-md text-label-md">Đăng xuất</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <!-- Đã đổi h-screen overflow-hidden -> min-h-screen để cho phép cuộn xuống footer -->
+    <main class="ml-64 flex-grow flex flex-col min-h-screen">
+        <!-- Header Section -->
+        <header
+            class="h-20 bg-surface shadow-[0px_4px_20px_rgba(0,0,0,0.05)] flex items-center justify-between px-gutter z-40 sticky top-0">
+            <div></div>
+            <div class="flex items-center space-x-4">
+                <!-- Search Bar -->
+                {% block itemHeader %}
+                <div class="relative">
+                    <span
+                        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+                </div>
+                {% endblock %}
+            </div>
+        </header>
+
+        <!-- Content Body -->
+        <div class="flex-grow flex bg-surface-bright">
+            {% block content %}{% endblock %}
+        </div>
+
+        <!-- Footer: nhúng thẳng trong file này, không tách partial, đã né sidebar vì đã nằm trong <main> (đã có ml-64 ở ngoài) -->
+        <footer class="bg-secondary-fixed dark:bg-inverse-surface w-full py-lg mt-auto shadow-none">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-gutter">
+                <div class="space-y-4">
+                    <span
+                        class="font-headline-md text-headline-md text-on-secondary-fixed font-bold">CraveConnect</span>
+                    <p class="font-body-md text-body-md text-on-secondary-fixed-variant max-w-xs">Giao hàng nhanh chóng,
+                        niềm vui trọn vẹn. Khám phá hàng ngàn món ngon từ các nhà hàng uy tín nhất.</p>
+                    <div class="flex space-x-4">
+                        <a class="text-on-secondary-fixed hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100"
+                            href="#"><span class="material-symbols-outlined">public</span></a>
+                        <a class="text-on-secondary-fixed hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100"
+                            href="#"><span class="material-symbols-outlined">smart_display</span></a>
+                        <a class="text-on-secondary-fixed hover:text-primary transition-all duration-300 opacity-80 hover:opacity-100"
+                            href="#"><span class="material-symbols-outlined">group</span></a>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-headline-md text-headline-md text-on-secondary-fixed">Về chúng tôi</h4>
+                    <ul class="space-y-2">
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Về chúng tôi</a></li>
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Cơ hội nghề nghiệp</a></li>
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Blog ẩm thực</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-headline-md text-headline-md text-on-secondary-fixed">Dành cho đối tác</h4>
+                    <ul class="space-y-2">
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Trở thành đối tác nhà hàng</a></li>
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Trở thành tài xế giao hàng</a></li>
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Quảng cáo nhà hàng</a></li>
+                    </ul>
+                </div>
+                <div class="space-y-4">
+                    <h4 class="font-headline-md text-headline-md text-on-secondary-fixed">Hỗ trợ</h4>
+                    <ul class="space-y-2">
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Trung tâm hỗ trợ</a></li>
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Điều khoản dịch vụ</a></li>
+                        <li><a class="text-on-secondary-fixed-variant font-body-md text-body-md hover:underline hover:text-primary transition-all opacity-80 hover:opacity-100"
+                                href="#">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="px-gutter mt-lg pt-lg border-t border-on-secondary-fixed/10 text-center">
+                <p class="font-caption text-caption text-on-secondary-fixed-variant">© {{ current_year|default(2026) }}
+                    CraveConnect. Giao hàng nhanh chóng, niềm vui trọn vẹn.</p>
+            </div>
+        </footer>
+    </main>
+
+    {% block scripts %}{% endblock %}
+    <script>
+        // --- Active sidebar bằng JavaScript ---
+        (function () {
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                var endpoint = link.dataset.sidebarEndpoint;
+                var isActive = currentPath === endpoint
+                    || currentPath.startsWith(endpoint + '/')
+                    || (endpoint !== '/admin/' && endpoint !== '#' && currentPath.startsWith(endpoint));
+
+                if (isActive) {
+                    link.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
+                    link.classList.add('bg-primary-container', 'text-on-primary-container', 'hover:text-on-primary-container', 'font-bold', 'translate-x-1');
+                }
+            });
+        })();
+
+        // Simple toggle simulation for demo
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', function () {
+                const card = this.closest('.group');
+                const label = this.parentElement.previousElementSibling;
+                if (this.checked) {
+                    card.classList.remove('opacity-75', 'grayscale-[0.5]');
+                    label.textContent = 'Còn hàng';
+                    label.classList.remove('text-error');
+                    label.classList.add('text-on-surface');
+                } else {
+                    card.classList.add('opacity-75', 'grayscale-[0.5]');
+                    label.textContent = 'Hết hàng';
+                    label.classList.remove('text-on-surface');
+                    label.classList.add('text-error');
+                }
+            });
+        });
+
+        // Hover effect for side nav items
+        const navItems = document.querySelectorAll('nav a');
+        navItems.forEach(item => {
+            item.addEventListener('mouseenter', () => {
+                if (!item.classList.contains('bg-primary-container')) {
+                    item.style.transform = 'translateX(4px)';
+                }
+            });
+            item.addEventListener('mouseleave', () => {
+                if (!item.classList.contains('bg-primary-container')) {
+                    item.style.transform = 'translateX(0px)';
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

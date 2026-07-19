@@ -1,0 +1,30 @@
+<div onclick="goToRestaurantDetail({{id}})">
+    <div class="h-48 relative overflow-hidden">
+        <img class="w-full h-full object-cover" src="{{cover_image}}">
+        <div
+            class="absolute top-3 right-3 bg-white/90 backdrop-blur shadow-sm px-2 py-1 rounded-lg flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px] text-tertiary"
+                style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="font-bold text-on-surface text-sm">5.0</span>
+        </div>
+    </div>
+    <div class="p-4 space-y-3">
+        <div>
+            <h3 class="font-headline-md text-headline-md group-hover:text-primary transition-colors">{{name}}</h3>
+            <p class="text-secondary text-sm font-body-md italic">{{cuisine_type}}</p>
+        </div>
+        <div>
+            <p class="text-secondary text-sm font-body-md font-bold">{{address}}</p>
+        </div>
+        <div class="flex items-center gap-4 text-on-surface-variant text-sm border-t border-outline-variant pt-3">
+            <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-[18px]">schedule</span>
+                <span>{{opening_time}} - {{closing_time}}</span>
+            </div>
+            <div class="flex items-center gap-1 ml-auto">
+                <span class="material-symbols-outlined text-[18px]">distance</span>
+                <span>10.5 km</span>
+            </div>
+        </div>
+    </div>
+</div>
