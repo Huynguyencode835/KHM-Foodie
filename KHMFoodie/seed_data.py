@@ -16,8 +16,11 @@ DISHES_JSON = os.path.join(BASE_DIR, "app", "data", "dishes.json")
 def seed():
     app = create_app()
     with app.app_context():
-        db.drop_all()
         db.create_all()
+
+        if User.query.first():
+            print("ℹ Data already exists, skipping seed.")
+            return
 
         # ---------- Admin & Customer mẫu ----------
         # Admin: username=admin, password=123456
