@@ -31,7 +31,6 @@ class UserRole(RoleEnum):
 class User(Base, UserMixin):
     __tablename__ = 'user'
     __mapper_args__ = {
-        'polymorphic_on': 'role',
         'polymorphic_identity': UserRole.CUSTOMER,
     }
     username = Column(String(150), unique=True, nullable=True)
@@ -58,15 +57,6 @@ class CuisineType(RoleEnum):
     BBQ_HOTPOT = "Nướng & Lẩu"
     CAFE_DESSERT = "Cafe & Tráng miệng"
     OTHER = "Khác"
-
-
-class Admin(User):
-    __tablename__ = 'admin'
-    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
-
-    __mapper_args__ = {
-        'polymorphic_identity': UserRole.ADMIN
-    }
 
 
 class Restaurant(User):

@@ -3,7 +3,7 @@ import os
 from app import create_app
 from app.extensions import db
 from app.models.model import (
-    User, Admin, Restaurant, Dish,
+    User, Restaurant, Dish,
     UserRole, CuisineType, DishCategory,
     hash_password, parse_time
 )
@@ -21,9 +21,10 @@ def seed():
 
         # ---------- Admin & Customer mẫu ----------
         # Admin: username=admin, password=123456
-        new_admin = Admin(
+        new_admin = User(
             name="Quản trị viên",
             username="admin",
+            role = UserRole.ADMIN,
             password=hash_password("123456"),
             avatar="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfjno7hGrNNuPZwaFZ8U8Mhr_Yq39rzd_p0YN_HVYk6KFmMETjtgd9bwl0UhU6g4xDDGg&usqp=CAU",
         )
