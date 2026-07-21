@@ -146,7 +146,9 @@
                     <span class="material-symbols-outlined">restaurant</span>
                 </div>
                 <div>
-                    <a href="/"><h2 class="font-headline-md text-headline-md text-primary font-bold">CraveConnect</h2></a>
+                    <a href="/">
+                        <h2 class="font-headline-md text-headline-md text-primary font-bold">CraveConnect</h2>
+                    </a>
                     <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Trung tâm điều
                         hành</p>
                 </div>
@@ -173,10 +175,9 @@
             ] %}
             {% endif %}
 
-            {% for key, label, icon, endpoint  in sidebar_menu_items %}
+            {% for key, label, icon, endpoint in sidebar_menu_items %}
             <a class="sidebar-link flex items-center space-x-3 px-4 py-3 rounded-lg transition-all text-on-surface-variant hover:text-on-surface-variant hover:no-underline no-underline"
-               href="{{ endpoint }}" data-sidebar-key="{{ key }}"
-               data-sidebar-endpoint="{{ endpoint }}">
+                href="{{ endpoint }}" data-sidebar-key="{{ key }}" data-sidebar-endpoint="{{ endpoint }}">
                 <span class="material-symbols-outlined">{{ icon }}</span>
                 <span class="font-label-md text-label-md">{{ label }}</span>
             </a>
@@ -209,14 +210,16 @@
         <!-- Header Section -->
         <header
             class="h-20 bg-surface shadow-[0px_4px_20px_rgba(0,0,0,0.05)] flex items-center justify-between px-gutter z-40 sticky top-0">
-            <div></div>
             <div class="flex items-center space-x-4">
                 <!-- Search Bar -->
                 {% block itemHeader %}
                 <div class="relative">
-                    <span
-                        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">notifications</span>
-                    <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+                    <a href="/notication">
+                        <span
+                            class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">notifications</span>
+                        <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full"></span>
+                    </a>
+
                 </div>
                 {% endblock %}
             </div>
@@ -287,21 +290,21 @@
 
     {% block scripts %}{% endblock %}
     <script>
-        // --- Active sidebar bằng JavaScript ---
-        (function () {
-            const currentPath = window.location.pathname;
-            document.querySelectorAll('.sidebar-link').forEach(function (link) {
-                var endpoint = link.dataset.sidebarEndpoint;
-                var isActive = currentPath === endpoint
-                    || currentPath.startsWith(endpoint + '/')
-                    || (endpoint !== '/admin/' && endpoint !== '#' && currentPath.startsWith(endpoint));
+            // --- Active sidebar bằng JavaScript ---
+            (function () {
+                const currentPath = window.location.pathname;
+                document.querySelectorAll('.sidebar-link').forEach(function (link) {
+                    var endpoint = link.dataset.sidebarEndpoint;
+                    var isActive = currentPath === endpoint
+                        || currentPath.startsWith(endpoint + '/')
+                        || (endpoint !== '/admin/' && endpoint !== '#' && currentPath.startsWith(endpoint));
 
-                if (isActive) {
-                    link.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
-                    link.classList.add('bg-primary-container', 'text-on-primary-container', 'hover:text-on-primary-container', 'font-bold', 'translate-x-1');
-                }
-            });
-        })();
+                    if (isActive) {
+                        link.classList.remove('text-on-surface-variant', 'hover:bg-surface-variant');
+                        link.classList.add('bg-primary-container', 'text-on-primary-container', 'hover:text-on-primary-container', 'font-bold', 'translate-x-1');
+                    }
+                });
+            })();
 
         // Simple toggle simulation for demo
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {

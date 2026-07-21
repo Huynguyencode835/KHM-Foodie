@@ -419,6 +419,9 @@
             fetchRestaurantData(id),
             fetchDishesData(id)
         ]);
+
+        console.log(data)
+
         renderRestaurantDetail(data);
         allDishes = dishes;
         renderDishes(allDishes);
