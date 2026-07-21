@@ -14,138 +14,246 @@
 <div class="flex flex-col md:flex-row gap-lg items-start">
     <!-- Bộ Lọc -->
     <aside id="filter-sidebar" class="w-full md:w-64 flex-shrink-0 space-y-lg md:sticky md:top-[160px] md:h-fit">
-        <div class="flex items-center justify-between">
-            <h2 class="font-headline-md text-headline-md">Bộ lọc</h2>
-            <button class="text-primary font-label-md hover:underline"
-                onclick="location.href='/search_customer?q={{ keyword }}'">Xóa tất cả</button>
-        </div>
-        <!-- Sắp Xếp Theo -->
-        <div class="space-y-sm">
-            <h3 class="font-label-md text-secondary-fixed-variant uppercase tracking-wider text-[11px]">Sắp xếp theo
-            </h3>
-            <div class="flex flex-col gap-xs">
-                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
-                    <input type="radio" name="sort" value="best-match" checked
-                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
-                    <span class="text-body-md group-hover:text-primary transition-colors">Phù hợp nhất</span>
-                </label>
-                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
-                    <input type="radio" name="sort" value="rating"
-                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
-                    <span class="text-body-md group-hover:text-primary transition-colors">Đánh giá cao nhất</span>
-                </label>
-                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
-                    <input type="radio" name="sort" value="price-asc"
-                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
-                    <span class="text-body-md group-hover:text-primary transition-colors">Giá: Thấp → Cao</span>
-                </label>
-                <label class="flex items-center gap-xs cursor-pointer group no-bounce">
-                    <input type="radio" name="sort" value="price-desc"
-                        class="text-primary focus:ring-primary border-outline" onchange="applySort()">
-                    <span class="text-body-md group-hover:text-primary transition-colors">Giá: Cao → Thấp</span>
-                </label>
-            </div>
+        <!-- Tiêu đề: đây không còn là bộ lọc nhiều tầng, mà là loại kết quả -->
+        <div>
+            <h2 class="font-headline-md text-headline-md">Loại kết quả</h2>
+            <p class="text-sm text-on-surface-variant mt-1">Chọn kiểu kết quả bạn muốn xem</p>
         </div>
 
-        <button onclick="searchSubmit()"
-            class="w-full px-4 py-2 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200 flex items-center justify-center gap-2">
-            <span class="material-symbols-outlined text-[18px]">search</span>
-            <span>Tìm Kiếm</span>
-        </button>
-        <!-- Mobile Horizontal Scroll -->
-        <div class="md:hidden overflow-x-auto flex gap-xs no-scrollbar pb-xs">
-            <span class="flex-none px-4 py-2 bg-primary text-white rounded-full font-label-md">Pizza</span>
-            <span
-                class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Healthy</span>
-            <span
-                class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Fast
-                Delivery</span>
-            <span
-                class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Promotions</span>
+        <!-- Hai nút chuyển giữa danh sách nhà hàng và danh sách món ăn -->
+        <div class="flex flex-col gap-xs">
+            <button id="view-restaurants-btn"
+                class="w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-label-md text-left transition-all duration-200">
+                Nhà hàng
+            </button>
+
+            <button id="view-dishes-btn"
+                class="w-full px-4 py-3 rounded-xl bg-white border border-outline-variant text-on-surface font-label-md text-left transition-all duration-200">
+                Món ăn
+            </button>
         </div>
+
+        <!-- Khối sắp xếp chỉ dùng cho món ăn, mặc định ẩn -->
+        <div id="dish-sort-box" class="hidden space-y-xs">
+            <label for="dish-sort-select"
+                class="font-label-md text-secondary-fixed-variant uppercase tracking-wider text-[11px]">
+                Sắp xếp món ăn
+            </label>
+
+            <select id="dish-sort-select"
+                class="w-full rounded-xl border border-outline-variant bg-white px-3 py-2 text-body-md focus:border-primary focus:ring-primary">
+                <option value="default">Mặc định</option>
+                <option value="price-asc">Giá thấp đến cao</option>
+                <option value="price-desc">Giá cao đến thấp</option>
+            </select>
+        </div>
+    </aside>
+    <!-- Mobile Horizontal Scroll -->
+    <div class="md:hidden overflow-x-auto flex gap-xs no-scrollbar pb-xs">
+        <span class="flex-none px-4 py-2 bg-primary text-white rounded-full font-label-md">Pizza</span>
+        <span
+            class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Healthy</span>
+        <span
+            class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Fast
+            Delivery</span>
+        <span
+            class="flex-none px-4 py-2 bg-white border border-outline-variant rounded-full font-label-md text-secondary">Promotions</span>
+    </div>
     </aside>
     <!-- Content Area -->
     <div class="flex-1 min-w-0 space-y-lg">
-        <!-- Restaurant Grid -->
-        <div id="restaurant-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-            {% for r in restaurants %}
-            {% with id=r.id, cover_image=r.cover_image or (r.user.avatar if r.user else ''), name=r.name, cuisine_type=r.cuisine_type,
-            address=r.user.address if r.user else '',
-            opening_time=r.opening_time, closing_time=r.closing_time %}
-            <div
-                class="w-full group bg-white rounded-2xl overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-300 restaurant-card{% if loop.index > 6 %} hidden{% endif %}">
-                {% include "restaurantCard.html" %}
+        <!-- Khối kết quả nhà hàng -->
+        <section id="restaurants-section" class="space-y-lg">
+            <!-- Grid nhà hàng -->
+            <div id="restaurant-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+                {% for r in restaurants %}
+                {% with id=r.id, cover_image=r.cover_image or (r.user.avatar if r.user else ''), name=r.name,
+                cuisine_type=r.cuisine_type,
+                address=r.user.address if r.user else '',
+                opening_time=r.opening_time, closing_time=r.closing_time %}
+                <div
+                    class="w-full group bg-white rounded-2xl overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-300 restaurant-card{% if loop.index > 6 %} hidden{% endif %}">
+                    {% include "restaurantCard.html" %}
+                </div>
+                {% endwith %}
+                {% else %}
+                <p class="col-span-full text-center py-10 text-on-surface-variant">Không tìm thấy nhà hàng nào phù hợp
+                </p>
+                {% endfor %}
             </div>
-            {% endwith %}
-            {% else %}
-            <p class="col-span-full text-center py-10 text-on-surface-variant">Không tìm thấy nhà hàng nào phù hợp</p>
-            {% endfor %}
-        </div>
 
-        <!-- Nếu có dish results mới show -->
-        {% if dishes %}
-        <!-- Divider -->
-        <div class="flex items-center gap-4 my-lg">
-            <hr class="flex-1 border-outline-variant">
-            <h2 class="font-headline-md text-headline-md text-on-surface-variant whitespace-nowrap">Món ăn</h2>
-            <hr class="flex-1 border-outline-variant">
-        </div>
+            <!-- Nút xem thêm nhà hàng -->
+            <div id="show-more-wrapper" class="text-center {% if restaurants|length <= 6 %}hidden{% endif %}">
+                <button id="show-more-btn" onclick="showAllRestaurants()"
+                    class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200">
+                    <span>Xem thêm nhà hàng</span>
+                    <span class="material-symbols-outlined text-[18px]">expand_more</span>
+                </button>
+            </div>
+        </section>
 
-        <!-- Dish Grid -->
-        <div id="dish-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-            {% for d in dishes %}
-            <div class="group bg-white rounded-xl overflow-hidden custom-shadow hover:-translate-y-1 transition-all duration-300 dish-card"
-                data-price="{{ d.price }}">
-                <div class=" relative h-48">
-                    <img class="w-full h-full object-cover" src="{{ d.image }}" alt="{{ d.name }}">
-                    <!-- Price badge -->
-                    <div class="absolute top-3 right-3 bg-primary text-on-primary px-2 py-1 rounded-lg font-label-md">
-                        {{ "{:,.0f}".format(d.price) }}đ
+        <!-- Khối kết quả món ăn -->
+        <section id="dishes-section" class="hidden space-y-lg">
+            <!-- Tiêu đề riêng cho món ăn -->
+            <div class="flex items-center gap-4">
+                <hr class="flex-1 border-outline-variant">
+                <h2 class="font-headline-md text-headline-md text-on-surface-variant whitespace-nowrap">Món ăn</h2>
+                <hr class="flex-1 border-outline-variant">
+            </div>
+
+            <!-- Grid món ăn -->
+            <div id="dish-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+                {% for d in dishes %}
+                <div class="group bg-white rounded-xl overflow-hidden custom-shadow hover:-translate-y-1 transition-all duration-300 dish-card"
+                    data-price="{{ d.price }}" data-restaurant-id="{{ d.restaurant_id }}">
+                    <div class="relative h-48">
+                        <img class="w-full h-full object-cover" src="{{ d.image }}" alt="{{ d.name }}">
+                        <div
+                            class="absolute top-3 right-3 bg-primary text-on-primary px-2 py-1 rounded-lg font-label-md">
+                            {{ "{:,.0f}".format(d.price) }}đ
+                        </div>
+                        <div
+                            class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-caption font-bold">
+                            {{ d.category.value if d.category else '' }}
+                        </div>
                     </div>
-                    <!-- Category badge -->
-                    <div
-                        class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-caption font-bold">
-                        {{ d.category.value if d.category else '' }}
+
+                    <div class="p-sm space-y-xs">
+                        <h3 class="font-headline-md text-headline-md group-hover:text-primary transition-colors">
+                            {{ d.name }}
+                        </h3>
+                        <p class="text-on-surface-variant text-sm line-clamp-2">{{ d.description }}</p>
+
+                        <!-- Thông tin nhà hàng chứa món này -->
+                        <div class="flex items-center gap-2 pt-1">
+                            <img class="w-6 h-6 rounded-full object-cover"
+                                src="{{ d.restaurant.user.avatar if d.restaurant and d.restaurant.user else '' }}">
+                            <span class="text-body-md text-secondary">{{ d.restaurant.name }}</span>
+                        </div>
                     </div>
                 </div>
-                <div class="p-sm space-y-xs">
-                    <h3 class="font-headline-md text-headline-md group-hover:text-primary transition-colors">{{ d.name
-                        }}</h3>
-                    <p class="text-on-surface-variant text-sm line-clamp-2">{{ d.description }}</p>
-                    <!-- Restaurant info -->
-                    <div class="flex items-center gap-2 pt-1">
-                        <img class="w-6 h-6 rounded-full object-cover" src="{{ d.restaurant.user.avatar if d.restaurant and d.restaurant.user else '' }}">
-                        <span class="text-body-md text-secondary">{{ d.restaurant.name }}</span>
-                    </div>
-                </div>
+                {% else %}
+                <p class="col-span-full text-center py-10 text-on-surface-variant">Không tìm thấy món ăn nào phù hợp</p>
+                {% endfor %}
             </div>
-            {% endfor %}
-        </div>
-
-        <!-- Xem thêm cho dish -->
-        <div id="show-more-dish-wrapper" class="text-center mt-md {% if dishes|length <= 6 %}hidden{% endif %}">
-            <button id="show-more-dish-btn"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200"
-                onclick="showAllDishes()">
-                <span>Xem thêm món ăn</span>
-                <span class="material-symbols-outlined text-[18px]">expand_more</span>
-            </button>
-        </div>
-        {% endif %}
-
-
-        <!-- Xem Thêm Button -->
-        <div id="show-more-wrapper" class="text-center {% if restaurants|length <= 6 %}hidden{% endif %}">
-            <button id="show-more-btn" onclick="showAllRestaurants()"
-                class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200">
-                <span>Xem thêm nhà hàng</span>
-                <span class="material-symbols-outlined text-[18px]">expand_more</span>
-            </button>
-        </div>
+        </section>
     </div>
 </div>
 
 <script>
+    // Hiện tất cả card nhà hàng khi bấm "Xem thêm"
+    function showAllRestaurants() {
+        document.querySelectorAll('.restaurant-card.hidden').forEach(function (card) {
+            card.classList.remove('hidden');
+        });
+        document.getElementById('show-more-wrapper').classList.add('hidden');
+    }
+
+    // Xác định dữ liệu hiện có để chọn tab mặc định hợp lý
+    // Nếu không có nhà hàng nhưng có món ăn, nên mở tab món ăn trước
+    const hasRestaurants = {{ 'true' if restaurants else 'false' }};
+    const hasDishes = {{ 'true' if dishes else 'false' }};
+
+    // Trạng thái hiện tại của sidebar
+    let currentView = hasRestaurants ? 'restaurants' : (hasDishes ? 'dishes' : 'restaurants');
+
+    // Hàm cập nhật giao diện sidebar và vùng nội dung
+    function setCurrentView(view) {
+        currentView = view;
+
+        const restaurantsBtn = document.getElementById('view-restaurants-btn');
+        const dishesBtn = document.getElementById('view-dishes-btn');
+
+        const restaurantsSection = document.getElementById('restaurants-section');
+        const dishesSection = document.getElementById('dishes-section');
+
+        const dishSortBox = document.getElementById('dish-sort-box');
+
+        // Reset style 2 nút về trạng thái chưa active
+        restaurantsBtn.className = 'w-full px-4 py-3 rounded-xl bg-white border border-outline-variant text-on-surface font-label-md text-left transition-all duration-200';
+        dishesBtn.className = 'w-full px-4 py-3 rounded-xl bg-white border border-outline-variant text-on-surface font-label-md text-left transition-all duration-200';
+
+        if (view === 'restaurants') {
+            // Active nút nhà hàng
+            restaurantsBtn.className = 'w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-label-md text-left transition-all duration-200';
+
+            // Chỉ hiện section nhà hàng
+            restaurantsSection.classList.remove('hidden');
+            dishesSection.classList.add('hidden');
+
+            // Ẩn sort món ăn vì không áp dụng cho nhà hàng
+            dishSortBox.classList.add('hidden');
+        } else {
+            // Active nút món ăn
+            dishesBtn.className = 'w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-label-md text-left transition-all duration-200';
+
+            // Chỉ hiện section món ăn
+            restaurantsSection.classList.add('hidden');
+            dishesSection.classList.remove('hidden');
+
+            // Hiện sort món ăn
+            dishSortBox.classList.remove('hidden');
+        }
+    }
+
+    // Sắp xếp món ăn theo giá
+    function applyDishSort() {
+        const select = document.getElementById('dish-sort-select');
+        const grid = document.getElementById('dish-grid');
+        if (!select || !grid) return;
+
+        const cards = Array.from(grid.querySelectorAll('.dish-card'));
+        const value = select.value;
+
+        if (value === 'default') return;
+
+        cards.sort((a, b) => {
+            const pA = parseFloat(a.dataset.price);
+            const pB = parseFloat(b.dataset.price);
+
+            return value === 'price-asc' ? pA - pB : pB - pA;
+        });
+
+        // Gắn lại card sau khi sort
+        cards.forEach(card => grid.appendChild(card));
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Gắn sự kiện cho 2 nút trong sidebar
+        const restaurantsBtn = document.getElementById('view-restaurants-btn');
+        const dishesBtn = document.getElementById('view-dishes-btn');
+        const dishSortSelect = document.getElementById('dish-sort-select');
+
+        if (restaurantsBtn) {
+            restaurantsBtn.addEventListener('click', function () {
+                setCurrentView('restaurants');
+            });
+        }
+
+        if (dishesBtn) {
+            dishesBtn.addEventListener('click', function () {
+                setCurrentView('dishes');
+            });
+        }
+
+        if (dishSortSelect) {
+            dishSortSelect.addEventListener('change', applyDishSort);
+        }
+
+        // Khởi tạo tab mặc định khi trang vừa load
+        setCurrentView(currentView);
+
+        // Cho phép bấm món ăn để đi sang trang chi tiết nhà hàng
+        document.querySelectorAll('.dish-card').forEach(function (card) {
+            card.addEventListener('click', function () {
+                const restaurantId = this.dataset.restaurantId;
+                if (restaurantId) {
+                    window.location.href = '/restaurants/' + restaurantId;
+                }
+            });
+        });
+    });
+
     function showAllRestaurants() {
         document.querySelectorAll('.restaurant-card.hidden').forEach(function (card) {
             card.classList.remove('hidden');
@@ -178,42 +286,6 @@
         const cards = document.querySelectorAll('.dish-card');
         cards.forEach(function (card) { card.style.display = ''; });
         document.getElementById('show-more-dish-wrapper').classList.add('hidden');
-    }
-
-
-    function searchSubmit() {
-        const input = document.getElementById('header-search-input');
-        const keyword = input ? input.value.trim() : '';
-        location.href = '/search_customer?q=' + encodeURIComponent(keyword);
-    }
-
-
-    function applySort() {
-        const selected = document.querySelector('input[name="sort"]:checked');
-        if (!selected) return;
-        const value = selected.value;
-
-        const grid = document.getElementById('dish-grid');
-        if (!grid) return;
-
-        const cards = Array.from(grid.querySelectorAll('.dish-card'));
-
-        if (value === 'best-match') {
-            // reload lại trang để về thứ tự mặc định
-            location.href = '/search_customer?q={{ keyword }}';
-            return;
-        }
-
-        if (value === 'price-asc' || value === 'price-desc') {
-            cards.sort((a, b) => {
-                const pA = parseFloat(a.dataset.price);
-                const pB = parseFloat(b.dataset.price);
-                return value === 'price-asc' ? pA - pB : pB - pA;
-            });
-            cards.forEach(card => grid.appendChild(card));
-        }
-
-        // "Đánh giá cao nhất" giữ nguyên vì chưa có data rating
     }
 </script>
 {% endblock %}

@@ -156,8 +156,10 @@
 
                 {% block itemHeader %}
                 {% endblock %}
-                <button
-                    class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">notifications</button>
+                <button onclick="window.location.href='/notification'"
+                    class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">
+                    notifications
+                </button>
                 <div class="relative">
                     <button
                         class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">shopping_cart</button>
@@ -167,17 +169,18 @@
                 {% if current_user.is_authenticated %}
 
                 <a href="/me">
-                <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
-                    <img class="w-full h-full object-cover" alt="{{ current_user.name }}"
-                        src="{{ current_user.avatar }}">
-                </div>
+                    <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+                        <img class="w-full h-full object-cover" alt="{{ current_user.name }}"
+                            src="{{ current_user.avatar }}">
+                    </div>
                 </a>
                 {% else %}
                 <a href="/login"
                     class="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:opacity-90 scale-95 hover:scale-100 transition-transform duration-150">Tài
                     khoản</a>
                 <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
-                    <a href="/login" class="material-symbols-outlined text-on-surface-variant w-full h-full flex items-center justify-center">person</a>
+                    <a href="/login"
+                        class="material-symbols-outlined text-on-surface-variant w-full h-full flex items-center justify-center">person</a>
                 </div>
                 {% endif %}
             </div>

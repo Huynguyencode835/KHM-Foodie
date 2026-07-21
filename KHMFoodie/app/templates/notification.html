@@ -1,0 +1,287 @@
+{% extends "layout/baseCustomer.html" %}
+
+{% block content %}
+<!-- Main Content -->
+<main class="flex-grow max-w-[1000px] mx-auto w-full px-gutter py-xl">
+    <!-- Page Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-lg">
+        <div>
+            <nav class="flex items-center gap-2 text-caption text-secondary/70 mb-2">
+                <a class="hover:text-primary transition-colors" href="#">Trang chủ</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-on-surface-variant font-medium">Thông báo</span>
+            </nav>
+            <h1 class="font-display-lg text-headline-lg text-on-surface tracking-tight">Thông báo của tôi</h1>
+        </div>
+        <button
+            class="group flex items-center gap-2 text-secondary hover:text-primary bg-surface-container-low hover:bg-primary/5 px-5 py-2.5 rounded-full transition-all border border-outline-variant/30 hover:border-primary/20"
+            id="mark-all-read">
+            <span
+                class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">done_all</span>
+            <span class="font-label-md">Đánh dấu tất cả là đã đọc</span>
+        </button>
+    </div>
+    <!-- Horizontal Tabs Navigation - Modern Style -->
+    <div class="mb-lg overflow-x-auto pb-2">
+        <div class="flex gap-3 min-w-max">
+            <button
+                class="tab-item-modern active px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md transition-all cursor-pointer"
+                data-tab="all">
+                <span class="material-symbols-outlined text-[20px]"
+                    style="font-variation-settings: 'FILL' 1;">apps</span>
+                <span>Tất cả</span>
+                <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] font-bold">4</span>
+            </button>
+            <button
+                class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
+                data-tab="unread">
+                <span class="material-symbols-outlined text-[20px]">mark_email_unread</span>
+                <span>Chưa đọc</span>
+                <span
+                    class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold">2</span>
+            </button>
+            <button
+                class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
+                data-tab="orders">
+                <span class="material-symbols-outlined text-[20px]">local_shipping</span>
+                <span>Đơn hàng</span>
+            </button>
+            <button
+                class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
+                data-tab="promotions">
+                <span class="material-symbols-outlined text-[20px]">sell</span>
+                <span>Khuyến mãi</span>
+            </button>
+        </div>
+    </div>
+    <!-- Notification List Area -->
+    <div class="w-full">
+        <div class="space-y-4">
+            <!-- Notification Item 1: Order Update -->
+            <div
+                class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 flex gap-5 cursor-pointer relative"
+                data-icon="local_shipping" data-title="Cập nhật đơn hàng" data-time="2 phút trước"
+                data-icon-bg="#fff2ed" data-icon-color="primary">
+                <div
+                    class="w-14 h-14 rounded-2xl bg-[#fff2ed] flex items-center justify-center flex-shrink-0 shadow-inner">
+                    <span class="material-symbols-outlined text-primary text-[28px]"
+                        style="font-variation-settings: 'FILL' 1;">local_shipping</span>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-start mb-1.5">
+                        <h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Cập nhật đơn hàng</h3>
+                        <div class="flex items-center gap-3">
+                            <span class="text-caption text-secondary/60">2 phút trước</span>
+                            <div class="unread-dot-integrated"></div>
+                        </div>
+                    </div>
+                    <p class="text-body-md text-on-surface-variant mb-4 max-w-2xl">Đơn hàng <span
+                            class="font-bold text-primary">#CC-9921</span> của bạn đang được giao. Tài xế sẽ đến trong
+                        khoảng 10 phút nữa.</p>
+                    <div class="flex gap-3">
+                        <button
+                            class="text-caption font-bold text-primary px-4 py-2 bg-primary/5 rounded-lg hover:bg-primary/10 transition-colors border border-primary/10 btn-action">Theo
+                            dõi đơn hàng</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Notification Item 2: Promotion -->
+            <div
+                class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 flex gap-5 cursor-pointer relative"
+                data-icon="sell" data-title="Ưu đãi đặc biệt" data-time="1 giờ trước"
+                data-icon-bg="#fff9eb" data-icon-color="tertiary">
+                <div
+                    class="w-14 h-14 rounded-2xl bg-[#fff9eb] flex items-center justify-center flex-shrink-0 shadow-inner">
+                    <span class="material-symbols-outlined text-tertiary text-[28px]"
+                        style="font-variation-settings: 'FILL' 1;">sell</span>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-start mb-1.5">
+                        <h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Ưu đãi đặc biệt</h3>
+                        <div class="flex items-center gap-3">
+                            <span class="text-caption text-secondary/60">1 giờ trước</span>
+                            <div class="unread-dot-integrated"></div>
+                        </div>
+                    </div>
+                    <p class="text-body-md text-on-surface-variant max-w-2xl leading-relaxed">Giảm giá 50% cho <span
+                            class="font-bold">Pizza Lab</span> chỉ trong hôm nay! Đừng bỏ lỡ bữa tối thịnh soạn với giá
+                        hời.</p>
+                </div>
+            </div>
+            <!-- Notification Item 3: Message -->
+            <div
+                class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 flex gap-5 cursor-pointer"
+                data-icon="chat" data-title="Tin nhắn mới" data-time="2 giờ trước"
+                data-icon-bg="bg-surface-container" data-icon-color="secondary">
+                <div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-secondary text-[28px]"
+                        style="font-variation-settings: 'FILL' 1;">chat</span>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-start mb-1.5">
+                        <h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Tin nhắn mới</h3>
+                        <span class="text-caption text-secondary/60">2 giờ trước</span>
+                    </div>
+                    <p class="text-body-md text-on-surface-variant mb-4 max-w-2xl">Nhà hàng <span
+                            class="font-medium text-on-surface">Pizza Lab</span> đã gửi tin nhắn cho bạn về yêu cầu tùy
+                        chỉnh món ăn cho đơn hàng tối nay.</p>
+                    <button
+                        class="text-caption font-bold text-secondary px-4 py-2 bg-surface-container rounded-lg hover:bg-secondary-fixed transition-colors border border-outline-variant/20 btn-action">Xem
+                        tin nhắn</button>
+                </div>
+            </div>
+            <!-- Notification Item 4: System -->
+            <div
+                class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 flex gap-5 cursor-pointer opacity-60 grayscale-[0.2]"
+                data-icon="info" data-title="Thông báo hệ thống" data-time="Hôm qua"
+                data-icon-bg="bg-surface-container" data-icon-color="secondary">
+                <div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-secondary text-[28px]">info</span>
+                </div>
+                <div class="flex-grow">
+                    <div class="flex justify-between items-start mb-1.5">
+                        <h3 class="font-headline-md text-[18px] text-on-surface leading-tight">Thông báo hệ thống</h3>
+                        <span class="text-caption text-secondary/60">Hôm qua</span>
+                    </div>
+                    <p class="text-body-md text-on-surface-variant max-w-2xl">Cập nhật chính sách bảo mật mới của
+                        CraveConnect. Chúng tôi đã cải thiện cách bảo vệ dữ liệu cá nhân của bạn để mang lại trải nghiệm
+                        an toàn hơn.</p>
+                </div>
+            </div>
+        </div>
+        <!-- Empty State (Hidden) -->
+        <div class="hidden flex-col items-center justify-center py-32 text-center bg-surface-container-lowest rounded-3xl border-2 border-dashed border-outline-variant/50"
+            id="empty-state">
+            <div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <span class="material-symbols-outlined text-[48px] text-outline opacity-40">notifications_off</span>
+            </div>
+            <h3 class="font-headline-lg text-headline-md text-on-surface mb-3">Bạn đã cập nhật hết rồi!</h3>
+            <p class="text-body-md text-secondary/70 max-w-xs mx-auto">Mọi cập nhật về đơn hàng và khuyến mãi mới nhất
+                sẽ xuất hiện tại đây.</p>
+            <button
+                class="mt-8 bg-primary text-on-primary px-10 py-3.5 rounded-full font-label-md hover:shadow-xl transition-all hover:-translate-y-1">
+                Tiếp tục khám phá
+            </button>
+        </div>
+        <!-- Load More Button -->
+        <div class="mt-12 text-center">
+            <button
+                class="group inline-flex items-center gap-3 text-secondary font-label-md hover:text-primary transition-all py-3 px-8 rounded-full hover:bg-primary/5 border border-transparent hover:border-primary/10">
+                Tải thêm thông báo
+                <span
+                    class="material-symbols-outlined text-[20px] group-hover:translate-y-1 transition-transform">keyboard_arrow_down</span>
+            </button>
+        </div>
+    </div>
+</main>
+
+{% include 'partials/modalNotification.html' %}
+
+<style>
+    .tab-item-modern.active {
+        background: #a93100;
+        color: #ffffff;
+        box-shadow: 0 2px 12px rgba(169, 49, 0, 0.3);
+    }
+    .tab-item-modern.active .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1;
+    }
+    .unread-dot-integrated {
+        width: 10px;
+        height: 10px;
+        border-radius: 9999px;
+        background: #a93100;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+    }
+</style>
+<script>
+    // Tab switching logic
+    const tabs = document.querySelectorAll('.tab-item-modern');
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => {
+                t.classList.remove('active');
+                t.classList.add('text-secondary');
+                const icon = t.querySelector('.material-symbols-outlined');
+                if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+            });
+            tab.classList.add('active');
+            tab.classList.remove('text-secondary');
+            const activeIcon = tab.querySelector('.material-symbols-outlined');
+            if (activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+        });
+    });
+
+    // Mark all as read micro-interaction
+    const markAllBtn = document.getElementById('mark-all-read');
+    if (markAllBtn) {
+        markAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.unread-dot-integrated').forEach(dot => {
+                dot.style.transform = 'scale(0)';
+                setTimeout(() => dot.remove(), 300);
+            });
+            document.querySelectorAll('.notification-card').forEach(card => {
+                card.style.opacity = '0.6';
+                card.style.filter = 'grayscale(0.2)';
+            });
+            // Update counts
+            document.querySelectorAll('.bg-white\\/20, .bg-secondary-container').forEach(badge => {
+                badge.textContent = '0';
+                if (badge.classList.contains('bg-white/20')) badge.style.opacity = '0.5';
+            });
+        });
+    }
+
+    // Card click: mark as read + show modal with details
+    document.querySelectorAll('.notification-card').forEach(card => {
+        card.addEventListener('click', function (e) {
+            if (e.target.closest('button')) return;
+
+            const dot = this.querySelector('.unread-dot-integrated');
+            if (dot) {
+                dot.style.transform = 'scale(0)';
+                setTimeout(() => dot.remove(), 300);
+                this.style.opacity = '0.6';
+                this.style.filter = 'grayscale(0.2)';
+            }
+
+            const icon = this.dataset.icon || 'notifications';
+            const title = this.dataset.title || 'Thông báo';
+            const time = this.dataset.time || '';
+            const iconBg = this.dataset.iconBg || '#f0f1f2';
+            const iconColor = this.dataset.iconColor || 'secondary';
+
+            const msgP = this.querySelector('p');
+            const msgHTML = msgP ? msgP.innerHTML : '';
+
+            const actionBtn = this.querySelector('.btn-action');
+            const actionHTML = actionBtn ? actionBtn.outerHTML : '';
+
+            let iconStyle = '';
+            if (iconBg.startsWith('#')) {
+                iconStyle = 'style="background:' + iconBg + '"';
+            } else {
+                iconStyle = 'class="' + iconBg + '"';
+            }
+
+            const bodyHTML =
+                '<div class="flex flex-col items-center text-center pt-2 pb-4">' +
+                    '<div ' + iconStyle + ' class="w-16 h-16 rounded-2xl flex items-center justify-center shadow-inner">' +
+                        '<span class="material-symbols-outlined text-' + iconColor + ' text-[36px]" style="font-variation-settings:\'FILL\' 1">' + icon + '</span>' +
+                    '</div>' +
+                    '<div class="text-caption text-secondary/60 mt-4">' + time + '</div>' +
+                    '<div class="text-body-md text-on-surface-variant mt-4 max-w-lg text-left leading-relaxed">' + msgHTML + '</div>' +
+                    (actionHTML ? '<div class="mt-6">' + actionHTML + '</div>' : '') +
+                '</div>';
+
+            openModal({
+                title: title,
+                icon: icon,
+                body: bodyHTML,
+                size: 'md'
+            });
+        });
+    });
+</script>
+{% endblock %}

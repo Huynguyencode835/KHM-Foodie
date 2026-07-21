@@ -1,0 +1,258 @@
+<!-- ============================================================
+     Shared Modal Component
+     Usage:
+       <button data-modal-trigger="myModal">Open Modal</button>
+
+       <div id="myModal" class="modal" data-modal-size="md">
+         <div data-modal-header>
+           <span data-modal-icon>info</span>
+           <h2 data-modal-title>Title</h2>
+         </div>
+         <div data-modal-body>
+           Body content here
+         </div>
+         <div data-modal-footer>
+           <button data-modal-close class="btn-secondary">Đóng</button>
+           <button class="btn-primary">Xác nhận</button>
+         </div>
+       </div>
+     ============================================================ -->
+<div id="modal-root" class="fixed inset-0 z-[100] flex items-center justify-center hidden" role="dialog"
+  aria-modal="true" aria-labelledby="modal-title">
+  <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" data-modal-backdrop></div>
+  <div class="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full mx-gutter
+              transition-all duration-300 scale-95 opacity-0 max-h-[85dvh] flex flex-col overflow-hidden"
+    data-modal-container>
+    <div class="flex items-center justify-between px-md pt-md pb-sm shrink-0" data-modal-header>
+      <div class="flex items-center gap-2 min-w-0">
+        <span class="material-symbols-outlined text-primary hidden" data-modal-icon></span>
+        <h2 id="modal-title" class="font-headline-md text-headline-md text-on-surface truncate" data-modal-title></h2>
+      </div>
+      <button data-modal-close
+        class="material-symbols-outlined p-1.5 text-on-surface-variant hover:bg-surface-container-highest rounded-full transition-all shrink-0">
+        close
+      </button>
+    </div>
+    <div class="overflow-y-auto px-md py-sm flex-1 no-scrollbar" data-modal-body></div>
+    <div
+      class="flex items-center justify-end gap-sm px-md pb-md pt-sm shrink-0 border-t border-outline-variant/30 hidden"
+      data-modal-footer></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     Push Notification Component
+     Usage:
+       showNotification({
+         type: 'success',   // success | error | info | warning
+         title: 'Thành công!',
+         message: 'Đã lưu thông tin.',
+         duration: 4000
+       });
+     ============================================================ -->
+<div id="notification-container"
+  class="fixed top-4 right-4 z-[200] flex flex-col gap-2 w-[360px] max-w-[calc(100vw-2rem)] pointer-events-none">
+</div>
+
+<style>
+  #modal-root.show {
+    display: flex;
+  }
+
+  #modal-root.show>div[data-modal-container] {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  #modal-root.show>div[data-modal-backdrop] {
+    opacity: 1;
+  }
+
+  #modal-root>div[data-modal-container] {
+    max-width: min(calc(100vw - 2rem), 100%);
+  }
+
+  #modal-root[data-modal-size="sm"]>div[data-modal-container] {
+    max-width: 400px;
+  }
+
+  #modal-root[data-modal-size="md"]>div[data-modal-container] {
+    max-width: 560px;
+  }
+
+  #modal-root[data-modal-size="lg"]>div[data-modal-container] {
+    max-width: 720px;
+  }
+
+  #modal-root[data-modal-size="xl"]>div[data-modal-container] {
+    max-width: 920px;
+  }
+
+  #modal-root[data-modal-size="full"]>div[data-modal-container] {
+    max-width: calc(100vw - 4rem);
+    height: calc(100dvh - 4rem);
+    max-height: calc(100dvh - 4rem);
+  }
+
+  .notification-toast {
+    pointer-events: auto;
+    transform: translateX(120%);
+    opacity: 0;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.3s ease;
+  }
+
+  .notification-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .notification-toast.removing {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+
+  @media (max-width: 480px) {
+    #notification-container {
+      left: 50%;
+      right: auto;
+      transform: translateX(-50%);
+      width: calc(100vw - 2rem);
+    }
+  }
+</style>
+
+<script>
+  // ============================================================
+  // Modal API
+  // ============================================================
+  (function () {
+    const root = document.getElementById('modal-root');
+    if (!root) return;
+    const container = root.querySelector('[data-modal-container]');
+    const backdrop = root.querySelector('[data-modal-backdrop]');
+    const closeBtn = root.querySelector('[data-modal-close]');
+    const titleEl = root.querySelector('[data-modal-title]');
+    const iconEl = root.querySelector('[data-modal-icon]');
+    const bodyEl = root.querySelector('[data-modal-body]');
+    const footerEl = root.querySelector('[data-modal-footer]');
+    let currentResolve = null;
+
+    function openModal(opts) {
+      if (!root) return;
+      opts = opts || {};
+      const size = opts.size || 'md';
+      root.setAttribute('data-modal-size', size);
+      titleEl.textContent = opts.title || '';
+      if (opts.icon) {
+        iconEl.classList.remove('hidden');
+        iconEl.textContent = opts.icon;
+      } else {
+        iconEl.classList.add('hidden');
+      }
+      bodyEl.innerHTML = opts.body || '';
+      if (opts.footer) {
+        footerEl.classList.remove('hidden');
+        footerEl.innerHTML = opts.footer;
+      } else {
+        footerEl.classList.add('hidden');
+      }
+      root.classList.add('show');
+      document.body.style.overflow = 'hidden';
+      currentResolve = null;
+      return new Promise(function (resolve) {
+        currentResolve = resolve;
+      });
+    }
+
+    function closeModal() {
+      root.classList.remove('show');
+      document.body.style.overflow = '';
+      if (currentResolve) {
+        currentResolve({ dismissed: true });
+        currentResolve = null;
+      }
+    }
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', function (e) {
+      if (e.target === backdrop) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && root.classList.contains('show')) closeModal();
+    });
+
+    window.openModal = openModal;
+    window.closeModal = closeModal;
+  })();
+
+  // ============================================================
+  // Push Notification API
+  // ============================================================
+  (function () {
+    var container = document.getElementById('notification-container');
+    if (!container) return;
+
+    var icons = {
+      success: 'check_circle',
+      error: 'error',
+      warning: 'warning',
+      info: 'info'
+    };
+    var colors = {
+      success: { bg: 'bg-[#d1fae5]', border: 'border-[#059669]', icon: 'text-[#059669]', title: 'text-[#065f46]', msg: 'text-[#065f46]/80' },
+      error: { bg: 'bg-[#fee2e2]', border: 'border-[#dc2626]', icon: 'text-[#dc2626]', title: 'text-[#991b1b]', msg: 'text-[#991b1b]/80' },
+      warning: { bg: 'bg-[#fef3c7]', border: 'border-[#d97706]', icon: 'text-[#d97706]', title: 'text-[#92400e]', msg: 'text-[#92400e]/80' },
+      info: { bg: 'bg-[#dbeafe]', border: 'border-[#2563eb]', icon: 'text-[#2563eb]', title: 'text-[#1e40af]', msg: 'text-[#1e40af]/80' }
+    };
+
+    window.showNotification = function (opts) {
+      opts = opts || {};
+      var type = opts.type || 'info';
+      var title = opts.title || '';
+      var message = opts.message || '';
+      var duration = opts.duration != null ? opts.duration : 4000;
+
+      var c = colors[type] || colors.info;
+      var icon = icons[type] || icons.info;
+
+      var toast = document.createElement('div');
+      toast.className = 'notification-toast rounded-xl border-l-4 shadow-lg ' + c.bg + ' ' + c.border + ' p-3 flex items-start gap-3';
+
+      toast.innerHTML =
+        '<span class="material-symbols-outlined text-xl shrink-0 ' + c.icon + '">' + icon + '</span>' +
+        '<div class="flex-1 min-w-0">' +
+        (title ? '<div class="font-label-md text-label-md font-bold ' + c.title + '">' + title + '</div>' : '') +
+        (message ? '<div class="font-body-md text-body-md ' + c.msg + '">' + message + '</div>' : '') +
+        '</div>' +
+        '<button class="notification-close material-symbols-outlined text-lg shrink-0 text-on-surface-variant hover:opacity-70 transition-opacity">close</button>';
+
+      container.appendChild(toast);
+
+      requestAnimationFrame(function () {
+        toast.classList.add('show');
+      });
+
+      var timer = null;
+      if (duration > 0) {
+        timer = setTimeout(function () {
+          removeToast(toast);
+        }, duration);
+      }
+
+      toast.querySelector('.notification-close').addEventListener('click', function () {
+        clearTimeout(timer);
+        removeToast(toast);
+      });
+
+      function removeToast(el) {
+        if (el.classList.contains('removing')) return;
+        el.classList.remove('show');
+        el.classList.add('removing');
+        setTimeout(function () {
+          if (el.parentNode) el.parentNode.removeChild(el);
+        }, 350);
+      }
+    };
+  })();
+</script>
