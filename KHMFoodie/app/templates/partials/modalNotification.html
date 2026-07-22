@@ -21,7 +21,7 @@
   aria-modal="true" aria-labelledby="modal-title">
   <div class="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300" data-modal-backdrop></div>
   <div class="relative bg-surface-container-lowest rounded-2xl shadow-2xl w-full mx-gutter
-              transition-all duration-300 scale-95 opacity-0 max-h-[85dvh] flex flex-col overflow-hidden"
+              transition-[transform,opacity] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] translate-y-4 scale-95 opacity-0 max-h-[85dvh] flex flex-col overflow-hidden"
     data-modal-container>
     <div class="flex items-center justify-between px-md pt-md pb-sm shrink-0" data-modal-header>
       <div class="flex items-center gap-2 min-w-0">
@@ -70,6 +70,16 @@
 
   #modal-root>div[data-modal-container] {
     max-width: min(calc(100vw - 2rem), 100%);
+    will-change: transform, opacity;
+  }
+
+  #modal-root.show>div[data-modal-container] {
+    transform: translateY(0) scale(1);
+  }
+
+  #modal-root>div[data-modal-backdrop] {
+    opacity: 0;
+    transition: opacity 180ms ease;
   }
 
   #modal-root[data-modal-size="sm"]>div[data-modal-container] {
@@ -137,12 +147,18 @@
     const bodyEl = root.querySelector('[data-modal-body]');
     const footerEl = root.querySelector('[data-modal-footer]');
     let currentResolve = null;
+    let closeTimer = null;
 
     function openModal(opts) {
       if (!root) return;
       opts = opts || {};
       const size = opts.size || 'md';
       root.setAttribute('data-modal-size', size);
+      root.classList.remove('show');
+      root.style.display = 'flex';
+      backdrop.style.opacity = '0';
+      container.style.opacity = '0';
+      container.style.transform = 'translateY(24px) scale(0.96)';
       titleEl.textContent = opts.title || '';
       if (opts.icon) {
         iconEl.classList.remove('hidden');
@@ -159,21 +175,41 @@
       } else {
         footerEl.classList.add('hidden');
       }
-      root.classList.add('show');
       document.body.style.overflow = 'hidden';
       currentResolve = null;
+      if (closeTimer) {
+        clearTimeout(closeTimer);
+        closeTimer = null;
+      }
+      container.offsetWidth;
+      backdrop.style.transition = 'opacity 180ms ease';
+      container.style.transition = 'transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 220ms ease';
       return new Promise(function (resolve) {
         currentResolve = resolve;
+        requestAnimationFrame(function () {
+          backdrop.style.opacity = '1';
+          container.style.opacity = '1';
+          container.style.transform = 'translateY(0) scale(1)';
+          root.classList.add('show');
+        });
       });
     }
 
     function closeModal() {
       root.classList.remove('show');
+      backdrop.style.opacity = '0';
+      container.style.opacity = '0';
+      container.style.transform = 'translateY(24px) scale(0.96)';
       document.body.style.overflow = '';
       if (currentResolve) {
         currentResolve({ dismissed: true });
         currentResolve = null;
       }
+      closeTimer = setTimeout(function () {
+        root.style.display = '';
+        backdrop.style.transition = '';
+        container.style.transition = '';
+      }, 300);
     }
 
     closeBtn.addEventListener('click', closeModal);
