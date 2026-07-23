@@ -4,6 +4,7 @@ from app.dao.userDao import add_user, check_userEmail
 from app.dao.userDao import UserDao
 from flask_login import login_user, logout_user, login_required, current_user
 import cloudinary.uploader
+from app.service.notificationByEmail import send_account_registration_email, send_restaurant_registration_pending_email 
 
 class LoginController:
 
@@ -113,6 +114,10 @@ class LoginController:
             return jsonify({"message": "Username already exists"}), 409
 
         add_user(name, phone, username, password, email)
+        send_account_registration_email(
+            recipient=email,
+            username=name
+        )
         return jsonify({"message": "Registration successful"}), 201
 
     @staticmethod
@@ -167,5 +172,10 @@ class LoginController:
             tax_code=tax_code,
             avatar=avatar_path,
             cover_image=avatar_path,
+        )
+
+        send_restaurant_registration_pending_email(
+            recipient=email,
+            restaurant_name=name
         )
         return jsonify({"message": "Đăng ký nhà hàng thành công!"}), 201

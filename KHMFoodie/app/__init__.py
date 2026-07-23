@@ -10,8 +10,9 @@ from flask_admin import Admin
 from app.models.model import User, Restaurant, Dish
 from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView
 from flask_admin.theme import Bootstrap4Theme
-
+from flask_mail import Mail, Message
 import cloudinary
+from app.extensions import db, mail
 
 
 load_dotenv()
@@ -41,9 +42,18 @@ def create_app(config_name='dev'):
 
     app.config.from_object(config_map[config_name])
 
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+
     # Init extensions
     login_manager.init_app(app)
     db.init_app(app)
+    mail.init_app(app) 
 
     # Admin
     from app.models.model import User, Restaurant, Dish
