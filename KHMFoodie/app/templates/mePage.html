@@ -77,6 +77,17 @@
             </div>
             <!-- Brand Details -->
             <div class="pt-20 pb-8 px-8 space-y-6">
+                {% if approval_status == "Bị từ chối" and rejection_reason %}
+                <div class="rounded-xl border border-error-container bg-error-container/50 p-4 text-error">
+                    <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined mt-0.5">error</span>
+                        <div>
+                            <p class="font-bold">Nhà hàng đang bị từ chối</p>
+                            <p class="text-body-md mt-1">{{ rejection_reason }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-label-md font-bold text-on-surface-variant">Tên nhà hàng</label>

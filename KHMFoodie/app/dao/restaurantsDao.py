@@ -25,17 +25,20 @@ class RestaurantsDao:
         if not r:
             return None
         r.approval_status = RestaurantApprovalStatus.APPROVED
+        r.rejection_reason = None
         if r.user:
             r.user.active = True
         db.session.commit()
         return r
 
     @staticmethod
-    def reject_restaurant(restaurant_id):
+    def reject_restaurant(restaurant_id, reason=None):
         r = Restaurant.query.get(restaurant_id)
         if not r:
             return None
+        reason = reason.strip()
         r.approval_status = RestaurantApprovalStatus.REJECTED
+        r.rejection_reason = reason
         if r.user:
             r.user.active = False
         db.session.commit()

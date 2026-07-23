@@ -132,38 +132,85 @@
                                 <h3 class="font-headline-md text-headline-md">Giỏ hàng của bạn</h3>
                                 <span class="material-symbols-outlined text-secondary">shopping_bag</span>
                             </div>
-                            <div class="flex items-start gap-xs bg-surface-container-low p-sm rounded-lg mb-md">
-                                <span class="material-symbols-outlined text-sm text-primary">info</span>
-                                <p class="text-caption text-secondary">Mỗi nhà hàng có giỏ hàng riêng. Đang xem <span
-                                        data-restaurant-name-sidebar>Pizza Lab</span>.</p>
-                            </div>
-                            <div class="space-y-sm max-h-[300px] overflow-y-auto no-scrollbar mb-md" id="cart-items">
+                            <div class="space-y-sm max-h-[220px] overflow-y-auto pr-1 mb-md" id="cart-items">
                                 <div class="flex justify-between items-center py-xs border-b border-outline-variant/10">
                                     <div>
                                         <p class="font-label-md">Truffle &amp; Forest Fungi</p>
-                                        <p class="text-caption text-secondary">1 x 285.000đ</p>
-                                    </div><span class="font-label-md text-on-surface">285.000đ</span>
+                                        <p class="text-caption text-secondary">285.000đ</p>
+                                    </div>
+                                    <div class="flex items-center gap-xs">
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">remove</span>
+                                        </button>
+                                        <span class="font-label-md w-4 text-center">1</span>
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="flex justify-between items-center py-xs border-b border-outline-variant/10">
                                     <div>
                                         <p class="font-label-md">Burrata Prosciutto</p>
-                                        <p class="text-caption text-secondary">1 x 320.000đ</p>
-                                    </div><span class="font-label-md text-on-surface">320.000đ</span>
+                                        <p class="text-caption text-secondary">320.000đ</p>
+                                    </div>
+                                    <div class="flex items-center gap-xs">
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">remove</span>
+                                        </button>
+                                        <span class="font-label-md w-4 text-center">1</span>
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center py-xs border-b border-outline-variant/10">
+                                    <div>
+                                        <p class="font-label-md">Margherita Classic</p>
+                                        <p class="text-caption text-secondary">180.000đ</p>
+                                    </div>
+                                    <div class="flex items-center gap-xs">
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">remove</span>
+                                        </button>
+                                        <span class="font-label-md w-4 text-center">1</span>
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="flex justify-between items-center py-xs border-b border-outline-variant/10">
+                                    <div>
+                                        <p class="font-label-md">Pepperoni Supreme</p>
+                                        <p class="text-caption text-secondary">250.000đ</p>
+                                    </div>
+                                    <div class="flex items-center gap-xs">
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">remove</span>
+                                        </button>
+                                        <span class="font-label-md w-4 text-center">1</span>
+                                        <button
+                                            class="w-6 h-6 rounded-full border border-outline-variant flex items-center justify-center text-secondary hover:bg-primary hover:text-white hover:border-primary active:scale-90 transition-all">
+                                            <span class="material-symbols-outlined text-sm">add</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="border-t border-outline-variant pt-md space-y-xs">
                                 <div class="flex justify-between text-body-md text-secondary">
                                     <span>Tạm tính</span>
-                                    <span id="cart-subtotal">605.000đ</span>
-                                </div>
-                                <div class="flex justify-between text-body-md text-secondary">
-                                    <span>Phí giao hàng (1.2km)</span>
-                                    <span>15.000đ</span>
+                                    <span id="cart-subtotal">1.035.000đ</span>
                                 </div>
                                 <div
-                                    class="flex justify-between font-headline-md text-headline-md text-on-surface pt-sm">
-                                    <span>Tổng cộng</span>
-                                    <span class="text-primary" id="cart-total">620.000đ</span>
+                                    class="flex justify-between items-center gap-xs font-headline-md text-headline-md text-on-surface pt-sm">
+                                    <span class="whitespace-nowrap">Tổng cộng</span>
+                                    <span class="text-primary whitespace-nowrap" id="cart-total">1.035.000đ</span>
                                 </div>
                             </div>
                             <button
@@ -281,6 +328,7 @@
     </button>
 </div>
 
+<script src="{{ url_for('static', filename='js/restaurantDetail.js') }}"></script>
 <script>
     async function fetchRestaurantData(id) {
         const res = await fetch(`/api/restaurants/${id}`);
@@ -376,7 +424,7 @@
                 <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
                     <span class="font-headline-md text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>
                     <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
-                        onclick="addToCart('${(d.name || '').replace(/'/g, "\\'")}', ${d.price || 0})">
+                        onclick="addToCart(${d.id})">
                         <span class="material-symbols-outlined text-sm">add</span> Thêm
                     </button>
                 </div>
