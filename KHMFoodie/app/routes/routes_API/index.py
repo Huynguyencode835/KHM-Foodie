@@ -3,6 +3,8 @@ from app.routes.routes_API.restaurantRoute import restaurant_api
 from app.routes.routes_API.searchRoute import search_api
 from app.routes.routes_API.adminRoute import admin_api
 from app.routes.routes_API.fcmRoute import fcm_api
+from app.routes.routes_API.cartRoute import cart_api
+from app.routes.routes_API.voucherRoute import voucher_api
 
 
 def route_api(app):
@@ -11,3 +13,5 @@ def route_api(app):
     app.register_blueprint(search_api, url_prefix="/api/search")
     app.register_blueprint(admin_api, url_prefix="/api/admin")
     app.register_blueprint(fcm_api, url_prefix="/api/fcm")
+    app.register_blueprint(cart_api, url_prefix="/api/cart")
+    app.register_blueprint(voucher_api, url_prefix="/api")

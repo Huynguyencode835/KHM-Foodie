@@ -12,6 +12,7 @@ from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexVie
 from flask_admin.theme import Bootstrap4Theme
 from app.extensions import db, mail, init_firebase
 
+from flask_mail import Mail, Message
 import cloudinary
 
 
@@ -45,6 +46,14 @@ def create_app(config_name='dev'):
     if cred_path and not os.path.isabs(cred_path):
         cred_path = os.path.join(app.root_path, '..', cred_path)
     app.config['FIREBASE_CREDENTIALS_PATH'] = cred_path
+
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USE_SSL'] = False
+    app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
 
     # Init extensions
     login_manager.init_app(app)

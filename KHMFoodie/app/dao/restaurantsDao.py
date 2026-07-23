@@ -1,7 +1,7 @@
 from app.models.model import Restaurant, User, Dish, RestaurantApprovalStatus
 from app.extensions import db
 from sqlalchemy import func
-
+from app.service.notificationByEmail import send_restaurant_approved_email,send_restaurant_rejected_email
 
 class RestaurantsDao:
 
@@ -25,20 +25,32 @@ class RestaurantsDao:
         if not r:
             return None
         r.approval_status = RestaurantApprovalStatus.APPROVED
+        r.rejection_reason = None
         if r.user:
             r.user.active = True
+            r.active = True
         db.session.commit()
+        send_restaurant_approved_email(
+            recipient=r.user.email,
+            restaurant_name=r.user.name
+        )
         return r
 
     @staticmethod
-    def reject_restaurant(restaurant_id):
+    def reject_restaurant(restaurant_id, reason=None):
         r = Restaurant.query.get(restaurant_id)
         if not r:
             return None
+        reason = reason.strip()
         r.approval_status = RestaurantApprovalStatus.REJECTED
+        r.rejection_reason = reason
         if r.user:
             r.user.active = False
         db.session.commit()
+        send_restaurant_rejected_email(
+            recipient=r.user.email,
+            restaurant_name=r.user.name
+        )
         return r
     
     @staticmethod

@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, abort
 from flask_login import current_user, login_required
 from app.models.model import UserRole, CuisineType
 
@@ -48,3 +48,15 @@ def me_page():
             layout_template=layout_template,
             role='Guest'
         )
+
+
+@login_required
+def promotions_page():
+    role = current_user.role
+    if role != UserRole.RESTAURANT:
+        abort(403)
+
+    return render_template(
+        'promotionsPage.html',
+        title='Khuyến mãi'
+    )

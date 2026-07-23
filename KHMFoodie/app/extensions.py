@@ -1,4 +1,3 @@
-# app/extensions.py
 from flask_sqlalchemy import SQLAlchemy
 import firebase_admin
 from flask_mail import Mail
