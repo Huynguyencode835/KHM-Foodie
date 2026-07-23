@@ -177,6 +177,6 @@ class LoginController:
 
         send_restaurant_registration_pending_email(
             recipient=email,
-            username=name
+            restaurant_name=name
         )
         return jsonify({"message": "Đăng ký nhà hàng thành công!"}), 201
