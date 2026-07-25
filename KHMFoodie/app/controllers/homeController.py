@@ -1,4 +1,4 @@
-from flask import render_template, abort
+from flask import render_template, abort, redirect, url_for
 from flask_login import current_user, login_required
 from app.models.model import UserRole, CuisineType
 
@@ -7,12 +7,20 @@ def index():
     return render_template('homePage.html', title='KHM Foodie', description='Welcome to KHM Foodie! Explore the best food in Cambodia.')
 
 def login_page():
+    if current_user.is_authenticated:
+        return redirect(url_for('home_bp.index'))
     return render_template('loginPage.html')
 
 def register_page():
+    if current_user.is_authenticated:
+        return redirect(url_for('home_bp.index'))
     return render_template('registerPage.html')
 
 def register_page_restaurant():
+    if current_user.is_authenticated and current_user.role != UserRole.RESTAURANT:
+        return redirect(url_for('home_bp.index'))
+    if current_user.is_authenticated and current_user.role == UserRole.RESTAURANT:
+        return redirect(url_for('home_bp.me_page'))
     return render_template('registerPageRestaurant.html')
 
 def me_page():

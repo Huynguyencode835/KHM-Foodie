@@ -10,6 +10,8 @@ class AdminSecureView(ModelView):
         return current_user.is_authenticated and current_user.role == UserRole.ADMIN
 
     def inaccessible_callback(self, name, **kwargs):
+        if current_user.is_authenticated:
+            return redirect(url_for('home_bp.index'))
         return redirect(url_for('login_bp.login_page'))
 
 
@@ -18,6 +20,8 @@ class AdminSecureIndexView(AdminIndexView):
         return current_user.is_authenticated and current_user.role == UserRole.ADMIN
 
     def inaccessible_callback(self, name, **kwargs):
+        if current_user.is_authenticated:
+            return redirect(url_for('home_bp.index'))
         return redirect(url_for('login_bp.login_page'))
 
 
