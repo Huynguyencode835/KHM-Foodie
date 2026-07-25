@@ -15,7 +15,6 @@ def register_page():
 def register_page_restaurant():
     return render_template('registerPageRestaurant.html')
 
-@login_required
 def me_page():
     role = current_user.role
 

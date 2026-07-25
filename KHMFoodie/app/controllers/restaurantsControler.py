@@ -51,10 +51,6 @@ class RestaurantsController:
                 "phonenumber": user.phonenumber if user else None,
                 "email": user.email if user else None,
                 "status": restaurant.status,
-                "tax_code": restaurant.tax_code,
-                "username": user.username if user else None,
-                "role": user.role.value if user and user.role else None,
-                "auth_provider": user.auth_provider if user else None,
                 "active": restaurant.active,
                 "created_at": restaurant.created_at.isoformat() if restaurant.created_at else None,
                 "created_updated_at": restaurant.created_updated_at.isoformat() if restaurant.created_updated_at else None
