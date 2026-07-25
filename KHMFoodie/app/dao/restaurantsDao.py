@@ -16,9 +16,10 @@ class RestaurantsDao:
                 query = query.filter(Restaurant.approval_status == status_enum)
             except KeyError:
                 pass
-        query = query.order_by(Restaurant.created_at.desc())
-        return query.paginate(page=page, per_page=per_page, error_out=False)
+        query = query.order_by(Restaurant.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
 
+        return query
+    
     @staticmethod
     def approve_restaurant(restaurant_id):
         r = Restaurant.query.get(restaurant_id)
@@ -73,19 +74,19 @@ class RestaurantsDao:
         ).filter_by(id=restaurant_id, active=True).first()
 
     @staticmethod
-    def search_restaurants(keyword):
+    def search_restaurants(keyword, page=1, per_page=9):
         query = Restaurant.query.options(db.joinedload(Restaurant.user)).filter(Restaurant.active == True)
         if keyword:
             query = query.filter(Restaurant.name.ilike(f"%{keyword}%"))
-        return query.all()
+        return query.order_by(Restaurant.created_at.desc()).paginate(page=page, per_page=per_page, error_out=False)
 
     @staticmethod
-    def search_dishes(keyword):
+    def search_dishes(keyword, page=1, per_page=9):
         if not keyword:
-            return []
+            return Dish.query.filter(False).paginate(page=page, per_page=per_page, error_out=False)
         return Dish.query.options(
             db.joinedload(Dish.restaurant).joinedload(Restaurant.user)
         ).filter(
             Dish.active == True,
             Dish.name.ilike(f"%{keyword}%")
-        ).all()
+        ).paginate(page=page, per_page=per_page, error_out=False)
