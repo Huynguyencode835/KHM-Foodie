@@ -144,6 +144,7 @@ class CartItems(Base):
     def __str__(self):
         return f"CartItem({self.cart_id}, {self.dish_id})"
 
+
 def hash_password(raw_password: str) -> str:
     return str(hashlib.md5(raw_password.encode('utf-8')).hexdigest())
 

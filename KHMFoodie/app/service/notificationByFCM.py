@@ -19,8 +19,11 @@ def send_push_notification(user_id, title, body, data=None):
     current_app.logger.info(f"Đang gửi push cho user {user_id}, số token: {len(tokens)}")
 
     message = messaging.MulticastMessage(
-        notification=messaging.Notification(title=title, body=body),
-        data=data or {},
+        data={
+            "title": title,
+            "body": body,
+            **(data or {})
+        },
         tokens=tokens
     )
 
@@ -51,7 +54,6 @@ def send_push_notification_multicast(tokens, title, body, data=None):
         return None
 
     message = messaging.MulticastMessage(
-        notification=messaging.Notification(title=title, body=body),
         data=data or {},
         tokens=tokens
     )
@@ -68,7 +70,6 @@ def send_push_notification_to_topic(topic, title, body, data=None):
     Gửi push notification broadcast tới 1 topic (nhóm user đã subscribe).
     """
     message = messaging.Message(
-        notification=messaging.Notification(title=title, body=body),
         data=data or {},
         topic=topic
     )

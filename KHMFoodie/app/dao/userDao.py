@@ -9,7 +9,7 @@ class UserDao:
         return User.query.filter_by(username=username).first()
     
     @staticmethod
-    def check_userActive(self, user):
+    def check_userActive(user):
         user = User.query.get(user.id)
         if user:
             return user.active

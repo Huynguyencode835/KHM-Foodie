@@ -6,64 +6,37 @@ FCM_COLLECTION = "fcm_tokens"
 NOTIFICATIONS_COLLECTION = "notifications"
 
 
-def save_fcm_token(user_id, token, device_id, platform="unknown"):
-    """
-    Lưu/cập nhật FCM token cho 1 thiết bị cụ thể của user.
-
-    Tham số:
-        user_id   (str/int): ID user trong hệ thống (SQL).
-        token     (str): FCM token do client gửi lên.
-        device_id (str): ID định danh thiết bị (client tự sinh, lưu local để biết thiết bị nào).
-        platform  (str): "android" | "ios" | "web".
-    """
+def save_fcm_token(user_id, token, device_id=None, platform="unknown"):
     doc_ref = firestore_db.collection(FCM_COLLECTION).document(str(user_id))
     doc_ref.set({
-        "tokens": {
-            device_id: {
-                "token": token,
-                "platform": platform,
-                "updated_at": datetime.now(timezone.utc)
-            }
-        }
-    }, merge=True)  # merge=True để không ghi đè token của thiết bị khác
+        "token": token,
+        "platform": platform,
+        "updated_at": datetime.now(timezone.utc)
+    })
 
 
 def get_fcm_tokens(user_id):
-    """
-    Lấy toàn bộ token của 1 user (tất cả thiết bị).
-    Trả về: list các token (str).
-    """
     doc = firestore_db.collection(FCM_COLLECTION).document(str(user_id)).get()
     if not doc.exists:
         return []
 
-    tokens_data = doc.to_dict().get("tokens", {})
-    return [info["token"] for info in tokens_data.values() if "token" in info]
+    data = doc.to_dict()
+    token = data.get("token")
+    return [token] if token else []
 
 
-def delete_fcm_token(user_id, device_id):
-    """
-    Xóa token của 1 thiết bị cụ thể, gọi khi user logout thiết bị đó.
-    """
+def delete_fcm_token(user_id, device_id=None):
     doc_ref = firestore_db.collection(FCM_COLLECTION).document(str(user_id))
-    doc_ref.update({
-        f"tokens.{device_id}": firestore.DELETE_FIELD
-    })
+    doc_ref.delete()
 
 
 def delete_invalid_token(user_id, token):
-    """
-    Xóa 1 token cụ thể khỏi Firestore khi FCM báo token đã hết hạn/không hợp lệ
-    (dùng trong except block của hàm gửi push).
-    """
     doc = firestore_db.collection(FCM_COLLECTION).document(str(user_id)).get()
     if not doc.exists:
         return
 
-    tokens_data = doc.to_dict().get("tokens", {})
-    for device_id, info in list(tokens_data.items()):
-        if info.get("token") == token:
-            delete_fcm_token(user_id, device_id)
+    if doc.to_dict().get("token") == token:
+        delete_fcm_token(user_id)
 
 
 def save_notification(user_id, title, body, data=None):

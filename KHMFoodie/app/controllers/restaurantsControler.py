@@ -35,11 +35,6 @@ class RestaurantsController:
         restaurant = RestaurantsDao.get_restaurant_by_id(restaurant_id)
         if restaurant:
             user = restaurant.user
-            try:
-                send_push_notification(37, "Có người xem nhà hàng của bạn!",
-                                       f"Nhà hàng {restaurant.name} vừa được xem bởi ai đó.")
-            except Exception as e:
-                current_app.logger.error(f"Test push lỗi: {e}")
             return jsonify({
                 "id": restaurant.id,
                 "name": restaurant.name,

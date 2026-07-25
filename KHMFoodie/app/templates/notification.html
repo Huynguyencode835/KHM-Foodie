@@ -30,7 +30,7 @@
                 <span class="material-symbols-outlined text-[20px]"
                     style="font-variation-settings: 'FILL' 1;">apps</span>
                 <span>Tất cả</span>
-                <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] font-bold">4</span>
+                <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
             </button>
             <button
                 class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
@@ -38,7 +38,7 @@
                 <span class="material-symbols-outlined text-[20px]">mark_email_unread</span>
                 <span>Chưa đọc</span>
                 <span
-                    class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold">2</span>
+                    class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
             </button>
             <button
                 class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
@@ -103,17 +103,18 @@
 </style>
 <script>
     async function loadNotifications() {
-        const userId = localStorage.getItem("user_id");
-        if (!userId) return;
-
-        try {
-            const res = await fetch("/api/fcm/list?user_id=" + userId);
-            const data = await res.json();
-            renderNotifications(data.notifications);
-            updateBadge(data.unread_count);
-        } catch (err) {
-            console.error("Lỗi tải thông báo:", err);
-        }
+        {% if current_user.is_authenticated %}
+            const userid = {{ current_user.id | tojson }};
+            console.log(userid);
+            try {
+                const res = await fetch("/api/fcm/list?user_id=" + userid);
+                const data = await res.json();
+                renderNotifications(data.notifications);
+                updateBadge(data.unread_count);
+            } catch (err) {
+                console.error("Lỗi tải thông báo:", err);
+            }
+        {% endif %}
     }
 
     function timeAgo(dateStr) {

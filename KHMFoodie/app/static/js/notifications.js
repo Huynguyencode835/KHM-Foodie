@@ -116,10 +116,13 @@ async function updateUnreadBadge() {
 
 // ============ 7. Nhận thông báo khi tab đang mở ============
 messaging.onMessage((payload) => {
-  console.log("Nhận thông báo khi tab đang mở:", payload);
-  const { title, body } = payload.notification || {};
+  const { title, body, category } = payload.data || {};
+  console.log(title)
   if (title) {
     new Notification(title, { body });
+    if (typeof window.showToast === "function") {
+      window.showToast(body || title, category || "info");
+    }
   }
   updateUnreadBadge();
 });
