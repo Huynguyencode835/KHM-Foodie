@@ -77,7 +77,6 @@ class Restaurant(Base):
     cuisine_type = Column(Enum(CuisineType), nullable=True)
     tax_code = Column(String(50), nullable=True)
     cover_image = Column(String(300), nullable=True)
-    is_close = Column(Boolean, default=False)
     approval_status = Column(Enum(RestaurantApprovalStatus), default=RestaurantApprovalStatus.PENDING)
 
     carts = relationship('Cart', backref='restaurant', lazy=True)

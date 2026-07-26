@@ -2,7 +2,6 @@ from flask import jsonify, request,flash
 from flask_login import current_user
 from app.dao.cartDao import CartDao
 from app.dao.restaurantsDao import RestaurantsDao
-from app.models.model import CartItems
 
 
 class CartController:
@@ -67,7 +66,7 @@ class CartController:
 
     @staticmethod
     def update_item(restaurant_id, cart_item_id):
-        item = CartItems.query.get(cart_item_id)
+        item = CartDao.get_item_by_id(cart_item_id)
         if not item or item.cart.user_id != current_user.id or item.cart.restaurant_id != restaurant_id:
             return jsonify({"success": False, "message": "Cart item not found"}), 404
 
@@ -88,7 +87,7 @@ class CartController:
 
     @staticmethod
     def remove_item(restaurant_id, cart_item_id):
-        item = CartItems.query.get(cart_item_id)
+        item = CartDao.get_item_by_id(cart_item_id)
         if not item or item.cart.user_id != current_user.id or item.cart.restaurant_id != restaurant_id:
             return jsonify({"success": False, "message": "Cart item not found"}), 404
         CartDao.remove_item(cart_item_id)

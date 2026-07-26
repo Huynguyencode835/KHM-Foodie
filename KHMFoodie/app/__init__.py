@@ -1,11 +1,9 @@
 import os
 from flask import Flask
 from app.config import config_map
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
-from app.extensions import db
 from flask_admin import Admin
 from app.models.model import User, Restaurant, Dish
 from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView

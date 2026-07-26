@@ -11,17 +11,8 @@
 
 {% block itemHeader %}
 {% if role == "Restaurant" %}
-<!-- <div class="relative">
-    <button onclick="window.location.href='/notification'"
-        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">
-        notifications
-    </button>
-    <span id="notif-badge"
-        class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center hidden">0</span>
-</div>
 <div class="relative">
-    <span
-        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">chat</span>
+    <span class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">chat</span>
 </div>
 <div class="relative">
     <span
@@ -168,8 +159,7 @@
                 <h3 class="font-headline-md text-headline-md border-l-4 border-primary pl-4">Hoạt động</h3>
                 <div class="flex items-center space-x-2 px-4 py-1.5 rounded-full bg-green-500/10">
                     <span class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></span>
-                    <span class="text-label-md font-bold text-green-500">{% if is_open %}Đang mở cửa{% else %}Đã đóng
-                        cửa{% endif %}</span>
+                    <span id="restaurant-status-label" class="text-label-md font-bold {% if is_open %}text-green-500{% else %}text-error{% endif %}">{% if is_open %}&#272;ang m&#7903; c&#7917;a{% else %}&#272;&#227; &#273;&#243;ng c&#7917;a{% endif %}</span>
                 </div>
             </div>
             <div class="space-y-6">

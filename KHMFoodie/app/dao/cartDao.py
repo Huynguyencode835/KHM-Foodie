@@ -49,6 +49,10 @@ class CartDao:
         return item
 
     @staticmethod
+    def get_item_by_id(cart_item_id):
+        return CartItems.query.get(cart_item_id)
+
+    @staticmethod
     def update_item_quantity(cart_item_id, quantity):
         item = CartItems.query.get(cart_item_id)
         if not item:
