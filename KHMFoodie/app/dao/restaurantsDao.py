@@ -89,4 +89,22 @@ class RestaurantsDao:
         ).filter(
             Dish.active == True,
             Dish.name.ilike(f"%{keyword}%")
-        ).paginate(page=page, per_page=per_page, error_out=False)
+        ).all()
+
+    @staticmethod
+    def open_restaurant(restaurant_id):
+        r = Restaurant.query.get(restaurant_id)
+        if not r:
+            return None
+        r.status = True
+        db.session.commit()
+        return r
+
+    @staticmethod
+    def close_restaurant(restaurant_id):
+        r = Restaurant.query.get(restaurant_id)
+        if not r:
+            return None
+        r.status = False
+        db.session.commit()
+        return r
