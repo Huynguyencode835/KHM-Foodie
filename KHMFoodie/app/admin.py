@@ -5,23 +5,23 @@ from flask_login import current_user
 from app.models.model import UserRole
 
 
-def _is_admin():
-    return current_user.is_authenticated and current_user.role == UserRole.ADMIN
-
-
 class AdminSecureView(ModelView):
     def is_accessible(self):
-        return _is_admin()
+        return current_user.is_authenticated and current_user.role == UserRole.ADMIN
 
     def inaccessible_callback(self, name, **kwargs):
+        if current_user.is_authenticated:
+            return redirect(url_for('home_bp.index'))
         return redirect(url_for('login_bp.login_page'))
 
 
 class AdminSecureIndexView(AdminIndexView):
     def is_accessible(self):
-        return _is_admin()
+        return current_user.is_authenticated and current_user.role == UserRole.ADMIN
 
     def inaccessible_callback(self, name, **kwargs):
+        if current_user.is_authenticated:
+            return redirect(url_for('home_bp.index'))
         return redirect(url_for('login_bp.login_page'))
 
 

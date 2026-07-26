@@ -51,7 +51,6 @@ class LoginController:
         return redirect('/')
 
     @staticmethod
-    @login_required
     def update_profile():
         data = request.get_json()
         if not data:
@@ -81,16 +80,6 @@ class LoginController:
         }), 200
 
 
-# def add_user(
-#     name,
-#     phonenumber=None,
-#     username=None,
-#     password=None,
-#     email=None,
-#     role=None,
-#     is_restaurant=False,
-#     **kwargs
-# ):
     @staticmethod
     def register():
         data = request.get_json()
