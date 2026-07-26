@@ -63,9 +63,6 @@ async function addToCart(dishId) {
         alert('Không thể thêm món vào giỏ hàng');
         return;
     }
-    if (typeof window.showToast === "function") {
-      window.showToast("Add món ăn thành công" || "ADD món ăn", "ADD món ăn" || "info");
-    }
     await refreshCart();
 }
 

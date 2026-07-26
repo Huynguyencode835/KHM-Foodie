@@ -94,7 +94,7 @@ class RestaurantsDao:
         ).filter(
             Dish.active == True,
             Dish.name.ilike(f"%{keyword}%")
-        ).all()
+        ).paginate(page=page, per_page=per_page, error_out=False)
 
     @staticmethod
     def open_restaurant(restaurant_id):
