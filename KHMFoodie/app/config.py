@@ -11,6 +11,7 @@ class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PAGE_SIZE = 4
+    FIREBASE_VAPID_KEY = os.getenv("FIREBASE_VAPID_KEY")
 
 
 class DevConfig(Config):

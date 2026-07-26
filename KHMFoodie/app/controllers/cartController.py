@@ -1,4 +1,4 @@
-from flask import jsonify, request
+from flask import jsonify, request,flash
 from flask_login import current_user
 from app.dao.cartDao import CartDao
 from app.dao.restaurantsDao import RestaurantsDao
@@ -44,7 +44,6 @@ class CartController:
         restaurant = RestaurantsDao.get_restaurant_by_id(restaurant_id)
         if not restaurant:
             return jsonify({"success": False, "message": "Restaurant not found"}), 404
-
         data = request.get_json() or {}
         dish_id = data.get("dish_id")
         quantity = data.get("quantity", 1)

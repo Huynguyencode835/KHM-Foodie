@@ -1,8 +1,10 @@
 from app.dao.restaurantsDao import RestaurantsDao
+from flask import jsonify, render_template, request, current_app
 from flask import jsonify, render_template, request
 from flask_login import current_user
 from app.models.model import UserRole
 from app.dao.dishesDao import DishesDao
+from app.service.notificationByFCM import send_push_notification
 
 
 class RestaurantsController:

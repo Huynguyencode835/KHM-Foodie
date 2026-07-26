@@ -1,7 +1,8 @@
+import os
+from flask import Blueprint, send_from_directory
 from app.routes.homeRoute import home_bp
 from app.routes.loginRoute import login_bp
 from app.routes.registerRoute import register_bp
-from flask import Blueprint
 from app.routes.searchRoute import search_bp
 from app.routes.logInSignInGoogleRoute import google_auth_bp
 from app.routes.restaurantRoute import restaurant_bp
@@ -12,6 +13,14 @@ from app.routes.promotionsRoute import promotions_bp
 
 
 def route_web(app):
+    @app.route('/firebase-messaging-sw.js')
+    def serve_fcm_sw():
+        return send_from_directory(
+            os.path.join(app.root_path, 'static'),
+            'firebase-messaging-sw.js',
+            mimetype='application/javascript'
+        )
+
     app.register_blueprint(home_bp, url_prefix='/')
     app.register_blueprint(login_bp, url_prefix='/')
     app.register_blueprint(register_bp, url_prefix='/')

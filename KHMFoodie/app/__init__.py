@@ -5,8 +5,13 @@ from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
 from flask_admin import Admin
+from app.models.model import User, Restaurant, Dish
+from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView
+from flask_admin.theme import Bootstrap4Theme
+from app.extensions import db, mail, init_firebase
+
+from flask_mail import Mail, Message
 import cloudinary
-from app.extensions import db, mail
 
 
 load_dotenv()
@@ -35,6 +40,10 @@ def create_app(config_name='dev'):
     app = Flask(__name__)
 
     app.config.from_object(config_map[config_name])
+    cred_path = os.getenv('FIREBASE_CREDENTIALS_PATH')
+    if cred_path and not os.path.isabs(cred_path):
+        cred_path = os.path.join(app.root_path, '..', cred_path)
+    app.config['FIREBASE_CREDENTIALS_PATH'] = cred_path
 
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
@@ -47,7 +56,8 @@ def create_app(config_name='dev'):
     # Init extensions
     login_manager.init_app(app)
     db.init_app(app)
-    mail.init_app(app) 
+    mail.init_app(app)
+    init_firebase(app)  
 
     # Admin
     from app.models.model import User, Restaurant, Dish
