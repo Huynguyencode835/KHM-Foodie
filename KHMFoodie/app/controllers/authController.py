@@ -50,6 +50,7 @@ class LoginController:
     @staticmethod
     def logout():
         logout_user()
+        flash(f"Đăng xuất thành công!", "success")
         return redirect('/')
 
     @staticmethod

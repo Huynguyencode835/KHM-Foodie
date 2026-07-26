@@ -40,10 +40,7 @@ def create_app(config_name='dev'):
     app = Flask(__name__)
 
     app.config.from_object(config_map[config_name])
-    cred_path = os.getenv('FIREBASE_CREDENTIALS_PATH')
-    if cred_path and not os.path.isabs(cred_path):
-        cred_path = os.path.join(app.root_path, '..', cred_path)
-    app.config['FIREBASE_CREDENTIALS_PATH'] = cred_path
+    app.config['FIREBASE_CREDENTIALS_BASE64'] = os.getenv('FIREBASE_CREDENTIALS_BASE64')
 
     app.config['MAIL_SERVER'] = 'smtp.gmail.com'
     app.config['MAIL_PORT'] = 587
