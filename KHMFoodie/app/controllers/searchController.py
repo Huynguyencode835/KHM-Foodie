@@ -7,8 +7,11 @@ class SearchController:
     @staticmethod
     def search_restaurants():
         keyword = request.args.get('q', '').strip()
-        restaurants = RestaurantsDao.search_restaurants(keyword)
-        dishes = RestaurantsDao.search_dishes(keyword)  # thêm dòng này
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 9, type=int)
+
+        restaurants_pagination = RestaurantsDao.search_restaurants(keyword, page, per_page)
+        dishes_pagination = RestaurantsDao.search_dishes(keyword, page, per_page)
 
         restaurant_data = [
             {
@@ -22,7 +25,7 @@ class SearchController:
                 "opening_time": r.opening_time.strftime("%H:%M") if r.opening_time else None,
                 "closing_time": r.closing_time.strftime("%H:%M") if r.closing_time else None
             }
-            for r in restaurants
+            for r in restaurants_pagination.items
         ]
 
         dish_data = [
@@ -37,25 +40,40 @@ class SearchController:
                 "restaurant_name": d.restaurant.name if d.restaurant else None,
                 "restaurant_avatar": d.restaurant.user.avatar if d.restaurant and d.restaurant.user else None
             }
-            for d in dishes
+            for d in dishes_pagination.items
         ]
 
         return jsonify({
             "data": restaurant_data,
             "dishes": dish_data,
-            "keyword": keyword
+            "keyword": keyword,
+            "page": restaurants_pagination.page,
+            "per_page": restaurants_pagination.per_page,
+            "total": restaurants_pagination.total,
+            "pages": restaurants_pagination.pages
         }), 200
-    
 
     @staticmethod
     def search_web():
         keyword = request.args.get('q', '').strip()
-        restaurants = RestaurantsDao.search_restaurants(keyword)
-        dishes = RestaurantsDao.search_dishes(keyword)
+        tab = request.args.get('tab', 'restaurants')
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 9, type=int)
+
+        if tab == 'dishes':
+            dishes_pagination = RestaurantsDao.search_dishes(keyword, page, per_page)
+            restaurants_pagination = RestaurantsDao.search_restaurants(keyword, 1, 9)
+        else:
+            restaurants_pagination = RestaurantsDao.search_restaurants(keyword, page, per_page)
+            dishes_pagination = RestaurantsDao.search_dishes(keyword, 1, 9)
+
         return render_template(
             "searchCustomer.html",
             title="Tìm kiếm",
-            restaurants=restaurants,
-            dishes=dishes,
-            keyword=keyword
+            restaurants_pagination=restaurants_pagination,
+            dishes_pagination=dishes_pagination,
+            keyword=keyword,
+            current_tab=tab,
+            page=page,
+            per_page=per_page
         )

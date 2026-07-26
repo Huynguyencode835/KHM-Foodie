@@ -63,21 +63,31 @@ class RestaurantsController:
 
     @staticmethod
     def get_list_dishes(restaurant_id):
-        dishes = DishesDao.get_list_dishes_by_restaurant(restaurant_id)
+        page = request.args.get("page", 1, type=int)
+        per_page = request.args.get("per_page", 10, type=int)
+
+        pagination = DishesDao.get_list_dishes_by_restaurant(restaurant_id, page, per_page)
 
         data = []
-
-        for d in dishes:
+        for d in pagination.items:
             data.append({
                 "id": d.id,
                 "name": d.name,
                 "category": d.category.value if d.category else None,
                 "description": d.description,
-                "price": d.price,
+                "price": float(d.price) if d.price is not None else None,
                 "image": d.image
             })
 
-        return jsonify({"data": data}), 200
+        return jsonify({
+            "data": data,
+            "page": pagination.page,
+            "per_page": pagination.per_page,
+            "total": pagination.total,
+            "pages": pagination.pages,
+            "has_next": pagination.has_next,
+            "has_prev": pagination.has_prev
+        }), 200
 
     @staticmethod
     def open_restaurant(restaurant_id):
