@@ -143,7 +143,6 @@ if (saveBtn) {
             address: document.getElementById('restaurant-address')?.value?.trim(),
             opening_time: document.getElementById('restaurant-opening-time')?.value,
             closing_time: document.getElementById('restaurant-closing-time')?.value,
-            status: document.getElementById('restaurant-status')?.checked,
         };
         const coverImg = document.querySelector('.h-48 img');
         if (coverImg) data.cover_image = coverImg.src;

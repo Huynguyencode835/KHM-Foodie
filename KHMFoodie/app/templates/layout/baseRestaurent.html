@@ -186,10 +186,14 @@
         </nav>
         <div class="pt-sm border-t border-outline-variant space-y-1">
             {% if current_user.role.value != 'Admin' %}
-            <button
-                class="w-full flex items-center justify-center space-x-2 py-3 px-4 bg-tertiary text-on-tertiary rounded-xl font-bold mb-4 hover:opacity-90 transition-opacity">
-                <span class="material-symbols-outlined text-[18px]">storefront</span>
-                <span class="text-label-md">Mở/Đóng cửa hàng</span>
+            {% set sidebar_is_open = current_user.restaurant.status if current_user.restaurant and current_user.restaurant.status is not none else True %}
+            <button id="sidebar-restaurant-toggle"
+                type="button"
+                data-restaurant-id="{{ current_user.id }}"
+                data-is-open="{{ 'true' if sidebar_is_open else 'false' }}"
+                class="w-full flex items-center justify-center space-x-2 py-3 px-4 {{ 'bg-tertiary text-on-tertiary' if sidebar_is_open else 'bg-error-container text-error' }} rounded-xl font-bold mb-4 hover:opacity-90 transition-opacity">
+                <span id="sidebar-restaurant-toggle-icon" class="material-symbols-outlined text-[18px]">storefront</span>
+                <span id="sidebar-restaurant-toggle-label" class="text-label-md">{% if sidebar_is_open %}&#272;&#243;ng c&#7917;a h&#224;ng{% else %}M&#7903; c&#7917;a h&#224;ng{% endif %}</span>
             </button>
             {% endif %}
             <a class="flex items-center space-x-3 px-4 py-2 text-on-surface-variant hover:text-on-surface-variant hover:no-underline no-underline hover:bg-surface-variant rounded-lg transition-all"
@@ -205,14 +209,39 @@
         </div>
     </aside>
 
+    {% if current_user.role.value != 'Admin' %}
+    <div id="restaurant-toggle-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 px-4 py-6">
+        <div class="w-full max-w-xl rounded-2xl bg-surface-container-lowest shadow-2xl border border-outline-variant overflow-hidden">
+            <div class="p-6 sm:p-8">
+                <div class="flex items-start gap-4">
+                    <div id="restaurant-toggle-modal-icon-wrap" class="shrink-0 w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+                        <span id="restaurant-toggle-modal-icon" class="material-symbols-outlined block w-7 h-7 overflow-hidden text-[28px] leading-none text-primary">storefront</span>
+                    </div>
+                    <div class="min-w-0 flex-1 space-y-2">
+                        <h3 id="restaurant-toggle-modal-title" class="font-headline-md text-headline-md font-bold text-on-surface leading-tight">X&#225;c nh&#7853;n thay &#273;&#7893;i</h3>
+                        <p id="restaurant-toggle-modal-message" class="text-body-md text-on-surface-variant leading-relaxed">B&#7841;n c&#243; ch&#7855;c mu&#7889;n thay &#273;&#7893;i tr&#7841;ng th&#225;i nh&#224; h&#224;ng?</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-end items-center gap-3 px-6 sm:px-8 py-5 bg-surface-container-low border-t border-outline-variant">
+                <button id="restaurant-toggle-cancel" type="button" class="px-6 py-3 rounded-lg font-bold text-on-surface hover:bg-surface-container-high transition-colors">H&#7911;y</button>
+                <button id="restaurant-toggle-confirm" type="button" class="px-6 py-3 rounded-lg font-bold bg-primary text-on-primary hover:opacity-90 transition-opacity">X&#225;c nh&#7853;n</button>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     <!-- Main Content Area -->
     <!-- Đã đổi h-screen overflow-hidden -> min-h-screen để cho phép cuộn xuống footer -->
     <main class="ml-64 flex-grow flex flex-col min-h-screen">
         <!-- Header Section -->
         <header
-            class="h-20 bg-surface shadow-[0px_4px_20px_rgba(0,0,0,0.05)] flex items-center justify-between px-gutter z-40 sticky top-0">
-            <div class="flex items-center space-x-4">
-                {% block itemHeader %}{% endblock %}
+            class="h-20 bg-surface shadow-[0px_4px_20px_rgba(0,0,0,0.05)] flex items-center justify-between gap-4 px-gutter z-40 sticky top-0">
+            <div class="min-w-0 flex-1">
+                <h1 class="truncate font-headline-md text-headline-md font-bold text-on-surface">{% block page_title %}{% endblock %}</h1>
+                <p class="hidden md:block truncate text-body-md text-secondary">{% block page_description %}{% endblock %}</p>
+            </div>
+            <div class="ml-auto flex shrink-0 items-center justify-end gap-2 md:gap-4">
                 <!-- Notification bell: always visible -->
                 <div class="relative">
                     <a href="/notication">
@@ -222,6 +251,7 @@
                     </a>
 
                 </div>
+                {% block itemHeader %}{% endblock %}
             </div>
         </header>
 
@@ -306,19 +336,142 @@
                 });
             })();
 
-        // Simple toggle simulation for demo
+        // Wire sidebar restaurant open/close button to backend
+        (function () {
+            const toggleBtn = document.getElementById('sidebar-restaurant-toggle');
+            if (!toggleBtn) return;
+
+            const restaurantId = toggleBtn.dataset.restaurantId;
+
+            function renderRestaurantStatus(isOpen) {
+                const label = document.getElementById('sidebar-restaurant-toggle-label');
+                const icon = document.getElementById('sidebar-restaurant-toggle-icon');
+
+                toggleBtn.dataset.isOpen = isOpen ? 'true' : 'false';
+                if (label) label.textContent = isOpen ? '\u0110\u00f3ng c\u1eeda h\u00e0ng' : 'M\u1edf c\u1eeda h\u00e0ng';
+                if (icon) icon.textContent = 'storefront';
+
+                toggleBtn.classList.toggle('bg-tertiary', isOpen);
+                toggleBtn.classList.toggle('text-on-tertiary', isOpen);
+                toggleBtn.classList.toggle('bg-error-container', !isOpen);
+                toggleBtn.classList.toggle('text-error', !isOpen);
+
+
+                const statusLabel = document.getElementById('restaurant-status-label');
+                if (statusLabel) {
+                    statusLabel.textContent = isOpen ? '\u0110ang m\u1edf c\u1eeda' : '\u0110\u00e3 \u0111\u00f3ng c\u1eeda';
+                    statusLabel.classList.toggle('text-green-500', isOpen);
+                    statusLabel.classList.toggle('text-error', !isOpen);
+                }
+            }
+
+            const modal = document.getElementById('restaurant-toggle-modal');
+            const modalTitle = document.getElementById('restaurant-toggle-modal-title');
+            const modalMessage = document.getElementById('restaurant-toggle-modal-message');
+            const modalIcon = document.getElementById('restaurant-toggle-modal-icon');
+            const modalIconWrap = document.getElementById('restaurant-toggle-modal-icon-wrap');
+            const cancelBtn = document.getElementById('restaurant-toggle-cancel');
+            const confirmBtn = document.getElementById('restaurant-toggle-confirm');
+            let pendingAction = null;
+
+            function openConfirmModal() {
+                const currentlyOpen = toggleBtn.dataset.isOpen === 'true';
+                pendingAction = currentlyOpen ? 'close_restaurant' : 'open_restaurant';
+
+                if (modalTitle) modalTitle.textContent = currentlyOpen ? '\u0110\u00f3ng c\u1eeda nh\u00e0 h\u00e0ng?' : 'M\u1edf c\u1eeda nh\u00e0 h\u00e0ng?';
+                if (modalMessage) {
+                    modalMessage.textContent = currentlyOpen
+                        ? 'Nh\u00e0 h\u00e0ng s\u1ebd t\u1ea1m ng\u01b0ng nh\u1eadn \u0111\u01a1n m\u1edbi cho \u0111\u1ebfn khi b\u1ea1n m\u1edf l\u1ea1i.'
+                        : 'Nh\u00e0 h\u00e0ng s\u1ebd hi\u1ec3n th\u1ecb l\u00e0 \u0111ang m\u1edf v\u00e0 c\u00f3 th\u1ec3 nh\u1eadn \u0111\u01a1n m\u1edbi.';
+                }
+                if (modalIcon) {
+                    modalIcon.textContent = 'storefront';
+                    modalIcon.classList.toggle('text-error', currentlyOpen);
+                    modalIcon.classList.toggle('text-primary', !currentlyOpen);
+                }
+                if (modalIconWrap) {
+                    modalIconWrap.classList.toggle('bg-error-container', currentlyOpen);
+                    modalIconWrap.classList.toggle('bg-primary-fixed', !currentlyOpen);
+                }
+                if (confirmBtn) {
+                    confirmBtn.textContent = currentlyOpen ? '\u0110\u00f3ng c\u1eeda' : 'M\u1edf c\u1eeda';
+                    confirmBtn.classList.toggle('bg-error', currentlyOpen);
+                    confirmBtn.classList.toggle('bg-primary', !currentlyOpen);
+                }
+
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+
+            function closeConfirmModal() {
+                pendingAction = null;
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+
+            async function submitRestaurantToggle() {
+                if (!pendingAction) return;
+                const action = pendingAction;
+                const previousHtml = toggleBtn.innerHTML;
+                const previousConfirmHtml = confirmBtn ? confirmBtn.innerHTML : '';
+
+                toggleBtn.disabled = true;
+                if (confirmBtn) {
+                    confirmBtn.disabled = true;
+                    confirmBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin align-middle">sync</span> &#272;ang c&#7853;p nh&#7853;t...';
+                }
+                toggleBtn.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span><span class="text-label-md">&#272;ang c&#7853;p nh&#7853;t...</span>';
+
+                try {
+                    const res = await fetch(`/api/restaurants/${restaurantId}/${action}`, {
+                        method: 'PATCH',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await res.json().catch(() => ({}));
+                    if (!res.ok) throw new Error(result.message || 'C\u1eadp nh\u1eadt tr\u1ea1ng th\u00e1i th\u1ea5t b\u1ea1i');
+
+                    toggleBtn.innerHTML = previousHtml;
+                    renderRestaurantStatus(Boolean(result.is_open));
+                    closeConfirmModal();
+                } catch (err) {
+                    toggleBtn.innerHTML = previousHtml;
+                    alert(err.message || 'L\u1ed7i k\u1ebft n\u1ed1i \u0111\u1ebfn m\u00e1y ch\u1ee7');
+                } finally {
+                    toggleBtn.disabled = false;
+                    if (confirmBtn) {
+                        confirmBtn.disabled = false;
+                        confirmBtn.innerHTML = previousConfirmHtml;
+                    }
+                }
+            }
+
+            toggleBtn.addEventListener('click', openConfirmModal);
+            if (cancelBtn) cancelBtn.addEventListener('click', closeConfirmModal);
+            if (confirmBtn) confirmBtn.addEventListener('click', submitRestaurantToggle);
+            if (modal) {
+                modal.addEventListener('click', function (event) {
+                    if (event.target === modal) closeConfirmModal();
+                });
+            }
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && modal && !modal.classList.contains('hidden')) closeConfirmModal();
+            });
+        })();
+
+        // Simple toggle simulation for demo (only for dish cards)
         document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
             checkbox.addEventListener('change', function () {
                 const card = this.closest('.group');
                 const label = this.parentElement.previousElementSibling;
+                if (!card || !label) return;
                 if (this.checked) {
                     card.classList.remove('opacity-75', 'grayscale-[0.5]');
-                    label.textContent = 'Còn hàng';
+                    label.textContent = 'C\u00f2n h\u00e0ng';
                     label.classList.remove('text-error');
                     label.classList.add('text-on-surface');
                 } else {
                     card.classList.add('opacity-75', 'grayscale-[0.5]');
-                    label.textContent = 'Hết hàng';
+                    label.textContent = 'H\u1ebft h\u00e0ng';
                     label.classList.remove('text-on-surface');
                     label.classList.add('text-error');
                 }

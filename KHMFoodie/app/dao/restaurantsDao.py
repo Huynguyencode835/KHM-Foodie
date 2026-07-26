@@ -89,3 +89,21 @@ class RestaurantsDao:
             Dish.active == True,
             Dish.name.ilike(f"%{keyword}%")
         ).all()
+
+    @staticmethod
+    def open_restaurant(restaurant_id):
+        r = Restaurant.query.get(restaurant_id)
+        if not r:
+            return None
+        r.status = True
+        db.session.commit()
+        return r
+
+    @staticmethod
+    def close_restaurant(restaurant_id):
+        r = Restaurant.query.get(restaurant_id)
+        if not r:
+            return None
+        r.status = False
+        db.session.commit()
+        return r
