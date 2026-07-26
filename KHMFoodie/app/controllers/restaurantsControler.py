@@ -1,5 +1,7 @@
 from app.dao.restaurantsDao import RestaurantsDao
 from flask import jsonify, render_template, request
+from flask_login import current_user
+from app.models.model import UserRole
 from app.dao.dishesDao import DishesDao
 
 
@@ -76,6 +78,39 @@ class RestaurantsController:
             })
 
         return jsonify({"data": data}), 200
+
+    @staticmethod
+    def open_restaurant(restaurant_id):
+        if current_user.role != UserRole.ADMIN and current_user.id != restaurant_id:
+            return jsonify({"success": False, "message": "Forbidden"}), 403
+
+        restaurant = RestaurantsDao.open_restaurant(restaurant_id)
+        if not restaurant:
+            return jsonify({"success": False, "message": "Restaurant not found"}), 404
+
+        return jsonify({
+            "success": True,
+            "message": "Restaurant opened successfully",
+            "id": restaurant.id,
+            "is_open": restaurant.status
+        }), 200
+
+    @staticmethod
+    def close_restaurant(restaurant_id):
+        if current_user.role != UserRole.ADMIN and current_user.id != restaurant_id:
+            return jsonify({"success": False, "message": "Forbidden"}), 403
+
+        restaurant = RestaurantsDao.close_restaurant(restaurant_id)
+        if not restaurant:
+            return jsonify({"success": False, "message": "Restaurant not found"}), 404
+
+        return jsonify({
+            "success": True,
+            "message": "Restaurant closed successfully",
+            "id": restaurant.id,
+            "is_open": restaurant.status
+        }), 200
+
 
     @staticmethod
     def index(restaurant_id):
