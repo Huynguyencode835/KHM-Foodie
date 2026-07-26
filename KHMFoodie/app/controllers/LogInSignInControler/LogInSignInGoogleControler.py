@@ -13,8 +13,6 @@ class LogInSignInGoogleControler:
         token = oauth.google.authorize_access_token()
         user_info = token.get('userinfo')
 
-        print("User Info:", user_info)
-
         email = user_info['email']
         name = user_info['name']
         avatar = user_info['picture']

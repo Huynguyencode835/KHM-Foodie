@@ -1,9 +1,11 @@
-from flask import request, jsonify, redirect
+from flask import request, jsonify, redirect, current_app, flash
 from app.models.model import hash_password, CuisineType, UserRole
 from app.dao.userDao import add_user, check_userEmail
 from app.dao.userDao import UserDao
 from flask_login import login_user, logout_user, login_required, current_user
+from app.service.notificationByFCM import send_push_notification
 import cloudinary.uploader
+from app.service.notificationByEmail import send_account_registration_email, send_restaurant_registration_pending_email 
 
 class LoginController:
 
@@ -21,32 +23,37 @@ class LoginController:
             return jsonify({"message": "Username and password required"}), 400
 
         user = UserDao.get_by_username(username)
-        check_active = UserDao.check_userActive(UserDao, user)
-        print("check_active:", check_active)
+        if not user:
+            return jsonify({"message": "Invalid username or password"}), 401
+
+        check_active = UserDao.check_userActive(user)
         if check_active is False:
             return jsonify({"message": "User account is inactive"}), 403
-        else:
-            if user and user.password == hash_password(password):
-                login_user(user, remember=remember)
 
-            redirect_url = '/admin/' if user.role == UserRole.ADMIN else '/'
-            return jsonify({
-                "message": "Login successful",
-                "redirect": redirect_url,
-                "user": {
-                    "id": user.id,
-                    "name": user.name,
-                    "role": user.role.value if user.role else None
-                }
-            }), 200
+        if user.password != hash_password(password):
+            return jsonify({"message": "Invalid username or password"}), 401
+
+        login_user(user, remember=remember)
+
+        redirect_url = '/admin/' if user.role == UserRole.ADMIN else '/'
+        flash(f"Chào mừng trở lại, {user.name}!", "success")
+        return jsonify({
+            "message": "Login successful",
+            "redirect": redirect_url,
+            "user": {
+                "id": user.id,
+                "name": user.name,
+                "role": user.role.value if user.role else None
+            }
+        }), 200
 
     @staticmethod
     def logout():
         logout_user()
+        flash(f"Đăng xuất thành công!", "success")
         return redirect('/')
 
     @staticmethod
-    @login_required
     def update_profile():
         data = request.get_json()
         if not data:
@@ -76,20 +83,11 @@ class LoginController:
         }), 200
 
 
-# def add_user(
-#     name,
-#     phonenumber=None,
-#     username=None,
-#     password=None,
-#     email=None,
-#     role=None,
-#     is_restaurant=False,
-#     **kwargs
-# ):
     @staticmethod
     def register():
         data = request.get_json()
         if not data:
+            flash("Dữ liệu gửi lên không hợp lệ.", "error")
             return jsonify({"message": "Invalid JSON"}), 400
 
         name = data.get("name")
@@ -100,15 +98,30 @@ class LoginController:
         confirm_password = data.get("confirm_password")
 
         if not all([name, username, email, phone, password, confirm_password]):
+            flash("Vui lòng điền đầy đủ tất cả các trường.", "warning")
             return jsonify({"message": "All fields are required"}), 400
 
         if password != confirm_password:
+            flash("Mật khẩu xác nhận không khớp.", "error")
             return jsonify({"message": "Passwords do not match"}), 400
 
         if UserDao.get_by_username(username):
+            flash("Tên đăng nhập đã tồn tại, vui lòng chọn tên khác.", "error")
             return jsonify({"message": "Username already exists"}), 409
 
-        add_user(name, phone, username, password, email)
+        user = add_user(name, phone, username, password, email)
+        try:
+            send_push_notification(user.id, "Chào mừng bạn đến với CraveConnect!",
+                                "Cảm ơn bạn đã đăng ký tài khoản. Hãy khám phá hàng ngàn món ngon nhé!")
+        except Exception as e:
+            current_app.logger.error(f"Gửi notification đăng ký thất bại: {e}")
+
+        send_account_registration_email(
+            recipient=email,
+            username=name
+        )
+
+        flash(f"Đăng ký thành công! Chào mừng {name} đến với CraveConnect. Vui lòng đăng nhập để trải nghiệm", "success")
         return jsonify({"message": "Registration successful"}), 201
 
     @staticmethod
@@ -149,7 +162,7 @@ class LoginController:
             res = cloudinary.uploader.upload(avatar_file)
             avatar_path = res["secure_url"]
 
-        add_user(
+        user = add_user(
             name=name,
             phonenumber=phone,
             username=username,
@@ -164,4 +177,15 @@ class LoginController:
             avatar=avatar_path,
             cover_image=avatar_path,
         )
+        try:
+            send_push_notification(user.id, "Đăng ký nhà hàng thành công!",
+                                   "Nhà hàng của bạn đang chờ được duyệt. Chúng tôi sẽ thông báo khi có kết quả.")
+        except Exception as e:
+            current_app.logger.error(f"Gửi notification đăng ký nhà hàng thất bại: {e}")
+
+        send_restaurant_registration_pending_email(
+            recipient=email,
+            restaurant_name=name
+        )
+        flash(f"Đăng ký thành công! Chào mừng {name} đến với CraveConnect. Vui lòng chờ admin duyệt để trải nghiệm", "success")
         return jsonify({"message": "Đăng ký nhà hàng thành công!"}), 201

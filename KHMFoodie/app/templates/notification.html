@@ -1,0 +1,255 @@
+{% extends "layout/baseCustomer.html" %}
+
+{% block content %}
+<!-- Main Content -->
+<main class="flex-grow max-w-[1000px] mx-auto w-full px-gutter py-xl">
+    <!-- Page Header Section -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-lg">
+        <div>
+            <nav class="flex items-center gap-2 text-caption text-secondary/70 mb-2">
+                <a class="hover:text-primary transition-colors" href="#">Trang chủ</a>
+                <span class="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span class="text-on-surface-variant font-medium">Thông báo</span>
+            </nav>
+            <h1 class="font-display-lg text-headline-lg text-on-surface tracking-tight">Thông báo của tôi</h1>
+        </div>
+        <button
+            class="group flex items-center gap-2 text-secondary hover:text-primary bg-surface-container-low hover:bg-primary/5 px-5 py-2.5 rounded-full transition-all border border-outline-variant/30 hover:border-primary/20"
+            id="mark-all-read">
+            <span
+                class="material-symbols-outlined text-[20px] group-hover:scale-110 transition-transform">done_all</span>
+            <span class="font-label-md">Đánh dấu tất cả là đã đọc</span>
+        </button>
+    </div>
+    <!-- Horizontal Tabs Navigation - Modern Style -->
+    <div class="mb-lg overflow-x-auto pb-2">
+        <div class="flex gap-3 min-w-max">
+            <button
+                class="tab-item-modern active px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md transition-all cursor-pointer"
+                data-tab="all">
+                <span class="material-symbols-outlined text-[20px]"
+                    style="font-variation-settings: 'FILL' 1;">apps</span>
+                <span>Tất cả</span>
+                <span class="bg-white/20 text-white px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
+            </button>
+            <button
+                class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
+                data-tab="unread">
+                <span class="material-symbols-outlined text-[20px]">mark_email_unread</span>
+                <span>Chưa đọc</span>
+                <span
+                    class="bg-secondary-container text-on-secondary-container px-2 py-0.5 rounded-full text-[10px] font-bold">0</span>
+            </button>
+            <button
+                class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
+                data-tab="orders">
+                <span class="material-symbols-outlined text-[20px]">local_shipping</span>
+                <span>Đơn hàng</span>
+            </button>
+            <button
+                class="tab-item-modern px-6 py-2.5 rounded-full flex items-center gap-2.5 text-label-md text-secondary transition-all cursor-pointer"
+                data-tab="promotions">
+                <span class="material-symbols-outlined text-[20px]">sell</span>
+                <span>Khuyến mãi</span>
+            </button>
+        </div>
+    </div>
+    <!-- Notification List Area -->
+    <div class="w-full">
+        <div class="space-y-4" id="notification-list"></div>
+        <div class="hidden flex-col items-center justify-center py-32 text-center bg-surface-container-lowest rounded-3xl border-2 border-dashed border-outline-variant/50"
+            id="empty-state">
+            <div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <span class="material-symbols-outlined text-[48px] text-outline opacity-40">notifications_off</span>
+            </div>
+            <h3 class="font-headline-lg text-headline-md text-on-surface mb-3">Bạn đã cập nhật hết rồi!</h3>
+            <p class="text-body-md text-secondary/70 max-w-xs mx-auto">Mọi cập nhật về đơn hàng và khuyến mãi mới nhất
+                sẽ xuất hiện tại đây.</p>
+            <button
+                class="mt-8 bg-primary text-on-primary px-10 py-3.5 rounded-full font-label-md hover:shadow-xl transition-all hover:-translate-y-1">
+                Tiếp tục khám phá
+            </button>
+        </div>
+        <div class="mt-12 text-center">
+            <button
+                class="group inline-flex items-center gap-3 text-secondary font-label-md hover:text-primary transition-all py-3 px-8 rounded-full hover:bg-primary/5 border border-transparent hover:border-primary/10">
+                Tải thêm thông báo
+                <span
+                    class="material-symbols-outlined text-[20px] group-hover:translate-y-1 transition-transform">keyboard_arrow_down</span>
+            </button>
+        </div>
+    </div>
+</main>
+
+{% include 'partials/modalNotification.html' %}
+
+<style>
+    .tab-item-modern.active {
+        background: #a93100;
+        color: #ffffff;
+        box-shadow: 0 2px 12px rgba(169, 49, 0, 0.3);
+    }
+    .tab-item-modern.active .material-symbols-outlined {
+        font-variation-settings: 'FILL' 1;
+    }
+    .unread-dot-integrated {
+        width: 10px;
+        height: 10px;
+        border-radius: 9999px;
+        background: #a93100;
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+    }
+</style>
+<script>
+    async function loadNotifications() {
+        {% if current_user.is_authenticated %}
+            const userid = {{ current_user.id | tojson }};
+            console.log(userid);
+            try {
+                const res = await fetch("/api/fcm/list?user_id=" + userid);
+                const data = await res.json();
+                renderNotifications(data.notifications);
+                updateBadge(data.unread_count);
+            } catch (err) {
+                console.error("Lỗi tải thông báo:", err);
+            }
+        {% endif %}
+    }
+
+    function timeAgo(dateStr) {
+        const now = new Date();
+        const date = new Date(dateStr);
+        const diff = Math.floor((now - date) / 1000);
+        if (diff < 60) return "Vài giây trước";
+        if (diff < 3600) return Math.floor(diff / 60) + " phút trước";
+        if (diff < 86400) return Math.floor(diff / 3600) + " giờ trước";
+        return Math.floor(diff / 86400) + " ngày trước";
+    }
+
+    function renderNotifications(notifications) {
+        const list = document.getElementById("notification-list");
+        const empty = document.getElementById("empty-state");
+
+        if (!notifications || notifications.length === 0) {
+            list.innerHTML = "";
+            empty.classList.remove("hidden");
+            return;
+        }
+
+        empty.classList.add("hidden");
+        list.innerHTML = notifications.map(n => {
+            const isRead = n.is_read;
+            const icon = n.data?.icon || "notifications";
+            const time = timeAgo(n.created_at);
+
+            return `
+                <div class="notification-card bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant/40 flex gap-5 cursor-pointer relative ${isRead ? 'opacity-60 grayscale-[0.2]' : ''}"
+                     data-id="${n.id}" data-title="${n.title}" data-body="${n.body.replace(/"/g, '&quot;')}" data-time="${time}">
+                    <div class="w-14 h-14 rounded-2xl bg-surface-container flex items-center justify-center flex-shrink-0 shadow-inner">
+                        <span class="material-symbols-outlined text-secondary text-[28px]" style="font-variation-settings: 'FILL' 1;">${icon}</span>
+                    </div>
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start mb-1.5">
+                            <h3 class="font-headline-md text-[18px] text-on-surface leading-tight">${n.title}</h3>
+                            <div class="flex items-center gap-3">
+                                <span class="text-caption text-secondary/60">${time}</span>
+                                ${isRead ? '' : '<div class="unread-dot-integrated"></div>'}
+                            </div>
+                        </div>
+                        <p class="text-body-md text-on-surface-variant max-w-2xl">${n.body}</p>
+                    </div>
+                </div>`;
+        }).join("");
+
+        attachCardEvents();
+    }
+
+    function updateBadge(count) {
+        const badges = document.querySelectorAll('[data-tab="all"] .bg-white\\/20, [data-tab="unread"] .bg-secondary-container');
+        badges.forEach(b => { b.textContent = count; });
+    }
+
+    function attachCardEvents() {
+        document.querySelectorAll('.notification-card').forEach(card => {
+            card.addEventListener('click', async function (e) {
+                if (e.target.closest('button')) return;
+
+                const id = this.dataset.id;
+                const title = this.dataset.title;
+                const body = this.dataset.body;
+                const time = this.dataset.time;
+
+                if (!this.classList.contains('opacity-60')) {
+                    const userId = localStorage.getItem("user_id");
+                    await fetch("/api/fcm/read/" + id, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ user_id: userId })
+                    });
+                    const dot = this.querySelector('.unread-dot-integrated');
+                    if (dot) {
+                        dot.style.transform = 'scale(0)';
+                        setTimeout(() => dot.remove(), 300);
+                    }
+                    this.style.opacity = '0.6';
+                    this.style.filter = 'grayscale(0.2)';
+                }
+
+                const bodyHTML = `
+                    <div class="flex flex-col items-center text-center pt-2 pb-4">
+                        <div class="w-16 h-16 rounded-2xl bg-surface-container flex items-center justify-center shadow-inner">
+                            <span class="material-symbols-outlined text-secondary text-[36px]" style="font-variation-settings:'FILL' 1">notifications</span>
+                        </div>
+                        <div class="text-caption text-secondary/60 mt-4">${time}</div>
+                        <div class="text-body-md text-on-surface-variant mt-4 max-w-lg text-left leading-relaxed">${body}</div>
+                    </div>`;
+
+                openModal({ title, icon: "notifications", body: bodyHTML, size: "md" });
+            });
+        });
+    }
+
+    // Tab switching
+    document.querySelectorAll('.tab-item-modern').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.tab-item-modern').forEach(t => {
+                t.classList.remove('active');
+                t.classList.add('text-secondary');
+                const icon = t.querySelector('.material-symbols-outlined');
+                if (icon) icon.style.fontVariationSettings = "'FILL' 0";
+            });
+            tab.classList.add('active');
+            tab.classList.remove('text-secondary');
+            const activeIcon = tab.querySelector('.material-symbols-outlined');
+            if (activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+        });
+    });
+
+    // Mark all as read
+    document.getElementById('mark-all-read')?.addEventListener('click', async () => {
+        const userId = localStorage.getItem("user_id");
+        if (!userId) return;
+        const unreadCards = document.querySelectorAll('.notification-card:not(.opacity-60)');
+        for (const card of unreadCards) {
+            const id = card.dataset.id;
+            await fetch("/api/fcm/read/" + id, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ user_id: userId })
+            });
+            const dot = card.querySelector('.unread-dot-integrated');
+            if (dot) {
+                dot.style.transform = 'scale(0)';
+                setTimeout(() => dot.remove(), 300);
+            }
+            card.style.opacity = '0.6';
+            card.style.filter = 'grayscale(0.2)';
+        }
+        updateBadge(0);
+    });
+
+    // Load on page ready
+    document.addEventListener("DOMContentLoaded", loadNotifications);
+</script>
+{% endblock %}

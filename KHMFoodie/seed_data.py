@@ -5,6 +5,7 @@ from app.extensions import db
 from app.models.model import (
     User, Restaurant, Dish,
     UserRole, CuisineType, DishCategory,
+    RestaurantApprovalStatus,
     hash_password, parse_time
 )
 
@@ -16,6 +17,7 @@ DISHES_JSON = os.path.join(BASE_DIR, "app", "data", "dishes.json")
 def seed():
     app = create_app()
     with app.app_context():
+        db.drop_all()
         db.create_all()
 
         if User.query.first():
@@ -73,6 +75,7 @@ def seed():
                 closing_time=parse_time(r.get("closing_time")),
                 cuisine_type=CuisineType[r["cuisine_type"]] if r.get("cuisine_type") else None,
                 tax_code=r.get("tax_code"),
+                approval_status=RestaurantApprovalStatus.APPROVED,
             )
             db.session.add(new_restaurant)
             restaurant_map[r["username"]] = new_restaurant
@@ -99,6 +102,42 @@ def seed():
             db.session.add(new_dish)
 
         db.session.commit()
+
+        # ---------- 5 nhà hàng PENDING để test duyệt ----------
+        pending_restaurants = [
+            ("Bún Bò Huế Cô Ba", "bunbohue", "123456", "Huế", CuisineType.VIETNAMESE, "06:00", "22:00"),
+            ("Lẩu Cua Đồng Út Tịch", "laucua", "123456", "Cần Thơ", CuisineType.VIETNAMESE, "10:00", "23:00"),
+            ("Ốc Đào Cô Liên", "ocddao", "123456", "Sài Gòn", CuisineType.SEAFOOD, "11:00", "23:00"),
+            ("Cháo Lòng Bà Điệp", "chaolong", "123456", "Hà Nội", CuisineType.VIETNAMESE, "06:00", "14:00"),
+            ("Cơm Niêu Đệ Nhất", "comnieu", "123456", "Nha Trang", CuisineType.VIETNAMESE, "10:00", "21:00"),
+        ]
+
+        for name, username, pw, addr, ctype, open_t, close_t in pending_restaurants:
+            new_user = User(
+                name=name,
+                username=username,
+                password=hash_password(pw),
+                email=f"{username}@email.com",
+                address=addr,
+                role=UserRole.RESTAURANT,
+                active=False,
+            )
+            db.session.add(new_user)
+            db.session.flush()
+
+            new_restaurant = Restaurant(
+                id=new_user.id,
+                name=name,
+                active=False,
+                approval_status=RestaurantApprovalStatus.PENDING,
+                cuisine_type=ctype,
+                opening_time=parse_time(open_t),
+                closing_time=parse_time(close_t),
+            )
+            db.session.add(new_restaurant)
+
+        db.session.commit()
+        print(f"✅ Thêm {len(pending_restaurants)} nhà hàng chờ duyệt.")
 
         print(f"✅ Đã tạo {len(restaurant_map)} nhà hàng và {len(dishes_data)} món ăn.")
 
