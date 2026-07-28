@@ -67,8 +67,10 @@ class RestaurantsController:
     def get_list_dishes(restaurant_id):
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 10, type=int)
+        category = request.args.get("category", None, type=str)
+        keyword = request.args.get("q", None, type=str)
 
-        pagination = DishesDao.get_list_dishes_by_restaurant(restaurant_id, page, per_page)
+        pagination = DishesDao.get_list_dishes_by_restaurant(restaurant_id, page, per_page, category, keyword)
 
         data = []
         for d in pagination.items:

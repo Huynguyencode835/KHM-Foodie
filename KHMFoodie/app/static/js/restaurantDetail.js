@@ -90,8 +90,11 @@ async function fetchRestaurantData(id) {
     return res.json();
 }
 
-async function fetchDishesData(id, page) {
-    const res = await fetch(`/api/restaurants/${id}/dishes?page=${page}&per_page=12`);
+async function fetchDishesData(id, page, category, keyword) {
+    const params = new URLSearchParams({ page, per_page: 12 });
+    if (category && category !== 'all') params.append('category', category);
+    if (keyword) params.append('q', keyword);
+    const res = await fetch(`/api/restaurants/${id}/dishes?${params}`);
     if (!res.ok) return { data: [], pages: 1 };
     const json = await res.json();
     return { data: json.data || [], pages: json.pages || 1 };
@@ -187,6 +190,20 @@ function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào') {
     `).join('');
 }
 
+let currentCategory = 'all';
+
+async function applyDishFilters() {
+    currentPage = 1;
+    const dishSearchInput = document.getElementById('dish-search-input');
+    const keyword = dishSearchInput ? dishSearchInput.value.trim().toLowerCase() : '';
+
+    const result = await fetchDishesData(restaurantId, 1, currentCategory, keyword);
+    renderDishes(result.data, 'Không tìm thấy món ăn phù hợp');
+    totalPages = result.pages;
+    renderPagination();
+}
+
+
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function () {
         const tab = this.dataset.tab;
@@ -206,24 +223,50 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 async function goToPage(page) {
     if (page < 1 || page > totalPages || page === currentPage) return;
     currentPage = page;
-    var result = await fetchDishesData(restaurantId, currentPage);
+    const dishSearchInput = document.getElementById('dish-search-input');
+    const keyword = dishSearchInput ? dishSearchInput.value.trim().toLowerCase() : '';
+    const result = await fetchDishesData(restaurantId, currentPage, currentCategory, keyword);
     renderDishes(result.data);
     renderPagination();
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
     if (!restaurantId) return;
-    refreshCart()
-    var dataPromise = fetchRestaurantData(restaurantId);
-    var dishesPromise = fetchDishesData(restaurantId, 1);
 
-    var data = await dataPromise;
-    var dishesResult = await dishesPromise;
+    const [data] = await Promise.all([
+        fetchRestaurantData(restaurantId),
+        refreshCart()
+    ]);
 
     renderRestaurantDetail(data);
+
     currentPage = 1;
-    totalPages = dishesResult.pages;
-    renderDishes(dishesResult.data);
-    renderPagination();
+    await applyDishFilters();
     bindPaginationButtons();
+
+    let searchTimeout;
+    const dishSearchInput = document.getElementById('dish-search-input');
+    if (dishSearchInput) {
+        dishSearchInput.addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(applyDishFilters, 300);
+        });
+    }
+
+    document.querySelectorAll('.dish-category-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            currentCategory = this.dataset.category;
+
+            document.querySelectorAll('.dish-category-btn').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white');
+                b.classList.add('bg-transparent', 'text-secondary');
+            });
+
+            this.classList.remove('bg-transparent', 'text-secondary');
+            this.classList.add('bg-primary', 'text-white');
+
+            applyDishFilters();
+        });
+    });
+
 });
