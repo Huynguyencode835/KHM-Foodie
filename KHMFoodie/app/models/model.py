@@ -2,7 +2,7 @@ import hashlib
 from datetime import datetime, time as dtime
 from sqlalchemy import (
     Column, Integer, String, DateTime, Boolean,
-    Float, Enum, ForeignKey, Time, UniqueConstraint, Text
+    Float, Enum, ForeignKey, Time, UniqueConstraint, Text, Numeric
 )
 from sqlalchemy.orm import relationship, backref
 from flask_login import UserMixin
@@ -95,32 +95,15 @@ class DiscountType(RoleEnum):
     PERCENTAGE = "Phần trăm"
     FIXED_AMOUNT = "Số tiền cố định"
 
-
-class OrderStatus(RoleEnum):
-    PENDING = "Chờ xác nhận"
-    ACCEPTED = "Đã nhận đơn"
-    PREPARING = "Đang chuẩn bị"
-    DELIVERING = "Đang giao"
-    COMPLETED = "Hoàn thành"
-    CANCELLED = "Đã hủy"
-
-
-class PaymentMethod(RoleEnum):
-    COD = "Thanh toán khi nhận hàng"
-    ONLINE = "Thanh toán online"
-
-
-class PaymentProvider(RoleEnum):
-    COD = "COD"
-    VNPAY = "VNPay"
-
-class PaymentStatus(RoleEnum):
-    UNPAID = "Chưa thanh toán"
-    PENDING = "Đang xử lý"
-    PAID = "Đã thanh toán"
-    FAILED = "Thất bại"
-    REFUNDED = "Đã hoàn tiền"
-
+class Status(RoleEnum):
+    PENDING_PAYMENT = "Pending Payment"
+    PAYMENT_FAILED = "Payment Failed"
+    PAID = "Paid"
+    CONFIRMED = "Confirmed"
+    PREPARING = "Preparing"
+    DELIVERING = "Delivering"
+    COMPLETED = "Completed"
+    CANCELLED = "Cancelled"
 
 class Dish(Base):
     __tablename__ = 'dish'
@@ -171,60 +154,85 @@ class CartItems(Base):
 
 
 class Order(Base):
-    __tablename__ = 'order'
-    code = Column(String(50), unique=True, nullable=False)
-    customer_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    __tablename__ = 'orders'
+
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
     voucher_id = Column(Integer, ForeignKey('voucher.id'), nullable=True)
-    status = Column(Enum(OrderStatus), default=OrderStatus.PENDING, nullable=False)
-    subtotal = Column(Float, default=0, nullable=False)
-    discount_amount = Column(Float, default=0, nullable=False)
-    delivery_fee = Column(Float, default=0, nullable=False)
-    total_amount = Column(Float, default=0, nullable=False)
-    note = Column(String(500), nullable=True)
-    delivery_address = Column(String(300), nullable=False)
-    recipient_name = Column(String(150), nullable=False)
-    recipient_phone = Column(String(50), nullable=False)
-    placed_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    accepted_at = Column(DateTime, nullable=True)
-    completed_at = Column(DateTime, nullable=True)
-    cancelled_at = Column(DateTime, nullable=True)
-    cancel_reason = Column(String(500), nullable=True)
 
-    customer = relationship('User', backref=backref('orders', lazy=True), foreign_keys=[customer_id])
-    restaurant = relationship('Restaurant', backref=backref('orders', lazy=True))
-    voucher = relationship('Voucher', backref=backref('orders', lazy=True))
-
-
-class OrderItem(Base):
-    __tablename__ = 'order_item'
-    order_id = Column(Integer, ForeignKey('order.id'), nullable=False)
-    dish_id = Column(Integer, ForeignKey('dish.id'), nullable=True)
-    dish_name = Column(String(150), nullable=False)
-    unit_price = Column(Float, nullable=False)
-    quantity = Column(Integer, default=1, nullable=False)
-    subtotal = Column(Float, nullable=False)
+    status = Column(Enum(Status), default=Status.PENDING_PAYMENT, nullable=False)
     note = Column(String(300), nullable=True)
 
-    order = relationship('Order', backref=backref('items', lazy=True))
+    customer_name = Column(String(150), nullable=False)
+    customer_phone = Column(String(50), nullable=True)
+    customer_email = Column(String(150), nullable=True)
+    delivery_address = Column(String(300), nullable=True)
+
+    shipping_fee = Column(Numeric(12, 0), nullable=False, default=0)
+    total_amount = Column(Numeric(12, 0), nullable=False, default=0)
+
+    user = relationship('User', backref=backref('orders', lazy=True))
+    restaurant = relationship('Restaurant', backref=backref('orders', lazy=True))
+    voucher = relationship('Voucher', backref=backref('orders', lazy=True))
+    items = relationship(
+        'OrderItem',
+        backref='order',
+        lazy=True,
+        cascade='all, delete-orphan'
+    )
+    payment_transactions = relationship(
+        'PaymentTransaction',
+        backref='order',
+        lazy=True,
+        order_by=lambda: PaymentTransaction.created_at.desc()
+    )
+
+    def __str__(self):
+        return f"Order({self.id}, {self.status.value})"
+
+class OrderItem(Base):
+    __tablename__ = 'order_items'
+
+    order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+    dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
+
+    unit_price = Column(Numeric(12, 0), nullable=False)
+    quantity = Column(Integer, nullable=False)
+
     dish = relationship('Dish', backref=backref('order_items', lazy=True))
 
+    def __str__(self):
+        return f"OrderItem({self.order_id}, {self.dish_id})"
 
-class Payment(Base):
-    __tablename__ = 'payment'
-    order_id = Column(Integer, ForeignKey('order.id'), nullable=False)
-    method = Column(Enum(PaymentMethod), default=PaymentMethod.COD, nullable=False)
-    provider = Column(Enum(PaymentProvider), default=PaymentProvider.COD, nullable=False)
-    status = Column(Enum(PaymentStatus), default=PaymentStatus.UNPAID, nullable=False)
-    amount = Column(Float, nullable=False)
-    currency = Column(String(10), default='VND', nullable=False)
-    transaction_ref = Column(String(150), nullable=True)
-    gateway_payload = Column(Text, nullable=True)
-    paid_at = Column(DateTime, nullable=True)
-    failed_at = Column(DateTime, nullable=True)
-    failure_reason = Column(String(500), nullable=True)
 
-    order = relationship('Order', backref=backref('payments', lazy=True))
+class PaymentTransaction(Base):
+    __tablename__ = 'payment_transaction'
+    __table_args__ = (
+        UniqueConstraint('vnp_txn_ref', name='uq_payment_transaction_vnp_txn_ref'),
+    )
+
+    order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+
+    gateway = Column(String(50), nullable=False, default='VNPAY')
+    vnp_txn_ref = Column(String(100), nullable=False)
+    amount = Column(Numeric(12, 0), nullable=False)
+    status = Column(String(50), nullable=False, default='CREATED')
+
+    ip_addr = Column(String(50), nullable=True)
+    payment_url = Column(Text, nullable=True)
+    vnp_transaction_no = Column(String(100), nullable=True)
+    vnp_response_code = Column(String(20), nullable=True)
+    vnp_transaction_status = Column(String(20), nullable=True)
+    bank_code = Column(String(50), nullable=True)
+    bank_tran_no = Column(String(100), nullable=True)
+    card_type = Column(String(50), nullable=True)
+    pay_date = Column(String(20), nullable=True)
+    raw_response = Column(Text, nullable=True)
+    completed_at = Column(DateTime, nullable=True)
+
+    def __str__(self):
+        return f"PaymentTransaction({self.vnp_txn_ref}, {self.status})"
+
 
 
 def hash_password(raw_password: str) -> str:
