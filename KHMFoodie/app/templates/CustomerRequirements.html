@@ -1,0 +1,273 @@
+{% extends "layout/baseRestaurent.html" %}
+{% block page_title %}Quản lý Đơn hàng{% endblock %}
+{% block page_description %}
+Theo dõi và xử lý đơn hàng theo thời gian thực. Quản lý trạng thái từ xác nhận đến giao hàng.
+{% endblock %}
+{% block content %}
+<div class="w-full px-gutter py-md space-y-lg" id="content-area">
+    <!-- Order Status Filters -->
+    <div class="flex gap-sm overflow-x-auto pb-xs scrollbar-thin" id="filter-bar"></div>
+
+    <!-- Orders Kanban Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-gutter h-full" id="kanban-grid"></div>
+</div>
+
+<script>
+    const CUSTOMERS = [
+        'Nguyễn Minh Tùng', 'Lê Thị Lan', 'Trần Hoàng Nam', 'Phạm Thu Hương',
+        'Hoàng Văn Dũng', 'Vũ Thị Hoa', 'Đặng Quốc Bảo', 'Bùi Thanh Huyền',
+        'Đỗ Minh Quân', 'Ngô Thị Phương', 'Trương Văn Khánh', 'Lâm Hồng Nhung'
+    ];
+    const DISHES = [
+        { name: 'Phở Bò Tái Lăn', price: 85000 },
+        { name: 'Trà Đào Cam Sả', price: 35000 },
+        { name: 'Cơm Tấm Sườn Bì Chả', price: 55000 },
+        { name: 'Nước Sâm', price: 20000 },
+        { name: 'Bún Bò Huế', price: 65000 },
+        { name: 'Nem Rán', price: 45000 },
+        { name: 'Bún Chả Hà Nội', price: 60000 },
+        { name: 'Phở Bò Đặc Biệt', price: 95000 },
+        { name: 'Cơm Tấm Sườn Cốt Lết', price: 75000 },
+        { name: 'Bánh Mì Kẹp Thịt', price: 30000 },
+    ];
+    const DRIVERS = ['Trần Văn Hùng', 'Lê Thị Hoa', 'Phạm Văn Tuấn', 'Nguyễn Văn A', 'Trần Thị B', 'Hoàng Văn C'];
+
+    const COLUMNS = [
+        { id: 'pending', label: 'Mới cần xác nhận', color: 'primary', icon: 'pending' },
+        { id: 'preparing', label: 'Đang chế biến', color: 'tertiary', icon: 'cooking' },
+        { id: 'delivering', label: 'Đang giao', color: 'secondary', icon: 'delivery' },
+        { id: 'completed', label: 'Hoàn tất', color: 'emerald', icon: 'done' },
+    ];
+
+    const STATUS_MAP = { pending: 'pending', preparing: 'preparing', delivering: 'delivering', completed: 'completed' };
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function formatCurrency(n) { return n.toLocaleString('vi-VN') + 'đ'; }
+
+    function timeAgo(minutes) {
+        if (minutes < 60) return minutes + ' phút trước';
+        const h = Math.floor(minutes / 60);
+        return h + ' giờ trước';
+    }
+
+    function genDishItems() {
+        const count = rand(1, 4);
+        const items = [];
+        for (let i = 0; i < count; i++) {
+            const d = pick(DISHES);
+            const qty = rand(1, 3);
+            items.push({ name: d.name, qty, price: d.price });
+        }
+        return items;
+    }
+
+    function genOrders(count) {
+        const orders = [];
+        for (let i = 0; i < count; i++) {
+            const status = pick(Object.keys(STATUS_MAP));
+            const items = genDishItems();
+            const total = items.reduce((s, it) => s + it.qty * it.price, 0);
+            const minsAgo = rand(1, 180);
+            const isUrgent = status === 'pending' && Math.random() < 0.3;
+            orders.push({
+                id: 'CC-' + rand(8900, 9100),
+                customer: pick(CUSTOMERS),
+                status,
+                items,
+                total,
+                timeAgo: minsAgo,
+                timeAgoText: timeAgo(minsAgo),
+                urgent: isUrgent,
+                note: Math.random() < 0.25 ? pick(['Không hành, ít dầu', 'Thêm ớt', 'Ít đường', 'Gói riêng nước sốt']) : null,
+                driver: status === 'preparing' || status === 'delivering' ? pick(DRIVERS) : null,
+                timer: status === 'preparing' ? rand(5, 30) + ':' + String(rand(0, 59)).padStart(2, '0') : null,
+                eta: status === 'delivering' ? rand(3, 25) : null,
+                progress: status === 'delivering' ? rand(10, 95) : null,
+                completedAt: status === 'completed' ? `${String(rand(7, 11)).padStart(2, '0')}:${String(rand(0, 59)).padStart(2, '0')}` : null,
+                driverEarn: status === 'completed' ? rand(30000, 150000) : null,
+            });
+        }
+        return orders;
+    }
+
+    function renderOrderCard(order) {
+        const colors = { pending: 'primary', preparing: 'tertiary', delivering: 'secondary', completed: 'emerald' };
+        const c = colors[order.status] || 'primary';
+
+        const itemsHtml = order.items.map(it =>
+            `<li class="flex items-center gap-2"><span class="w-1 h-1 rounded-full bg-${c} shrink-0"></span>${it.qty}x ${it.name}</li>`
+        ).join('');
+
+        let bodyHtml = '';
+        if (order.status === 'pending') {
+            bodyHtml = `
+                <div class="py-sm border-y border-outline-variant/20">
+                    <ul class="text-sm space-y-1.5 text-on-surface-variant">${itemsHtml}</ul>
+                    ${order.note ? `<p class="text-xs text-tertiary mt-1.5 flex items-center gap-1"><span class="material-symbols-outlined text-sm">info</span>${order.note}</p>` : ''}
+                </div>
+                <div class="flex gap-2 w-full pt-1 justify-end"><span class="font-bold text-primary text-lg">${formatCurrency(order.total)}</span></div>
+                <div class="flex gap-2 w-full pt-1">
+                    <button class="w-11 flex items-center justify-center p-2 bg-error-container text-on-error-container rounded-xl hover:bg-error-container/80 transition-all btn-reject" title="Từ chối">
+                        <span class="material-symbols-outlined text-sm">close</span>
+                    </button>
+                    <button class="flex-1 py-2 bg-primary text-on-primary rounded-xl font-label-md hover:scale-95 transition-all btn-confirm" title="Xác nhận đơn">
+                        Xác nhận
+                    </button>
+                </div>`;
+        } else if (order.status === 'preparing') {
+            bodyHtml = `
+                <div class="py-sm border-y border-outline-variant/20">
+                    <p class="text-sm font-medium">${order.items.map(it => it.name).join(', ')}</p>
+                    ${order.note ? `<p class="text-xs text-on-surface-variant mt-1 flex items-center gap-1"><span class="material-symbols-outlined text-sm">info</span>${order.note}</p>` : ''}
+                </div>
+                <button class="w-full py-2.5 bg-tertiary-container text-on-tertiary-container rounded-xl font-label-md hover:brightness-95 transition-all flex items-center justify-center gap-2 btn-complete-cook">
+                    <span class="material-symbols-outlined text-sm">check</span>
+                    Hoàn tất chế biến
+                </button>`;
+        } else if (order.status === 'delivering') {
+            bodyHtml = `
+                <div class="flex items-center gap-3 py-sm border-y border-outline-variant/20">
+                    <div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined text-secondary">motorcycle</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium">${order.driver}</p>
+                        <p class="text-xs text-on-surface-variant">Còn ${order.eta} phút</p>
+                    </div>
+                </div>
+                <div class="w-full bg-surface-container-higher h-2 rounded-full overflow-hidden">
+                    <div class="bg-secondary h-full rounded-full transition-all duration-500" style="width: ${order.progress}%"></div>
+                </div>`;
+        } else if (order.status === 'completed') {
+            bodyHtml = `
+                <div class="flex items-center gap-md">
+                    <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center text-emerald-600 shrink-0">
+                        <span class="material-symbols-outlined">check_circle</span>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="font-bold">#${order.id}</p>
+                        <p class="text-xs text-on-surface-variant">Đã giao lúc ${order.completedAt}</p>
+                        <p class="text-xs text-on-surface-variant mt-0.5">${order.driver} · ${formatCurrency(order.driverEarn)}</p>
+                    </div>
+                    <span class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-all cursor-pointer">chevron_right</span>
+                </div>`;
+        }
+
+        const urgentBadge = order.urgent
+            ? `<span class="text-[10px] bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-bold">GẤP</span>`
+            : '';
+
+        const borderColor = c === 'emerald' ? 'emerald-500' : c;
+
+        return `
+            <div class="bento-card bg-surface rounded-xl shadow-sm p-sm space-y-sm border-l-4 border-${borderColor} hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 cursor-pointer" data-order-id="${order.id}">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-bold text-lg flex items-center gap-2">#${order.id} ${urgentBadge}</p>
+                        <p class="text-caption text-on-surface-variant">${order.status === 'pending' ? 'Khách: ' + order.customer : 'Tài xế: ' + (order.driver || order.customer)}</p>
+                    </div>
+                    <span class="text-caption bg-surface-container-highest px-2 py-1 rounded-full whitespace-nowrap">${order.timeAgoText}</span>
+                </div>
+                ${bodyHtml}
+            </div>`;
+    }
+
+    function renderKanban(orders) {
+        const grid = document.getElementById('kanban-grid');
+        grid.innerHTML = COLUMNS.map(col => {
+            const colOrders = orders.filter(o => o.status === col.id);
+            return `
+                <div class="flex flex-col bg-surface-container-low rounded-2xl border border-outline-variant/30">
+                    <div class="flex items-center justify-between px-md pt-md pb-sm border-b border-outline-variant/20">
+                        <h3 class="font-headline-md text-headline-md flex items-center gap-base">
+                            <span class="w-2.5 h-2.5 rounded-full bg-${col.color}"></span>
+                            ${col.label}
+                        </h3>
+                        <span class="bg-${col.color}-fixed text-on-${col.color}-fixed-variant px-2.5 py-0.5 rounded-full text-xs font-bold">${colOrders.length}</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto custom-scrollbar p-sm space-y-sm min-h-0" style="max-height: calc(100vh - 320px);">
+                        ${colOrders.length ? colOrders.map(renderOrderCard).join('') : `
+                            <div class="flex flex-col items-center justify-center py-xl text-on-surface-variant">
+                                <span class="material-symbols-outlined text-4xl mb-sm">inbox</span>
+                                <p class="text-sm font-medium">Chưa có đơn hàng</p>
+                            </div>
+                        `}
+                    </div>
+                </div>`;
+        }).join('');
+    }
+
+    function renderFilters(orders) {
+        const bar = document.getElementById('filter-bar');
+        const counts = {};
+        orders.forEach(o => { counts[o.status] = (counts[o.status] || 0) + 1; });
+        const total = orders.length;
+
+        const allFilters = [
+            { id: 'all', label: 'Tất cả', count: total },
+            { id: 'pending', label: 'Chờ xác nhận', count: counts.pending || 0 },
+            { id: 'preparing', label: 'Đang chế biến', count: counts.preparing || 0 },
+            { id: 'delivering', label: 'Đang giao', count: counts.delivering || 0 },
+            { id: 'completed', label: 'Hoàn tất', count: counts.completed || 0 },
+        ];
+
+        bar.innerHTML = allFilters.map((f, i) => `
+            <button class="filter-btn px-md py-2 rounded-full font-label-md whitespace-nowrap transition-all ${i === 0 ? 'bg-primary text-on-primary' : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest'}"
+                data-filter="${f.id}">
+                ${f.label} (${f.count})
+            </button>
+        `).join('');
+    }
+
+    function init() {
+        const allOrders = genOrders(36);
+        renderFilters(allOrders);
+        renderKanban(allOrders);
+
+        document.getElementById('filter-bar').addEventListener('click', function (e) {
+            const btn = e.target.closest('.filter-btn');
+            if (!btn) return;
+
+            document.querySelectorAll('.filter-btn').forEach(b => {
+                b.classList.remove('bg-primary', 'text-on-primary');
+                b.classList.add('bg-surface-container-high', 'text-on-surface-variant');
+            });
+            btn.classList.remove('bg-surface-container-high', 'text-on-surface-variant');
+            btn.classList.add('bg-primary', 'text-on-primary');
+
+            const filter = btn.dataset.filter;
+            if (filter === 'all') {
+                renderKanban(allOrders);
+            } else {
+                const filtered = allOrders.filter(o => o.status === filter);
+                const grid = document.getElementById('kanban-grid');
+                const col = COLUMNS.find(c => c.id === filter);
+                const colOrders = filtered;
+                grid.innerHTML = `
+                    <div class="md:col-span-2 xl:col-span-4 flex flex-col bg-surface-container-low rounded-2xl border border-outline-variant/30">
+                        <div class="flex items-center justify-between px-md pt-md pb-sm border-b border-outline-variant/20">
+                            <h3 class="font-headline-md text-headline-md flex items-center gap-base">
+                                <span class="w-2.5 h-2.5 rounded-full bg-${col.color}"></span>
+                                ${col.label}
+                            </h3>
+                            <span class="bg-${col.color}-fixed text-on-${col.color}-fixed-variant px-2.5 py-0.5 rounded-full text-xs font-bold">${colOrders.length}</span>
+                        </div>
+                        <div class="flex-1 overflow-y-auto custom-scrollbar p-sm space-y-sm min-h-0" style="max-height: calc(100vh - 320px);">
+                            ${colOrders.length ? colOrders.map(renderOrderCard).join('') : `
+                                <div class="flex flex-col items-center justify-center py-xl text-on-surface-variant">
+                                    <span class="material-symbols-outlined text-4xl mb-sm">inbox</span>
+                                    <p class="text-sm font-medium">Chưa có đơn hàng</p>
+                                </div>
+                            `}
+                        </div>
+                    </div>`;
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+{% endblock %}

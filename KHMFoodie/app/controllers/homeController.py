@@ -67,3 +67,15 @@ def promotions_page():
         'promotionsPage.html',
         title='Khuyến mãi'
     )
+
+
+@login_required
+def customer_requirements():
+    role = current_user.role
+    if role != UserRole.RESTAURANT:
+        abort(403)
+
+    return render_template(
+        'CustomerRequirements.html',
+        title='Quản lý Đơn hàng'
+    )
