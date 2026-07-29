@@ -170,18 +170,8 @@ class Order(Base):
     customer_email = Column(String(150), nullable=True)
     delivery_address = Column(String(300), nullable=True)
 
-    restaurant_name = Column(String(150), nullable=False)
-    restaurant_phone = Column(String(50), nullable=True)
-    restaurant_address = Column(String(300), nullable=True)
-
-    voucher_code = Column(String(50), nullable=True)
-    subtotal_amount = Column(Numeric(12, 0), nullable=False, default=0)
-    discount_amount = Column(Numeric(12, 0), nullable=False, default=0)
     shipping_fee = Column(Numeric(12, 0), nullable=False, default=0)
     total_amount = Column(Numeric(12, 0), nullable=False, default=0)
-
-    paid_at = Column(DateTime, nullable=True)
-    cancelled_at = Column(DateTime, nullable=True)
 
     user = relationship('User', backref=backref('orders', lazy=True))
     restaurant = relationship('Restaurant', backref=backref('orders', lazy=True))
@@ -209,11 +199,8 @@ class OrderItem(Base):
     order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
     dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
 
-    dish_name = Column(String(150), nullable=False)
-    dish_image = Column(String(300), nullable=True)
     unit_price = Column(Numeric(12, 0), nullable=False)
     quantity = Column(Integer, nullable=False)
-    subtotal_amount = Column(Numeric(12, 0), nullable=False)
 
     dish = relationship('Dish', backref=backref('order_items', lazy=True))
 
