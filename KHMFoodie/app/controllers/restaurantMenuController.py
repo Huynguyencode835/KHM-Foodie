@@ -1,5 +1,6 @@
 from flask import render_template, request, jsonify
-from app.dao import dishesDao
+from app.dao.dishesDao import DishesDao
+from app.models.model import UserRole
 from flask_login import current_user
 import cloudinary.uploader
 
@@ -8,6 +9,9 @@ class RestaurantMenuController:
 
     @staticmethod
     def create_dishes():
+        if current_user.role != UserRole.RESTAURANT:
+            return jsonify({"message": "Không có quyền thực hiện thao tác này"}), 403
+
         name = request.form.get("name")
         price = request.form.get("price")
         category = request.form.get("category")
@@ -26,13 +30,20 @@ class RestaurantMenuController:
         image_url = None
         if avatar_file and avatar_file.filename:
             try:
-                res = cloudinary.uploader.upload(avatar_file)
+                res = cloudinary.uploader.upload(
+                    avatar_file,
+                    transformation=[
+                        {"width": 1000, "height": 1000, "crop": "limit"},
+                        {"quality": "auto:good"},
+                        {"fetch_format": "auto"}
+                    ]
+                )
                 image_url = res["secure_url"]
             except Exception as e:
                 return jsonify({"message": "Upload ảnh thất bại", "error": str(e)}), 400
 
         try:
-            new_dish = dishesDao.create_dishes(
+            new_dish = DishesDao.create_dishes(
                 name=name,
                 price=float(price),
                 category=category,
@@ -50,6 +61,50 @@ class RestaurantMenuController:
             return jsonify({"message": str(ve)}), 400
         except Exception as e:
             return jsonify({"message": "Lỗi hệ thống", "error": str(e)}), 500
+
+    @staticmethod
+    def delete_dishes(dishes_id):
+        if current_user.role != UserRole.RESTAURANT:
+            return jsonify({"message": "Không có quyền thực hiện thao tác này"}), 403
+
+        try:
+            dish = DishesDao.delete_dishes(dishes_id, current_user.id)
+        except ValueError as ve:
+            return jsonify({"message": str(ve)}), 400
+        except Exception as e:
+            print(f"Lỗi: {e}")  # hiện ngay trên terminal chạy Flask
+            return jsonify({"message": "Lỗi hệ thống", "error": str(e)}), 500
+
+        if not dish:
+            return jsonify({"message": "Món ăn không tồn tại"}), 404
+
+        return jsonify({"message": "Xóa món ăn thành công"}), 200
+
+    @staticmethod
+    def change_dishes_status():
+        if current_user.role != UserRole.RESTAURANT:
+            return jsonify({"message": "Không có quyền thực hiện thao tác này"}), 403
+
+        id_dishes = request.get_json().get("id_dishes")
+
+        dish = DishesDao.change_dishe_status(id_dishes, current_user.id) if id_dishes else None
+
+        if not dish:
+            return jsonify({"message": "Thiếu id_dishes hoặc không tìm thấy món ăn"}), 400
+
+        return jsonify({
+            "message": "Cập nhật trạng thái thành công",
+            "dish_id": dish.id,
+            "active": dish.active
+        }), 200
+        
+
+    @staticmethod
+    def get_dishes_stats():
+        if current_user.role != UserRole.RESTAURANT:
+            return jsonify({"message": "Không có quyền thực hiện thao tác này"}), 403
+
+        return jsonify(DishesDao.get_dishes_stats(current_user.id)), 200
 
     @staticmethod
     def index():

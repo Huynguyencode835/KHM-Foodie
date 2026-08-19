@@ -1,0 +1,103 @@
+<!-- ============ Modal: Thêm / Sửa món ăn (tái sử dụng) ============ -->
+<div id="dish-form-modal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 px-4 py-6">
+    <div
+        class="w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-2xl bg-surface-container-lowest shadow-2xl border border-outline-variant">
+        <div class="p-6 sm:p-8">
+            <div class="flex items-start gap-4">
+                <div class="shrink-0 w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center">
+                    <span class="material-symbols-outlined text-[28px] leading-none text-primary">restaurant_menu</span>
+                </div>
+                <div class="min-w-0 flex-1 space-y-1">
+                    <h3 id="dish-form-modal-title" class="font-headline-md text-headline-md font-bold text-on-surface leading-tight">Thêm món ăn</h3>
+                    <p class="text-body-md text-on-surface-variant leading-relaxed">Nhập thông tin món ăn mới cho thực đơn của bạn.</p>
+                </div>
+            </div>
+
+            <form id="dish-form" class="mt-6 space-y-4">
+                <div>
+                    <label for="dish-name" class="block font-label-md text-label-md text-on-surface mb-1.5">Tên món ăn <span class="text-error">*</span></label>
+                    <input id="dish-name" name="name" type="text" required maxlength="150"
+                        placeholder="VD: Phở bò tái"
+                        class="w-full px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary text-body-md">
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="dish-category" class="block font-label-md text-label-md text-on-surface mb-1.5">Danh mục <span class="text-error">*</span></label>
+                        <select id="dish-category" name="category" required
+                            class="w-full px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary text-body-md font-label-md cursor-pointer">
+                            <option value="Món khai vị">Món khai vị</option>
+                            <option value="Món chính">Món chính</option>
+                            <option value="Món tráng miệng">Món tráng miệng</option>
+                            <option value="Đồ uống">Đồ uống</option>
+                            <option value="Món ăn kèm">Món ăn kèm</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="dish-price" class="block font-label-md text-label-md text-on-surface mb-1.5">Giá (đ) <span class="text-error">*</span></label>
+                        <input id="dish-price" name="price" type="number" required min="0" step="1000" placeholder="VD: 50000"
+                            class="w-full px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary text-body-md">
+                    </div>
+                </div>
+
+                <div>
+                    <label for="dish-description" class="block font-label-md text-label-md text-on-surface mb-1.5">Mô tả <span class="text-error">*</span></label>
+                    <textarea id="dish-description" name="description" required maxlength="500" rows="3"
+                        placeholder="Mô tả ngắn về món ăn..."
+                        class="w-full px-4 py-2.5 rounded-xl border border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary text-body-md resize-none"></textarea>
+                </div>
+                <div>
+                    <label class="block font-label-md text-label-md text-on-surface mb-1.5">Hình ảnh</label>
+                    <div id="dish-image-drop"
+                        class="relative border-2 border-dashed border-outline-variant rounded-xl p-lg flex flex-col items-center justify-center bg-surface-container-lowest hover:bg-surface-container-low transition-colors cursor-pointer group overflow-hidden">
+                        <div class="w-14 h-14 rounded-full bg-primary/5 flex items-center justify-center mb-sm group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined text-primary text-3xl">add_photo_alternate</span>
+                        </div>
+                        <p class="font-label-md text-label-md text-on-surface-variant text-center">Kéo thả hoặc
+                            <span class="text-primary underline">nhấp để tải lên</span></p>
+                        <p class="font-caption text-caption text-secondary mt-base" id="dish-image-filename">Định dạng PNG, JPG, WebP (Tối đa 5MB)</p>
+                        <input id="dish-image" name="image" type="file" accept="image/*" class="hidden">
+                        <img id="dish-image-preview" class="absolute inset-0 w-full h-full object-cover rounded-xl hidden">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div
+            class="flex justify-end items-center gap-3 px-6 sm:px-8 py-5 bg-surface-container-low border-t border-outline-variant">
+            <button id="dish-form-cancel" type="button"
+                class="px-6 py-3 rounded-lg font-bold text-on-surface hover:bg-surface-container-high transition-colors">Hủy</button>
+            <button id="dish-form-submit" type="submit" form="dish-form"
+                class="px-6 py-3 rounded-lg font-bold bg-primary text-on-primary hover:opacity-90 transition-opacity flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">add</span> Thêm món ăn
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- ============ Modal: Xác nhận xóa món ăn (tái sử dụng) ============ -->
+<div id="dish-delete-modal"
+    class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 px-4 py-6">
+    <div class="w-full max-w-md rounded-2xl bg-surface-container-lowest shadow-2xl border border-outline-variant overflow-hidden">
+        <div class="p-6 sm:p-8">
+            <div class="flex items-start gap-4">
+                <div class="shrink-0 w-14 h-14 rounded-full bg-error-container flex items-center justify-center">
+                    <span class="material-symbols-outlined block text-[28px] leading-none text-error">delete</span>
+                </div>
+                <div class="min-w-0 flex-1 space-y-2">
+                    <h3 class="font-headline-md text-headline-md font-bold text-on-surface leading-tight">Xác nhận xóa</h3>
+                    <p id="dish-delete-message" class="text-body-md text-on-surface-variant leading-relaxed">Bạn có chắc muốn xóa món ăn này không?</p>
+                </div>
+            </div>
+        </div>
+        <div
+            class="flex justify-end items-center gap-3 px-6 sm:px-8 py-5 bg-surface-container-low border-t border-outline-variant">
+            <button id="dish-delete-cancel" type="button"
+                class="px-6 py-3 rounded-lg font-bold text-on-surface hover:bg-surface-container-high transition-colors">Hủy</button>
+            <button id="dish-delete-confirm" type="button"
+                class="px-6 py-3 rounded-lg font-bold bg-error text-on-error hover:opacity-90 transition-opacity flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">delete</span> Xóa
+            </button>
+        </div>
+    </div>
+</div>

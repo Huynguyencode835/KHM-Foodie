@@ -80,7 +80,8 @@ class RestaurantsController:
                 "category": d.category.value if d.category else None,
                 "description": d.description,
                 "price": float(d.price) if d.price is not None else None,
-                "image": d.image
+                "image": d.image,
+                "active": d.active
             })
 
         return jsonify({
