@@ -1,5 +1,7 @@
 from app.models.model import Dish, DishCategory
 from sqlalchemy import or_
+from app.extensions import db
+from sqlalchemy.exc import SQLAlchemyError
 
 
 class DishesDao:
@@ -33,3 +35,34 @@ class DishesDao:
             error_out=False
         )
         return pagination
+
+    @staticmethod
+    def create_dishes(name, price, category, restaurant_id, description=None, image=None):
+        try:
+            if category not in DishCategory._value2member_map_ and category not in DishCategory.__members__:
+                raise ValueError(f"Category không hợp lệ: {category}")
+
+            if isinstance(category, str):
+                category = DishCategory(category)
+
+            new_dish = Dish(
+                name=name,
+                description=description,
+                image=image,
+                price=price,
+                category=category,
+                restaurant_id=restaurant_id
+            )
+
+            db.session.add(new_dish)
+            db.session.commit()
+            return new_dish
+
+        except ValueError as ve:
+            print(f"Lỗi giá trị: {ve}")
+            db.session.rollback()
+            return None
+        except SQLAlchemyError as e:
+            print(f"Lỗi khi tạo món ăn: {e}")
+            db.session.rollback()
+            return None
