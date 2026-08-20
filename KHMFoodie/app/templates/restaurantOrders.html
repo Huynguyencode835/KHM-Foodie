@@ -100,7 +100,7 @@
             {% for st in pipeline_statuses %}
             {% set col = columns[st.name] %}
             {% set meta = status_meta[st.name] %}
-            <div class="space-y-4" data-status="{{ st.name }}">
+            <div class="space-y-4" data-status="{{ st.name }}" data-page="2" data-has-more="{{ '1' if col.has_more else '0' }}">
                 <div class="flex items-center justify-between">
                     <h3 class="font-headline-md text-headline-md flex items-center gap-2">
                         <span class="w-2 h-2 rounded-full bg-{{ meta.color }}"></span>
@@ -146,15 +146,11 @@
                     </div>
                     {% endfor %}
                 </div>
-                {% if col.has_more %}
-                <button class="load-more-btn w-full py-2 bg-surface-container-high text-secondary rounded-lg font-label-md hover:bg-surface-container transition-colors"
-                    data-status="{{ st.name }}" data-page="2">
-                    Xem thêm ({{ col.total - page_size }} đơn còn lại)
-                </button>
-                {% endif %}
             </div>
             {% endfor %}
         </div>
+
+        <div id="board-sentinel" class="h-px" aria-hidden="true"></div>
     </div>
 </div>
 

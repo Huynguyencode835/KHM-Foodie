@@ -1,24 +1,31 @@
 // Restaurant: xem danh sách đơn hàng kanban
+// Luồng chính: board server-render → click card xem chi tiết → duyệt/từ chối (PATCH) →
+// card tự animate chuyển cột (không reload) → tìm kiếm realtime + infinite scroll.
 (function () {
-    const API_BOARD = "/api/orders/board";
-    const API_ORDER = (id) => `/api/orders/${id}`;
-    const API_APPROVE = (id) => `/api/orders/${id}/approve`;
-    const API_REJECT = (id) => `/api/orders/${id}/reject`;
+    // ---- API endpoints ----
+    const API_BOARD = "/api/orders/board";      // load-more / filter: board_more
+    const API_ORDER = (id) => `/api/orders/${id}`;      // chi tiết 1 đơn
+    const API_APPROVE = (id) => `/api/orders/${id}/approve`;  // duyệt
+    const API_REJECT = (id) => `/api/orders/${id}/reject`;    // từ chối
 
+    // ---- DOM refs: modal chi tiết ----
     const detailModal = document.getElementById("order-detail-modal");
     const detailTitle = document.getElementById("order-detail-title");
     const detailStatus = document.getElementById("order-detail-status");
     const detailBody = document.getElementById("order-detail-body");
 
+    // ---- DOM refs: modal từ chối ----
     const rejectModal = document.getElementById("reject-modal");
     const rejectOrderId = document.getElementById("reject-order-id");
     const rejectReason = document.getElementById("reject-reason");
     const rejectError = document.getElementById("reject-error");
 
+    // ---- DOM refs: filter bar (tìm kiếm realtime) ----
     const searchInput = document.querySelector('input[name="keyword"]');
     const startInput = document.querySelector('input[name="start_date"]');
     const endInput = document.querySelector('input[name="end_date"]');
 
+    // Nhãn trạng thái hiển thị trong modal chi tiết
     const STATUS_LABELS = {
         PAID: "Mới",
         CONFIRMED: "Đã xác nhận",
@@ -28,6 +35,7 @@
         CANCELLED: "Từ chối",
     };
 
+    // ---- Helper render an toàn (chống XSS khi chèn dữ liệu server vào HTML) ----
     function escapeHtml(value) {
         if (value === null || value === undefined) return "";
         return String(value)
@@ -38,11 +46,13 @@
             .replace(/'/g, "&#39;");
     }
 
+    // Format tiền theo chuẩn VN: 1.000.000 đ
     function formatCurrency(value) {
         if (value === null || value === undefined || value === "") return "-";
         return new Intl.NumberFormat("vi-VN").format(Number(value)) + " đ";
     }
 
+    // Format thời gian: HH:MM - DD/MM/YYYY
     function formatDateTime(value) {
         if (!value) return "-";
         const date = new Date(value);
@@ -51,6 +61,7 @@
         return `${pad(date.getHours())}:${pad(date.getMinutes())} - ${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
     }
 
+    // Dựng HTML 1 card đơn hàng (dùng cho load-more / infinite scroll / realtime filter)
     function buildCard(o) {
         const items = (o.items || [])
             .slice(0, 3)
@@ -59,12 +70,14 @@
         const more = (o.items_count || 0) > 3
             ? `<p class="text-xs text-secondary mt-1">${escapeHtml(o.items_count)} món / ${formatCurrency(o.subtotal)}</p>`
             : "";
+        // Chỉ đơn chưa hoàn tất mới có nút Xác nhận / Từ chối
         const actions = o.status !== "COMPLETED"
             ? `<div class="flex gap-2">
                     <button class="reject-order-btn p-2 text-error rounded-lg transition-all" data-order-id="${escapeHtml(o.id)}" type="button"><span class="material-symbols-outlined text-sm">close</span></button>
                     <button class="approve-order-btn px-4 py-2 bg-primary text-white rounded-lg font-label-md hover:scale-95 transition-all" data-order-id="${escapeHtml(o.id)}" type="button">Xác nhận</button>
                </div>`
             : "";
+        // Màu viền trái theo trạng thái
         const borderColor = o.status === "PAID" ? "primary"
             : o.status === "PREPARING" ? "tertiary"
             : "emerald-500";
@@ -88,6 +101,7 @@
         </div>`;
     }
 
+    // Mở modal chi tiết đơn (chỉ xem, không action) từ dữ liệu API
     function openDetailModal(order) {
         detailTitle.textContent = order.code || "";
         detailStatus.textContent = STATUS_LABELS[order.status] || order.status || "";
@@ -128,6 +142,7 @@
         detailModal.classList.remove("hidden");
     }
 
+    // ---- Modal từ chối: mở / đóng ----
     function openRejectModal(orderId) {
         rejectOrderId.value = orderId;
         rejectReason.value = "";
@@ -143,6 +158,7 @@
         detailModal.classList.add("hidden");
     }
 
+    // Bật/tắt trạng thái loading trên nút (thay nội dung bằng spinner khi PATCH)
     function setLoading(btn, loading) {
         btn.disabled = loading;
         if (loading) {
@@ -153,6 +169,7 @@
         }
     }
 
+    // Hiệu ứng confetti nổ tại vị trí card khi duyệt/từ chối (variant C)
     function confetti(x, y) {
         const colors = ["#1f6b4e", "#ffd166", "#b3261e", "#4ade80", "#60a5fa"];
         for (let i = 0; i < 14; i++) {
@@ -172,6 +189,7 @@
         }
     }
 
+    // Tăng/giảm badge "N ĐƠN" của 1 cột (client-side, không cần reload)
     function bumpCount(status, delta) {
         const col = document.querySelector(`[data-status="${status}"]`);
         if (!col) return;
@@ -182,6 +200,7 @@
         badge.textContent = `${n} ĐƠN`;
     }
 
+    // Animate card rời cột cũ → nhảy sang cột mới (toStatus = null thì chỉ xoá, dùng cho từ chối)
     function popCard(card, toStatus) {
         const rect = card.getBoundingClientRect();
         confetti(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -196,6 +215,7 @@
             const el = card.cloneNode(true);
             el.classList.remove("card-out");
             el.classList.add("card-pop");
+            // Card vào cột Đã hoàn tất: bỏ nút thao tác + đổi viền sang xanh lục
             if (toStatus === "COMPLETED") {
                 const actions = el.querySelector(".flex.gap-2");
                 if (actions) actions.remove();
@@ -208,6 +228,56 @@
         }, 500);
     }
 
+    // ---- Infinite scroll (thay nút "Xem thêm"): theo dõi page/hasMore từng cột ----
+    const loadState = {};
+    function initLoadState() {
+        document.querySelectorAll("[data-status]").forEach((col) => {
+            loadState[col.dataset.status] = {
+                page: Number(col.dataset.page || 2),
+                hasMore: col.dataset.hasMore === "1",
+                loading: false,
+            };
+        });
+    }
+
+    // Nạp thêm 1 page cho 1 cột (board_more), giữ nguyên filter hiện tại
+    async function loadMore(status) {
+        const st = loadState[status];
+        if (!st || !st.hasMore || st.loading) return;
+        st.loading = true;
+        const col = document.querySelector(`[data-status="${status}"]`);
+        const container = col && col.querySelector(".space-y-4");
+        const board = document.querySelector("[data-board]");
+        const params = new URLSearchParams(window.location.search);
+        params.set("status", status);
+        params.set("page", st.page);
+        params.set("per_page", (board && board.dataset.pageSize) || "4");
+        try {
+            const r = await fetch(`${API_BOARD}?${params.toString()}`);
+            const data = await r.json();
+            if (data.success) {
+                data.items.forEach((o) => container.insertAdjacentHTML("beforeend", buildCard(o)));
+                st.page += 1;
+                st.hasMore = data.has_more;
+            }
+        } catch (e) {
+            window.showToast("Lỗi kết nối", "error");
+        }
+        st.loading = false;
+    }
+
+    // Nạp page kế cho TẤT CẢ cột còn dữ liệu; nếu sentinel vẫn trong viewport thì nạp tiếp
+    async function loadMoreAll() {
+        const sentinel = document.getElementById("board-sentinel");
+        const statuses = Object.keys(loadState).filter((s) => loadState[s].hasMore && !loadState[s].loading);
+        if (!statuses.length) return;
+        await Promise.all(statuses.map((s) => loadMore(s)));
+        const rect = sentinel && sentinel.getBoundingClientRect();
+        const stillNeeded = Object.keys(loadState).some((s) => loadState[s].hasMore);
+        if (rect && rect.top < window.innerHeight + 250 && stillNeeded) loadMoreAll();
+    }
+
+    // Re-render 1 cột từ dữ liệu filter mới (realtime search) + reset infinite-scroll state
     function renderColumn(status, data) {
         const col = document.querySelector(`[data-status="${status}"]`);
         if (!col) return;
@@ -218,20 +288,11 @@
         }
         const container = col.querySelector(".space-y-4");
         container.innerHTML = data.items.map(buildCard).join("");
-        const oldMore = col.querySelector(".load-more-btn");
-        if (oldMore) oldMore.remove();
-        if (data.has_more) {
-            const btn = document.createElement("button");
-            btn.className = "load-more-btn w-full py-2 bg-surface-container-high text-secondary rounded-lg font-label-md hover:bg-surface-container transition-colors";
-            btn.dataset.status = status;
-            btn.dataset.page = "2";
-            const pageSize = Number(document.querySelector("[data-board]")?.dataset.pageSize || 4);
-            btn.textContent = `Xem thêm (${data.total - pageSize} đơn còn lại)`;
-            col.appendChild(btn);
-        }
+        loadState[status] = { page: 2, hasMore: data.has_more, loading: false };
     }
 
-    let filterSeq = 0;
+    // ---- Tìm kiếm realtime: gõ keyword / đổi ngày → fetch 3 cột → re-render (không reload) ----
+    let filterSeq = 0; // chống race: chỉ render kết quả của lần gõ mới nhất
     function applyFilter() {
         const seq = ++filterSeq;
         const keyword = searchInput.value.trim();
@@ -255,15 +316,30 @@
         });
     }
 
+    // Keyword: debounce 350ms — chỉ tìm khi ngừng gõ
     let debounceTimer;
     searchInput.addEventListener("input", () => {
         clearTimeout(debounceTimer);
         debounceTimer = setTimeout(applyFilter, 350);
     });
+    // Đổi ngày: lọc ngay lập tức
     startInput.addEventListener("change", applyFilter);
     endInput.addEventListener("change", applyFilter);
 
+    // ---- Infinite scroll: quan sát sentinel cuối board, cuộn gần đáy thì nạp thêm ----
+    initLoadState();
+    const sentinel = document.getElementById("board-sentinel");
+    if (sentinel && "IntersectionObserver" in window) {
+        const observer = new IntersectionObserver((entries) => {
+            if (!entries[0].isIntersecting) return;
+            loadMoreAll();
+        }, { rootMargin: "250px" });
+        observer.observe(sentinel);
+    }
+
+    // ---- Event delegation: click toàn board ----
     document.addEventListener("click", function (e) {
+        // Nút Xác nhận: PATCH approve → animate card sang cột mới + toast
         const approveBtn = e.target.closest(".approve-order-btn");
         if (approveBtn) {
             const orderId = approveBtn.dataset.orderId;
@@ -287,12 +363,14 @@
             return;
         }
 
+        // Nút X (từ chối): mở modal nhập lý do
         const rejectBtn = e.target.closest(".reject-order-btn");
         if (rejectBtn) {
             openRejectModal(rejectBtn.dataset.orderId);
             return;
         }
 
+        // Click card: fetch chi tiết → mở modal
         const card = e.target.closest("[data-order-card]");
         if (card) {
             const orderId = card.dataset.orderId;
@@ -302,43 +380,14 @@
                     if (data.success) openDetailModal(data.order);
                 })
                 .catch(() => {});
-            return;
         }
-
-        const loadMoreBtn = e.target.closest(".load-more-btn");
-        if (!loadMoreBtn) return;
-
-        const status = loadMoreBtn.dataset.status;
-        const nextPage = Number(loadMoreBtn.dataset.page);
-        const container = loadMoreBtn.closest(".space-y-4").querySelector(".space-y-4");
-        const board = document.querySelector("[data-board]");
-        const params = new URLSearchParams(window.location.search);
-        params.set("status", status);
-        params.set("page", nextPage);
-        params.set("per_page", (board && board.dataset.pageSize) || "4");
-
-        fetch(`${API_BOARD}?${params.toString()}`)
-            .then((r) => r.json())
-            .then((data) => {
-                if (!data.success) {
-                    window.showToast(data.message || "Lỗi", "error");
-                    return;
-                }
-                data.items.forEach((o) => {
-                    container.insertAdjacentHTML("beforeend", buildCard(o));
-                });
-                if (data.has_more) {
-                    loadMoreBtn.dataset.page = nextPage + 1;
-                } else {
-                    loadMoreBtn.remove();
-                }
-            })
-            .catch(() => window.showToast("Lỗi kết nối", "error"));
     });
 
+    // Đóng modal chi tiết (nút X + click nền)
     document.getElementById("close-order-detail-btn").addEventListener("click", closeDetailModal);
     document.getElementById("order-detail-backdrop").addEventListener("click", closeDetailModal);
 
+    // Xác nhận từ chối trong modal: validate lý do → PATCH reject → xoá card + toast
     document.getElementById("confirm-reject-btn").addEventListener("click", function () {
         const orderId = rejectOrderId.value;
         const reason = rejectReason.value.trim();
@@ -373,6 +422,7 @@
             });
     });
 
+    // Đóng modal từ chối (nút X + Hủy + click nền)
     document.getElementById("close-reject-modal-btn").addEventListener("click", closeRejectModal);
     document.getElementById("cancel-reject-btn").addEventListener("click", closeRejectModal);
     document.getElementById("reject-modal-backdrop").addEventListener("click", closeRejectModal);
