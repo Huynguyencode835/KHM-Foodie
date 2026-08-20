@@ -55,3 +55,34 @@ class OrdersDao:
             db.joinedload(Order.items).joinedload(OrderItem.dish),
             db.joinedload(Order.voucher)
         ).filter_by(id=order_id, restaurant_id=restaurant_id).first()
+
+    @staticmethod
+    def approve_order(order_id, restaurant_id):
+        order = OrdersDao.get_order_by_id_and_restaurant(order_id, restaurant_id)
+        if not order:
+            return None
+
+        if order.status == Status.PAID:
+            order.status = Status.PREPARING
+        elif order.status == Status.PREPARING:
+            order.status = Status.COMPLETED
+        else:
+            return None
+
+        db.session.commit()
+        return order
+
+    @staticmethod
+    def reject_order(order_id, restaurant_id, reason=None):
+        order = OrdersDao.get_order_by_id_and_restaurant(order_id, restaurant_id)
+        if not order or order.status not in (Status.PAID, Status.PREPARING):
+            return None
+
+        reason = (reason or "").strip()
+        if not reason:
+            raise ValueError("rejection_reason là bắt buộc")
+
+        order.status = Status.CANCELLED
+        order.rejection_reason = reason
+        db.session.commit()
+        return order

@@ -161,3 +161,58 @@ class OrderController:
             "success": True,
             "order": OrderController._serialize_order(order),
         }), 200
+
+    @staticmethod
+    def approve(order_id):
+        restaurant_id = OrderController._get_restaurant_id()
+        if not restaurant_id:
+            return jsonify({"success": False, "status": "error", "message": "Nhà hàng không tồn tại"}), 403
+
+        order = OrdersDao.approve_order(order_id, restaurant_id)
+        if not order:
+            return jsonify({
+                "success": False,
+                "status": "error",
+                "message": "Đơn hàng không tồn tại hoặc không thể duyệt"
+            }), 404
+
+        return jsonify({
+            "success": True,
+            "status": "ok",
+            "message": "Đã duyệt đơn hàng",
+            "order": OrderController._serialize_order(order),
+        }), 200
+
+    @staticmethod
+    def reject(order_id):
+        restaurant_id = OrderController._get_restaurant_id()
+        if not restaurant_id:
+            return jsonify({"success": False, "status": "error", "message": "Nhà hàng không tồn tại"}), 403
+
+        data = request.get_json(silent=True) or {}
+        reason = data.get("reason")
+        if not reason or not str(reason).strip():
+            return jsonify({
+                "success": False,
+                "status": "error",
+                "message": "Lý do từ chối là bắt buộc"
+            }), 400
+
+        try:
+            order = OrdersDao.reject_order(order_id, restaurant_id, reason)
+        except ValueError as e:
+            return jsonify({"success": False, "status": "error", "message": str(e)}), 400
+
+        if not order:
+            return jsonify({
+                "success": False,
+                "status": "error",
+                "message": "Đơn hàng không tồn tại hoặc không thể từ chối"
+            }), 404
+
+        return jsonify({
+            "success": True,
+            "status": "ok",
+            "message": "Đã từ chối đơn hàng",
+            "order": OrderController._serialize_order(order),
+        }), 200

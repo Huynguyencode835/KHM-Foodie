@@ -78,6 +78,18 @@
                         </div>
                         <div class="flex justify-between items-center">
                             <p class="font-bold text-primary">{{ o['total_amount']|int }}d</p>
+                            {% if st.name in ('PAID', 'PREPARING') %}
+                            <div class="flex gap-2">
+                                <button class="reject-order-btn p-2 bg-error-container text-error rounded-lg hover:opacity-80 transition-all"
+                                    data-order-id="{{ o.id }}" type="button">
+                                    <span class="material-symbols-outlined text-sm">close</span>
+                                </button>
+                                <button class="approve-order-btn px-4 py-2 bg-primary text-white rounded-lg font-label-md hover:scale-95 transition-all"
+                                    data-order-id="{{ o.id }}" type="button">
+                                    Xac nhan
+                                </button>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                     {% else %}
@@ -113,6 +125,40 @@
                 </button>
             </div>
             <div id="order-detail-body" class="p-6 max-h-[65vh] overflow-y-auto space-y-5"></div>
+        </div>
+    </div>
+</div>
+
+<div id="reject-modal" class="hidden fixed inset-0 z-[70]">
+    <div class="absolute inset-0 bg-black/50" id="reject-modal-backdrop"></div>
+    <div class="relative h-full w-full flex items-center justify-center p-4">
+        <div class="w-full max-w-md rounded-2xl bg-surface-container-lowest shadow-2xl overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant">
+                <div>
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Tu choi don hang</h3>
+                    <p class="text-body-md text-secondary">Vui long nhap ly do tu choi.</p>
+                </div>
+                <button id="close-reject-modal-btn"
+                    class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center text-secondary transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <input type="hidden" id="reject-order-id">
+                <textarea id="reject-reason" rows="3" placeholder="Ly do tu choi..."
+                    class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"></textarea>
+                <p id="reject-error" class="hidden text-caption text-error"></p>
+                <div class="flex items-center justify-end gap-3">
+                    <button type="button" id="cancel-reject-btn"
+                        class="px-5 py-3 rounded-lg border border-outline-variant font-bold text-secondary hover:bg-surface-container transition-colors">
+                        Huy
+                    </button>
+                    <button id="confirm-reject-btn"
+                        class="px-6 py-3 rounded-lg bg-error text-white font-bold shadow-lg hover:opacity-90 transition-colors">
+                        Tu choi
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

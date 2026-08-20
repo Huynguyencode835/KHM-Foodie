@@ -2,11 +2,18 @@
 (function () {
     const API_BOARD = "/api/orders/board";
     const API_ORDER = (id) => `/api/orders/${id}`;
+    const API_APPROVE = (id) => `/api/orders/${id}/approve`;
+    const API_REJECT = (id) => `/api/orders/${id}/reject`;
 
     const detailModal = document.getElementById("order-detail-modal");
     const detailTitle = document.getElementById("order-detail-title");
     const detailStatus = document.getElementById("order-detail-status");
     const detailBody = document.getElementById("order-detail-body");
+
+    const rejectModal = document.getElementById("reject-modal");
+    const rejectOrderId = document.getElementById("reject-order-id");
+    const rejectReason = document.getElementById("reject-reason");
+    const rejectError = document.getElementById("reject-error");
 
     const STATUS_LABELS = {
         PAID: "Moi",
@@ -48,10 +55,16 @@
         const more = (o.items_count || 0) > 3
             ? `<p class="text-xs text-secondary mt-1">${escapeHtml(o.items_count)} mon / ${formatCurrency(o.subtotal)}</p>`
             : "";
+        const actions = o.status !== "COMPLETED"
+            ? `<div class="flex gap-2">
+                    <button class="reject-order-btn p-2 bg-error-container text-error rounded-lg hover:opacity-80 transition-all" data-order-id="${escapeHtml(o.id)}" type="button"><span class="material-symbols-outlined text-sm">close</span></button>
+                    <button class="approve-order-btn px-4 py-2 bg-primary text-white rounded-lg font-label-md hover:scale-95 transition-all" data-order-id="${escapeHtml(o.id)}" type="button">Xac nhan</button>
+               </div>`
+            : "";
         const borderColor = o.status === "PAID" ? "primary"
             : o.status === "PREPARING" ? "tertiary"
             : "secondary";
-        return `<div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] space-y-4 border-l-4 border-${borderColor}" data-order-id="${escapeHtml(o.id)}">
+        return `<div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] space-y-4 border-l-4 border-${borderColor} cursor-pointer hover:shadow-[0px_8px_30px_rgba(0,0,0,0.1)] transition-all" data-order-id="${escapeHtml(o.id)}" data-order-card>
             <div class="flex justify-between items-start">
                 <div>
                     <p class="font-bold text-lg">${escapeHtml(o.code)}</p>
@@ -66,6 +79,7 @@
             </div>
             <div class="flex justify-between items-center">
                 <span class="font-bold text-primary">${formatCurrency(o.total_amount)}</span>
+                ${actions}
             </div>
         </div>`;
     }
@@ -110,11 +124,41 @@
         detailModal.classList.remove("hidden");
     }
 
+    function openRejectModal(orderId) {
+        rejectOrderId.value = orderId;
+        rejectReason.value = "";
+        rejectError.classList.add("hidden");
+        rejectModal.classList.remove("hidden");
+    }
+
+    function closeRejectModal() {
+        rejectModal.classList.add("hidden");
+    }
+
     function closeDetailModal() {
         detailModal.classList.add("hidden");
     }
 
     document.addEventListener("click", function (e) {
+        const approveBtn = e.target.closest(".approve-order-btn");
+        if (approveBtn) {
+            const orderId = approveBtn.dataset.orderId;
+            fetch(API_APPROVE(orderId), { method: "PATCH" })
+                .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+                .then(({ ok, data }) => {
+                    window.showToast(data.message || "Da xu ly", ok ? "success" : "error");
+                    if (ok) setTimeout(() => location.reload(), 800);
+                })
+                .catch(() => window.showToast("Loi ket noi", "error"));
+            return;
+        }
+
+        const rejectBtn = e.target.closest(".reject-order-btn");
+        if (rejectBtn) {
+            openRejectModal(rejectBtn.dataset.orderId);
+            return;
+        }
+
         const card = e.target.closest("[data-order-card]");
         if (card) {
             const orderId = card.dataset.orderId;
@@ -160,4 +204,38 @@
 
     document.getElementById("close-order-detail-btn").addEventListener("click", closeDetailModal);
     document.getElementById("order-detail-backdrop").addEventListener("click", closeDetailModal);
+
+    document.getElementById("confirm-reject-btn").addEventListener("click", function () {
+        const orderId = rejectOrderId.value;
+        const reason = rejectReason.value.trim();
+        if (!reason) {
+            rejectError.textContent = "Vui long nhap ly do tu choi";
+            rejectError.classList.remove("hidden");
+            return;
+        }
+        fetch(API_REJECT(orderId), {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ reason }),
+        })
+            .then((r) => r.json().then((data) => ({ ok: r.ok, data })))
+            .then(({ ok, data }) => {
+                if (!ok) {
+                    rejectError.textContent = data.message || "Loi";
+                    rejectError.classList.remove("hidden");
+                    return;
+                }
+                closeRejectModal();
+                window.showToast(data.message, "success");
+                setTimeout(() => location.reload(), 800);
+            })
+            .catch(() => {
+                rejectError.textContent = "Loi ket noi";
+                rejectError.classList.remove("hidden");
+            });
+    });
+
+    document.getElementById("close-reject-modal-btn").addEventListener("click", closeRejectModal);
+    document.getElementById("cancel-reject-btn").addEventListener("click", closeRejectModal);
+    document.getElementById("reject-modal-backdrop").addEventListener("click", closeRejectModal);
 })();
