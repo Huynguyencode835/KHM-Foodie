@@ -1,0 +1,97 @@
+{% extends "layout/baseRestaurent.html" %}
+
+{% block itemHeader %}
+<div class="flex items-center space-x-3 cursor-pointer">
+    <div class="text-right hidden sm:block">
+        <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
+        <p class="text-caption text-secondary">Quan ly</p>
+    </div>
+    <a href="/me">
+        <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+            <img class="w-full h-full object-cover" alt="{{ current_user.name }}" src="{{ current_user.avatar }}">
+        </div>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="w-full p-gutter min-h-full">
+    <div class="max-w-[1600px] mx-auto space-y-6" data-board data-page-size="{{ page_size }}">
+        <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+                <h2 class="font-headline-lg text-headline-lg text-on-background">Don hang</h2>
+                <p class="text-body-md text-secondary">Theo doi va xu ly don hang cua nha hang.</p>
+            </div>
+        </div>
+
+        <form method="get" action="/restaurants/orders"
+            class="flex flex-col gap-3 lg:flex-row lg:items-center bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+            <button type="submit"
+                class="px-5 py-3 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary-container transition-colors">
+                Loc
+            </button>
+        </form>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-gutter">
+            {% set status_meta = {
+                'PAID': {'label': 'Moi', 'color': 'primary'},
+                'PREPARING': {'label': 'Dang che bien', 'color': 'tertiary'},
+                'COMPLETED': {'label': 'Da hoan tat / dang giao', 'color': 'secondary'}
+            } %}
+            {% for st in pipeline_statuses %}
+            {% set col = columns[st.name] %}
+            {% set meta = status_meta[st.name] %}
+            <div class="space-y-4" data-status="{{ st.name }}">
+                <div class="flex items-center justify-between">
+                    <h3 class="font-headline-md text-headline-md flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-{{ meta.color }}"></span>
+                        {{ meta.label }}
+                    </h3>
+                    <span class="bg-surface-container-highest px-2 py-0.5 rounded text-xs font-bold">{{ col.total }} DON</span>
+                </div>
+                <div class="space-y-4">
+                    {% for o in col.orders %}
+                    <div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] space-y-4 border-l-4 border-{{ meta.color }}"
+                        data-order-id="{{ o.id }}">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-bold text-lg">{{ o.code }}</p>
+                                <p class="text-caption text-secondary">Khach: {{ o.customer_name }}</p>
+                                <p class="text-caption text-secondary">{{ o.customer_phone }}</p>
+                            </div>
+                            <span class="text-caption bg-surface-container-highest px-2 py-1 rounded">{{ o.created_at }}</span>
+                        </div>
+                        <div class="py-3 border-y border-outline-variant/30">
+                            <ul class="text-sm space-y-1 text-secondary">
+                                {% for it in o['items'][:3] %}
+                                <li>{{ it.quantity }}x {{ it.name }}</li>
+                                {% endfor %}
+                            </ul>
+                            <p class="text-xs text-secondary mt-1">{{ o['items_count'] }} mon / {{ o['subtotal']|int }}d</p>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <p class="font-bold text-primary">{{ o['total_amount']|int }}d</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="rounded-lg border border-dashed border-outline-variant px-4 py-8 text-center text-secondary text-sm">
+                        Chua co don nao
+                    </div>
+                    {% endfor %}
+                </div>
+                {% if col.has_more %}
+                <button class="load-more-btn w-full py-2 bg-surface-container-high text-secondary rounded-lg font-label-md hover:bg-surface-container transition-colors"
+                    data-status="{{ st.name }}" data-page="2">
+                    Xem them ({{ col.total - page_size }} don con lai)
+                </button>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/restaurantOrders.js') }}"></script>
+{% endblock %}

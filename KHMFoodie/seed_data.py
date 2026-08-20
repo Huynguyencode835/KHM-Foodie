@@ -1,10 +1,11 @@
 import json
 import os
+from datetime import datetime, timedelta
 from app import create_app
 from app.extensions import db
 from app.models.model import (
-    User, Restaurant, Dish,
-    UserRole, CuisineType, DishCategory,
+    User, Restaurant, Dish, Voucher, Order, OrderItem,
+    UserRole, CuisineType, DishCategory, DiscountType, Status,
     RestaurantApprovalStatus,
     hash_password, parse_time
 )
@@ -14,8 +15,9 @@ RESTAURANTS_JSON = os.path.join(BASE_DIR, "app", "data", "restaurants.json")
 DISHES_JSON = os.path.join(BASE_DIR, "app", "data", "dishes.json")
 
 
-def seed():
-    app = create_app()
+def seed(app=None):
+    if app is None:
+        app = create_app()
     with app.app_context():
         db.drop_all()
         db.create_all()
@@ -139,7 +141,145 @@ def seed():
         db.session.commit()
         print(f"✅ Thêm {len(pending_restaurants)} nhà hàng chờ duyệt.")
 
+        _seed_orders(restaurant_map)
+
         print(f"✅ Đã tạo {len(restaurant_map)} nhà hàng và {len(dishes_data)} món ăn.")
+
+
+def _seed_orders(restaurant_map):
+    """Tạo đơn hàng test cho nhà hàng đã duyệt, trải đủ trạng thái."""
+    customer_specs = [
+        ("Nguyen Van A", "khach_a", "0911000111", "khacha@example.com", "12 Le Loi, Q1, TP.HCM"),
+        ("Tran Thi B", "khach_b", "0911000222", "khachb@example.com", "34 Nguyen Hue, Q3, TP.HCM"),
+        ("Le Van C", "khach_c", "0911000333", "khachc@example.com", "56 Hai Ba Trung, Q7, TP.HCM"),
+        ("Pham Thi D", "khach_d", "0911000444", "khachd@example.com", "78 Ly Thuong Kiet, Q10, TP.HCM"),
+    ]
+
+    customer_users = []
+    for name, username, phone, email, addr in customer_specs:
+        customer = User(
+            name=name,
+            username=username,
+            password=hash_password("123456"),
+            phonenumber=phone,
+            email=email,
+            address=addr,
+            role=UserRole.CUSTOMER,
+        )
+        db.session.add(customer)
+        customer_users.append(customer)
+    db.session.flush()
+
+    # Voucher mẫu cho nhà hàng test (quan_trua_ngon)
+    rest_test = restaurant_map["quan_trua_ngon"]
+    vouchers = [
+        Voucher(
+            name="Giam 10% toi da 50k",
+            code="QUANTRUANGON10",
+            description="Giam 10% don hang, toi da 50k",
+            discount_type=DiscountType.PERCENTAGE,
+            discount_value=10,
+            minimum_order=100,
+            max_discount=50,
+            start_date=datetime.utcnow() - timedelta(days=30),
+            end_date=datetime.utcnow() + timedelta(days=30),
+            usage_limit=1000,
+            used_count=5,
+            restaurant_id=rest_test.id,
+        ),
+        Voucher(
+            name="Giam 30k",
+            code="QUANTRUANGON30",
+            description="Giam 30k don hang tu 150k",
+            discount_type=DiscountType.FIXED_AMOUNT,
+            discount_value=30,
+            minimum_order=150,
+            max_discount=None,
+            start_date=datetime.utcnow() - timedelta(days=30),
+            end_date=datetime.utcnow() + timedelta(days=30),
+            usage_limit=1000,
+            used_count=3,
+            restaurant_id=rest_test.id,
+        ),
+    ]
+    db.session.add_all(vouchers)
+    db.session.flush()
+
+    # Đơn hàng cho 2 nhà hàng approved: quan_trua_ngon & goc_trua_van_phong
+    # spec: (restaurant_username, status, customer_idx, ship_fee, voucher_idx, note, days_ago)
+    order_specs = [
+        ("quan_trua_ngon", Status.PAID, 0, 20, 0, "Giao gio hanh chinh", 0),
+        ("quan_trua_ngon", Status.PAID, 1, 20, 1, None, 1),
+        ("quan_trua_ngon", Status.PAID, 2, 15, None, "Them it tuong ot", 2),
+        ("quan_trua_ngon", Status.PAID, 3, 25, 0, None, 3),
+        ("quan_trua_ngon", Status.CONFIRMED, 1, 20, None, None, 1),
+        ("quan_trua_ngon", Status.CONFIRMED, 2, 15, 1, "Giao trua 11h30", 2),
+        ("quan_trua_ngon", Status.PREPARING, 0, 20, None, None, 0),
+        ("quan_trua_ngon", Status.PREPARING, 3, 15, 0, None, 1),
+        ("quan_trua_ngon", Status.DELIVERING, 2, 20, None, None, 0),
+        ("quan_trua_ngon", Status.DELIVERING, 1, 25, 1, None, 2),
+        ("quan_trua_ngon", Status.COMPLETED, 0, 20, None, None, 5),
+        ("quan_trua_ngon", Status.CANCELLED, 3, 0, None, "Nha hang het nguyen lieu", 4),
+        ("quan_trua_ngon", Status.PENDING_PAYMENT, 1, 20, None, None, 0),
+        ("goc_trua_van_phong", Status.PAID, 2, 15, None, None, 1),
+        ("goc_trua_van_phong", Status.CONFIRMED, 3, 20, None, None, 2),
+        ("goc_trua_van_phong", Status.PREPARING, 0, 15, None, None, 0),
+        ("goc_trua_van_phong", Status.DELIVERING, 1, 20, None, None, 1),
+        ("goc_trua_van_phong", Status.COMPLETED, 2, 15, None, None, 6),
+        ("goc_trua_van_phong", Status.CANCELLED, 3, 0, None, "Khach huy don", 3),
+    ]
+
+    orders_created = 0
+    for username, status, cust_idx, ship_fee, voucher_idx, note, days_ago in order_specs:
+        restaurant = restaurant_map[username]
+        customer = customer_users[cust_idx]
+        dishes = Dish.query.filter_by(restaurant_id=restaurant.id).order_by(Dish.id).all()
+        if not dishes:
+            continue
+
+        voucher = vouchers[voucher_idx] if voucher_idx is not None else None
+        chosen = dishes[:3]
+        items = []
+        subtotal = 0
+        for i, dish in enumerate(chosen):
+            qty = (i % 3) + 1
+            unit_price = float(dish.price)
+            subtotal += unit_price * qty
+            items.append(OrderItem(name=dish.name, dish_id=dish.id, unit_price=unit_price, quantity=qty))
+
+        discount = 0
+        if voucher:
+            if voucher.discount_type == DiscountType.PERCENTAGE:
+                discount = subtotal * voucher.discount_value / 100
+                if voucher.max_discount is not None:
+                    discount = min(discount, voucher.max_discount)
+            else:
+                discount = min(voucher.discount_value, subtotal)
+        total = subtotal - discount + ship_fee
+
+        rejection_reason = note if status == Status.CANCELLED else None
+        order = Order(
+            name=f"DH-{orders_created + 1:05d}",
+            user_id=customer.id,
+            restaurant_id=restaurant.id,
+            voucher_id=voucher.id if voucher else None,
+            status=status,
+            note=note,
+            customer_name=customer.name,
+            customer_phone=customer.phonenumber,
+            customer_email=customer.email,
+            delivery_address=customer.address,
+            shipping_fee=ship_fee,
+            total_amount=total,
+            rejection_reason=rejection_reason,
+            created_at=datetime.utcnow() - timedelta(days=days_ago),
+        )
+        order.items = items
+        db.session.add(order)
+        orders_created += 1
+
+    db.session.commit()
+    print(f"✅ Đã tạo {orders_created} đơn hàng test.")
 
 
 if __name__ == "__main__":
