@@ -73,6 +73,11 @@ class OrderController:
         if not restaurant_id:
             return jsonify({"success": False, "message": "Nhà hàng không tồn tại"}), 403
 
+        keyword = (request.args.get("keyword") or "").strip()
+        start_date = OrderController._parse_date(request.args.get("start_date"))
+        end_date = OrderController._parse_date(request.args.get("end_date"))
+        if end_date is not None:
+            end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=0)
         per_page = current_app.config.get("PAGE_SIZE", 4)
 
         columns = {}
@@ -80,6 +85,9 @@ class OrderController:
             page = OrdersDao.get_pipeline_orders(
                 restaurant_id=restaurant_id,
                 status=status.name,
+                keyword=keyword,
+                start_date=start_date,
+                end_date=end_date,
                 page=1,
                 per_page=per_page,
             )
@@ -92,6 +100,9 @@ class OrderController:
         return render_template(
             "restaurantOrders.html",
             columns=columns,
+            keyword=keyword,
+            start_date=request.args.get("start_date") or "",
+            end_date=request.args.get("end_date") or "",
             pipeline_statuses=OrderController.PIPELINE_STATUSES,
             page_size=per_page,
         )
@@ -110,12 +121,20 @@ class OrderController:
         if status not in OrderController.PIPELINE_STATUSES:
             return jsonify({"success": False, "message": "Trạng thái không hợp lệ"}), 400
 
+        keyword = (request.args.get("keyword") or "").strip()
+        start_date = OrderController._parse_date(request.args.get("start_date"))
+        end_date = OrderController._parse_date(request.args.get("end_date"))
+        if end_date is not None:
+            end_date = end_date.replace(hour=23, minute=59, second=59, microsecond=0)
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", current_app.config.get("PAGE_SIZE", 4), type=int)
 
         result = OrdersDao.get_pipeline_orders(
             restaurant_id=restaurant_id,
             status=status.name,
+            keyword=keyword,
+            start_date=start_date,
+            end_date=end_date,
             page=page,
             per_page=per_page,
         )
