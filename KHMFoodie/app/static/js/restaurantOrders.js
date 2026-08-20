@@ -1,6 +1,21 @@
 // Restaurant: xem danh sách đơn hàng kanban
 (function () {
     const API_BOARD = "/api/orders/board";
+    const API_ORDER = (id) => `/api/orders/${id}`;
+
+    const detailModal = document.getElementById("order-detail-modal");
+    const detailTitle = document.getElementById("order-detail-title");
+    const detailStatus = document.getElementById("order-detail-status");
+    const detailBody = document.getElementById("order-detail-body");
+
+    const STATUS_LABELS = {
+        PAID: "Moi",
+        CONFIRMED: "Da xac nhan",
+        PREPARING: "Dang che bien",
+        DELIVERING: "Dang giao",
+        COMPLETED: "Da hoan tat",
+        CANCELLED: "Tu choi",
+    };
 
     function escapeHtml(value) {
         if (value === null || value === undefined) return "";
@@ -55,7 +70,63 @@
         </div>`;
     }
 
+    function openDetailModal(order) {
+        detailTitle.textContent = order.code || "";
+        detailStatus.textContent = STATUS_LABELS[order.status] || order.status || "";
+
+        const items = (order.items || [])
+            .map((it) => `<li class="flex justify-between gap-4 py-1.5 border-b border-outline-variant/30 last:border-0">
+                <span>${escapeHtml(it.quantity)}x ${escapeHtml(it.name)}</span>
+                <span class="font-semibold">${formatCurrency(it.unit_price * it.quantity)}</span>
+            </li>`)
+            .join("");
+
+        detailBody.innerHTML = `
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="bg-surface-bright rounded-xl p-4 space-y-1">
+                    <p class="text-caption text-secondary uppercase tracking-wider font-bold">Khach hang</p>
+                    <p class="font-bold">${escapeHtml(order.customer_name)}</p>
+                    <p>${escapeHtml(order.customer_phone || "")}</p>
+                    <p>${escapeHtml(order.customer_email || "")}</p>
+                </div>
+                <div class="bg-surface-bright rounded-xl p-4 space-y-1">
+                    <p class="text-caption text-secondary uppercase tracking-wider font-bold">Dia chi giao</p>
+                    <p>${escapeHtml(order.delivery_address || "")}</p>
+                    ${order.note ? `<p class="text-secondary">Ghi chu: ${escapeHtml(order.note)}</p>` : ""}
+                </div>
+            </div>
+            <div class="bg-surface-bright rounded-xl p-4">
+                <p class="text-caption text-secondary uppercase tracking-wider font-bold mb-2">Mon an</p>
+                <ul class="text-sm">${items || '<li class="text-secondary">Khong co mon</li>'}</ul>
+            </div>
+            <div class="bg-surface-bright rounded-xl p-4 space-y-1.5 text-sm">
+                ${order.voucher ? `<p class="flex justify-between"><span>Voucher: ${escapeHtml(order.voucher.code)}</span><span class="font-semibold">${escapeHtml(order.voucher.name)}</span></p>` : ""}
+                <p class="flex justify-between"><span>Tam tinh</span><span>${formatCurrency(order.subtotal)}</span></p>
+                <p class="flex justify-between"><span>Phi ship</span><span>${formatCurrency(order.shipping_fee)}</span></p>
+                <p class="flex justify-between font-bold text-primary text-base"><span>Tong</span><span>${formatCurrency(order.total_amount)}</span></p>
+                ${order.rejection_reason ? `<p class="mt-2 text-error">Ly do tu choi: ${escapeHtml(order.rejection_reason)}</p>` : ""}
+            </div>
+        `;
+        detailModal.classList.remove("hidden");
+    }
+
+    function closeDetailModal() {
+        detailModal.classList.add("hidden");
+    }
+
     document.addEventListener("click", function (e) {
+        const card = e.target.closest("[data-order-card]");
+        if (card) {
+            const orderId = card.dataset.orderId;
+            fetch(API_ORDER(orderId))
+                .then((r) => r.json())
+                .then((data) => {
+                    if (data.success) openDetailModal(data.order);
+                })
+                .catch(() => {});
+            return;
+        }
+
         const loadMoreBtn = e.target.closest(".load-more-btn");
         if (!loadMoreBtn) return;
 
@@ -86,4 +157,7 @@
             })
             .catch(() => window.showToast("Loi ket noi", "error"));
     });
+
+    document.getElementById("close-order-detail-btn").addEventListener("click", closeDetailModal);
+    document.getElementById("order-detail-backdrop").addEventListener("click", closeDetailModal);
 })();

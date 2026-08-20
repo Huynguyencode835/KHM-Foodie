@@ -146,3 +146,18 @@ class OrderController:
             "page": result.page,
             "has_more": result.has_next,
         }), 200
+
+    @staticmethod
+    def order_detail(order_id):
+        restaurant_id = OrderController._get_restaurant_id()
+        if not restaurant_id:
+            return jsonify({"success": False, "message": "Nhà hàng không tồn tại"}), 403
+
+        order = OrdersDao.get_order_by_id_and_restaurant(order_id, restaurant_id)
+        if not order:
+            return jsonify({"success": False, "message": "Đơn hàng không tồn tại"}), 404
+
+        return jsonify({
+            "success": True,
+            "order": OrderController._serialize_order(order),
+        }), 200

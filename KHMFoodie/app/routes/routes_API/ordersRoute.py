@@ -11,3 +11,8 @@ orders_api.add_url_rule(
     view_func=role_required(UserRole.RESTAURANT)(OrderController.board_more),
     methods=["GET"]
 )
+orders_api.add_url_rule(
+    "/<int:order_id>",
+    view_func=role_required(UserRole.RESTAURANT)(OrderController.order_detail),
+    methods=["GET"]
+)

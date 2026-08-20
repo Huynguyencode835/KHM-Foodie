@@ -48,3 +48,10 @@ class OrdersDao:
         return query.order_by(Order.created_at.desc()).paginate(
             page=page, per_page=per_page, error_out=False
         )
+
+    @staticmethod
+    def get_order_by_id_and_restaurant(order_id, restaurant_id):
+        return Order.query.options(
+            db.joinedload(Order.items).joinedload(OrderItem.dish),
+            db.joinedload(Order.voucher)
+        ).filter_by(id=order_id, restaurant_id=restaurant_id).first()
