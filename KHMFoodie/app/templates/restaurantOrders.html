@@ -1,10 +1,62 @@
 {% extends "layout/baseRestaurent.html" %}
 
+{% block head %}
+<style>
+    .order-pop .approve-order-btn {
+        box-shadow: 0 4px 14px rgba(31, 107, 78, 0.35);
+        transition: transform .1s ease, box-shadow .2s ease;
+    }
+    .order-pop .approve-order-btn:active,
+    .order-pop .reject-order-btn:active {
+        transform: scale(1.08);
+    }
+    .order-pop .reject-order-btn {
+        background: #fff;
+        border: 2px solid #b3261e;
+        color: #b3261e;
+        transition: transform .1s ease;
+    }
+    .spinner-dot {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        border-top-color: #fff;
+        animation: pop-spin .7s linear infinite;
+    }
+    @keyframes pop-spin { to { transform: rotate(360deg); } }
+    .card-pop {
+        animation: vc-pop .6s cubic-bezier(.2, 1.4, .5, 1);
+    }
+    @keyframes vc-pop {
+        0% { transform: scale(.4) rotate(-4deg); opacity: 0; }
+        100% { transform: none; opacity: 1; }
+    }
+    .card-out {
+        animation: vc-out .5s ease forwards;
+        pointer-events: none;
+    }
+    @keyframes vc-out {
+        0% { transform: none; }
+        40% { transform: scale(1.06); }
+        100% { transform: scale(.5); opacity: 0; }
+    }
+    .confetti {
+        position: absolute;
+        width: 8px;
+        height: 12px;
+        pointer-events: none;
+        z-index: 200;
+    }
+</style>
+{% endblock %}
+
 {% block itemHeader %}
 <div class="flex items-center space-x-3 cursor-pointer">
     <div class="text-right hidden sm:block">
         <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
-        <p class="text-caption text-secondary">Quan ly</p>
+        <p class="text-caption text-secondary">Quản lý</p>
     </div>
     <a href="/me">
         <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
@@ -16,17 +68,17 @@
 
 {% block content %}
 <div class="w-full p-gutter min-h-full">
-    <div class="max-w-[1600px] mx-auto space-y-6" data-board data-page-size="{{ page_size }}">
+    <div class="max-w-[1600px] mx-auto space-y-6 order-pop" data-board data-page-size="{{ page_size }}">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-                <h2 class="font-headline-lg text-headline-lg text-on-background">Don hang</h2>
-                <p class="text-body-md text-secondary">Theo doi va xu ly don hang cua nha hang.</p>
+                <h2 class="font-headline-lg text-headline-lg text-on-background">Đơn hàng</h2>
+                <p class="text-body-md text-secondary">Theo dõi và xử lý đơn hàng của nhà hàng.</p>
             </div>
         </div>
 
         <form method="get" action="/restaurants/orders"
             class="flex flex-col gap-3 lg:flex-row lg:items-center bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
-            <input type="search" name="keyword" value="{{ keyword }}" placeholder="Ma don, ten khach, so dien thoai..."
+            <input type="search" name="keyword" value="{{ keyword }}" placeholder="Mã đơn, tên khách, số điện thoại..."
                 class="flex-1 px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md focus:outline-none focus:ring-2 focus:ring-primary/30">
             <input type="date" name="start_date" value="{{ start_date }}"
                 class="px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md focus:outline-none focus:ring-2 focus:ring-primary/30">
@@ -35,15 +87,15 @@
                 class="px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md focus:outline-none focus:ring-2 focus:ring-primary/30">
             <button type="submit"
                 class="px-5 py-3 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary-container transition-colors">
-                Loc
+                Lọc
             </button>
         </form>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-gutter">
             {% set status_meta = {
-                'PAID': {'label': 'Moi', 'color': 'primary'},
-                'PREPARING': {'label': 'Dang che bien', 'color': 'tertiary'},
-                'COMPLETED': {'label': 'Da hoan tat / dang giao', 'color': 'secondary'}
+                'PAID': {'label': 'Mới', 'color': 'primary'},
+                'PREPARING': {'label': 'Đang chế biến', 'color': 'tertiary'},
+                'COMPLETED': {'label': 'Đã hoàn tất / đang giao', 'color': 'emerald-500'}
             } %}
             {% for st in pipeline_statuses %}
             {% set col = columns[st.name] %}
@@ -54,7 +106,7 @@
                         <span class="w-2 h-2 rounded-full bg-{{ meta.color }}"></span>
                         {{ meta.label }}
                     </h3>
-                    <span class="bg-surface-container-highest px-2 py-0.5 rounded text-xs font-bold">{{ col.total }} DON</span>
+                    <span class="bg-surface-container-highest px-2 py-0.5 rounded text-xs font-bold" data-total="{{ col.total }}">{{ col.total }} ĐƠN</span>
                 </div>
                 <div class="space-y-4">
                     {% for o in col.orders %}
@@ -63,10 +115,10 @@
                         <div class="flex justify-between items-start">
                             <div>
                                 <p class="font-bold text-lg">{{ o.code }}</p>
-                                <p class="text-caption text-secondary">Khach: {{ o.customer_name }}</p>
+                                <p class="text-caption text-secondary">Khách: {{ o.customer_name }}</p>
                                 <p class="text-caption text-secondary">{{ o.customer_phone }}</p>
                             </div>
-                            <span class="text-caption bg-surface-container-highest px-2 py-1 rounded">{{ o.created_at }}</span>
+                            <span class="text-caption bg-surface-container-highest px-2 py-1 rounded">{{ o.created_at_display }}</span>
                         </div>
                         <div class="py-3 border-y border-outline-variant/30">
                             <ul class="text-sm space-y-1 text-secondary">
@@ -74,34 +126,30 @@
                                 <li>{{ it.quantity }}x {{ it.name }}</li>
                                 {% endfor %}
                             </ul>
-                            <p class="text-xs text-secondary mt-1">{{ o['items_count'] }} mon / {{ o['subtotal']|int }}d</p>
+                            <p class="text-xs text-secondary mt-1">{{ o['items_count'] }} món / {{ o['subtotal']|int }}d</p>
                         </div>
                         <div class="flex justify-between items-center">
                             <p class="font-bold text-primary">{{ o['total_amount']|int }}d</p>
                             {% if st.name in ('PAID', 'PREPARING') %}
                             <div class="flex gap-2">
-                                <button class="reject-order-btn p-2 bg-error-container text-error rounded-lg hover:opacity-80 transition-all"
+                                <button class="reject-order-btn p-2 text-error rounded-lg transition-all"
                                     data-order-id="{{ o.id }}" type="button">
                                     <span class="material-symbols-outlined text-sm">close</span>
                                 </button>
                                 <button class="approve-order-btn px-4 py-2 bg-primary text-white rounded-lg font-label-md hover:scale-95 transition-all"
                                     data-order-id="{{ o.id }}" type="button">
-                                    Xac nhan
+                                    Xác nhận
                                 </button>
                             </div>
                             {% endif %}
                         </div>
-                    </div>
-                    {% else %}
-                    <div class="rounded-lg border border-dashed border-outline-variant px-4 py-8 text-center text-secondary text-sm">
-                        Chua co don nao
                     </div>
                     {% endfor %}
                 </div>
                 {% if col.has_more %}
                 <button class="load-more-btn w-full py-2 bg-surface-container-high text-secondary rounded-lg font-label-md hover:bg-surface-container transition-colors"
                     data-status="{{ st.name }}" data-page="2">
-                    Xem them ({{ col.total - page_size }} don con lai)
+                    Xem thêm ({{ col.total - page_size }} đơn còn lại)
                 </button>
                 {% endif %}
             </div>
@@ -135,8 +183,8 @@
         <div class="w-full max-w-md rounded-2xl bg-surface-container-lowest shadow-2xl overflow-hidden">
             <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant">
                 <div>
-                    <h3 class="font-headline-md text-headline-md text-on-surface">Tu choi don hang</h3>
-                    <p class="text-body-md text-secondary">Vui long nhap ly do tu choi.</p>
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Từ chối đơn hàng</h3>
+                    <p class="text-body-md text-secondary">Vui lòng nhập lý do từ chối.</p>
                 </div>
                 <button id="close-reject-modal-btn"
                     class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center text-secondary transition-colors">
@@ -145,17 +193,17 @@
             </div>
             <div class="p-6 space-y-4">
                 <input type="hidden" id="reject-order-id">
-                <textarea id="reject-reason" rows="3" placeholder="Ly do tu choi..."
+                <textarea id="reject-reason" rows="3" placeholder="Lý do từ chối..."
                     class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"></textarea>
                 <p id="reject-error" class="hidden text-caption text-error"></p>
                 <div class="flex items-center justify-end gap-3">
                     <button type="button" id="cancel-reject-btn"
                         class="px-5 py-3 rounded-lg border border-outline-variant font-bold text-secondary hover:bg-surface-container transition-colors">
-                        Huy
+                        Hủy
                     </button>
                     <button id="confirm-reject-btn"
                         class="px-6 py-3 rounded-lg bg-error text-white font-bold shadow-lg hover:opacity-90 transition-colors">
-                        Tu choi
+                        Từ chối
                     </button>
                 </div>
             </div>
