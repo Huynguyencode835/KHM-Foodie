@@ -30,25 +30,25 @@ class OrderController:
         items = []
         subtotal = 0
         for item in order.items:
-            subtotal += float(item.unit_price or 0) * item.quantity
+            subtotal += float(item.unit_price) * item.quantity
             items.append({
                 "id": item.id,
-                "name": item.dish.name if item.dish else item.name,
+                "name": item.dish.name,
                 "quantity": item.quantity,
-                "unit_price": float(item.unit_price or 0),
+                "unit_price": float(item.unit_price),
             })
         return {
             "id": order.id,
             "code": order.name,
-            "status": order.status.name if order.status else None,
+            "status": order.status.name,
             "customer_name": order.customer_name,
             "customer_phone": order.customer_phone,
             "customer_email": order.customer_email,
             "delivery_address": order.delivery_address,
             "note": order.note,
             "rejection_reason": order.rejection_reason,
-            "shipping_fee": float(order.shipping_fee or 0),
-            "total_amount": float(order.total_amount or 0),
+            "shipping_fee": float(order.shipping_fee),
+            "total_amount": float(order.total_amount),
             "subtotal": round(subtotal, 0),
             "items_count": sum(i.quantity for i in order.items),
             "items": items,
@@ -82,7 +82,7 @@ class OrderController:
 
         columns = {}
         for status in OrderController.PIPELINE_STATUSES:
-            page = OrdersDao.get_pipeline_orders(
+            page = OrdersDao.get_orders(
                 restaurant_id=restaurant_id,
                 status=status.name,
                 keyword=keyword,
@@ -129,7 +129,7 @@ class OrderController:
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", current_app.config.get("PAGE_SIZE", 4), type=int)
 
-        result = OrdersDao.get_pipeline_orders(
+        result = OrdersDao.get_orders(
             restaurant_id=restaurant_id,
             status=status.name,
             keyword=keyword,

@@ -14,7 +14,7 @@ class OrdersDao:
     ]
 
     @staticmethod
-    def get_pipeline_orders(restaurant_id, status=None, keyword=None,
+    def get_orders(restaurant_id, status=None, keyword=None,
                             start_date=None, end_date=None,
                             page=1, per_page=10):
         query = Order.query.options(
