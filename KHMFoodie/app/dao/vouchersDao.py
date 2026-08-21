@@ -19,6 +19,25 @@ class VouchersDao:
         ).first()
 
     @staticmethod
+    def get_dish_conflicts(dish_ids, restaurant_id, exclude_voucher_id=None):
+        """Trả về {dish_id: voucher} cho các món đã thuộc một voucher khác đang hiệu lực."""
+        if not dish_ids:
+            return {}
+
+        query = VoucherDish.query.join(Voucher).filter(
+            VoucherDish.dish_id.in_(dish_ids),
+            Voucher.restaurant_id == restaurant_id,
+        )
+        if exclude_voucher_id is not None:
+            query = query.filter(Voucher.id != exclude_voucher_id)
+
+        conflicts = {}
+        for link in query.all():
+            if link.voucher.is_valid_now():
+                conflicts[link.dish_id] = link.voucher
+        return conflicts
+
+    @staticmethod
     def create_voucher(voucher, dishes):
         db.session.add(voucher)
         db.session.flush()

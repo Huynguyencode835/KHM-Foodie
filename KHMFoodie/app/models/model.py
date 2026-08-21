@@ -111,6 +111,12 @@ class Dish(Base):
         lazy=True
     )
 
+    def get_active_voucher(self):
+        for link in self.voucher_links:
+            if link.voucher and link.voucher.is_valid_now():
+                return link.voucher
+        return None
+
 class Cart(Base):
     __tablename__ = 'cart'
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
@@ -135,6 +141,29 @@ class Voucher(Base):
         cascade='all, delete-orphan',
         lazy=True
     )
+
+    def is_valid_now(self, now=None):
+        now = now or datetime.utcnow()
+        if not self.active:
+            return False
+        if self.start_date and now < self.start_date:
+            return False
+        if self.end_date and now > self.end_date:
+            return False
+        if self.usage_limit is not None and self.used_count >= self.usage_limit:
+            return False
+        return True
+
+    def apply_discount(self, price):
+        if self.discount_type == DiscountType.PERCENTAGE:
+            discount = price * (self.discount_value / 100)
+            if self.max_discount:
+                discount = min(discount, self.max_discount)
+        else:
+            discount = self.discount_value
+
+        discount = max(0, min(discount, price))
+        return round(price - discount, 2)
 
 class VoucherDish(db.Model):
     __tablename__ = 'voucher_dish'

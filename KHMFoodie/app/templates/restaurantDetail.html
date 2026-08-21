@@ -364,25 +364,39 @@
             return;
         }
 
-        container.innerHTML = dishes.map(d => `
+        container.innerHTML = dishes.map(d => {
+            const hasVoucher = d.voucher && d.discount_price !== null && d.discount_price !== undefined;
+            const effectivePrice = hasVoucher ? d.discount_price : (d.price || 0);
+            const voucherLabel = hasVoucher
+                ? (d.voucher.discount_type === 'PERCENTAGE'
+                    ? `-${d.voucher.discount_value}%`
+                    : `-${d.voucher.discount_value.toLocaleString('vi-VN')}đ`)
+                : '';
+
+            return `
         <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-transparent hover:border-primary-fixed hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden group flex flex-col">
             <div class="h-40 bg-cover bg-center relative" style="background-image: url('${d.image || ''}')">
                 <img src="${d.image || ''}" onerror="this.parentElement.style.backgroundImage='url(https://png.pngtree.com/png-vector/20210623/ourmid/pngtree-pho-noodle-vietnamese-food-png-png-image_3508276.jpg)'" class="hidden">
+                ${hasVoucher ? `<span class="absolute top-2 left-2 bg-error text-white text-caption font-bold px-2 py-1 rounded-full shadow">${voucherLabel}</span>` : ''}
             </div>
             <div class="p-sm flex flex-col flex-1">
                 <h3 class="font-headline-lg font-bold line-clamp-1">${d.name}</h3>
                 <span class="text-caption text-secondary mb-xs">${d.category || ''}</span>
                 <p class="text-sm text-gray-500 italic line-clamp-2 mb-sm flex-1">${d.description || ''}</p>
                 <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
-                    <span class="font-headline-md text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>
+                    <span class="flex flex-col whitespace-nowrap">
+                        ${hasVoucher ? `<span class="text-caption text-secondary line-through">${(d.price || 0).toLocaleString('vi-VN')}đ</span>` : ''}
+                        <span class="font-headline-md text-primary">${effectivePrice.toLocaleString('vi-VN')}đ</span>
+                    </span>
                     <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
-                        onclick="addToCart('${(d.name || '').replace(/'/g, "\\'")}', ${d.price || 0})">
+                        onclick="addToCart('${(d.name || '').replace(/'/g, "\\'")}', ${effectivePrice})">
                         <span class="material-symbols-outlined text-sm">add</span> Thêm
                     </button>
                 </div>
             </div>
         </div>
-    `).join('');
+    `;
+        }).join('');
     }
 
     let allDishes = [];

@@ -51,12 +51,13 @@ class VoucherController:
             "dish_ids": [dish["id"] for dish in dishes],
             "dishes": dishes,
             "active": voucher.active,
+            "is_valid": voucher.is_valid_now(),
             "created_at": voucher.created_at.isoformat() if voucher.created_at else None,
             "created_updated_at": voucher.created_updated_at.isoformat() if voucher.created_updated_at else None,
         }
 
     @staticmethod
-    def _validate_dish_ids(dish_ids, restaurant_id):
+    def _validate_dish_ids(dish_ids, restaurant_id, exclude_voucher_id=None):
         if not isinstance(dish_ids, list):
             return None, {"dish_ids": "dish_ids phải là một danh sách"}
 
@@ -79,6 +80,20 @@ class VoucherController:
             }
 
         dishes_by_id = {dish.id: dish for dish in dishes}
+
+        conflicts = VouchersDao.get_dish_conflicts(dish_ids, restaurant_id, exclude_voucher_id)
+        if conflicts:
+            return None, {
+                "dish_ids": [
+                    {
+                        "dish_id": dish_id,
+                        "dish_name": dishes_by_id[dish_id].name,
+                        "voucher_code": voucher.code,
+                    }
+                    for dish_id, voucher in conflicts.items()
+                ],
+            }
+
         return [dishes_by_id[dish_id] for dish_id in dish_ids], None
 
     @staticmethod
@@ -92,16 +107,6 @@ class VoucherController:
             raise ValueError(f"{field_name} không đúng định dạng datetime")
 
     @staticmethod
-    def _parse_discount_type(value):
-        if not value:
-            raise ValueError("discount_type là bắt buộc")
-
-        try:
-            return DiscountType[value]
-        except KeyError:
-            raise ValueError("discount_type không hợp lệ")
-
-    @staticmethod
     def _validate_payload(data, is_update=False):
         if not data:
             return None, {"message": "Invalid JSON"}
@@ -110,8 +115,8 @@ class VoucherController:
         errors = {}
 
         allowed_fields = {
-            "name", "code", "description", "discount_type", "discount_value",
-            "minimum_order", "max_discount", "start_date", "end_date", "usage_limit",
+            "name", "code", "discount_value",
+            "max_discount", "start_date", "end_date", "usage_limit",
             "dish_ids"
         }
 
@@ -120,7 +125,7 @@ class VoucherController:
                 continue
             cleaned[key] = data.get(key)
 
-        required_fields = ["name", "code", "discount_type", "discount_value", "start_date", "end_date", "usage_limit"]
+        required_fields = ["name", "code", "discount_value", "start_date", "end_date", "usage_limit"]
         if not is_update:
             for field in required_fields:
                 if cleaned.get(field) in [None, ""]:
@@ -144,16 +149,7 @@ class VoucherController:
             if not cleaned["code"]:
                 errors["code"] = "Mã voucher không được để trống"
 
-        if "description" in cleaned and cleaned["description"] is not None:
-            cleaned["description"] = str(cleaned["description"]).strip()
-
-        if "discount_type" in cleaned and cleaned["discount_type"] is not None:
-            try:
-                cleaned["discount_type"] = VoucherController._parse_discount_type(cleaned["discount_type"])
-            except ValueError as e:
-                errors["discount_type"] = str(e)
-
-        number_fields = ["discount_value", "minimum_order", "max_discount", "usage_limit"]
+        number_fields = ["discount_value", "max_discount", "usage_limit"]
         for field in number_fields:
             if field in cleaned and cleaned[field] not in [None, ""]:
                 try:
@@ -167,10 +163,6 @@ class VoucherController:
         if "discount_value" in cleaned and isinstance(cleaned.get("discount_value"), (int, float)):
             if cleaned["discount_value"] <= 0:
                 errors["discount_value"] = "discount_value phải lớn hơn 0"
-
-        if "minimum_order" in cleaned and isinstance(cleaned.get("minimum_order"), (int, float)):
-            if cleaned["minimum_order"] < 0:
-                errors["minimum_order"] = "minimum_order không được âm"
 
         if "usage_limit" in cleaned and isinstance(cleaned.get("usage_limit"), int):
             if cleaned["usage_limit"] < 1:
@@ -196,15 +188,9 @@ class VoucherController:
             if cleaned["start_date"] >= cleaned["end_date"]:
                 errors["end_date"] = "end_date phải lớn hơn start_date"
 
-        discount_type = cleaned.get("discount_type")
         discount_value = cleaned.get("discount_value")
-
-        if discount_type == DiscountType.PERCENTAGE and isinstance(discount_value, (int, float)):
-            if discount_value > 100:
-                errors["discount_value"] = "Voucher phần trăm không được vượt quá 100"
-
-        if discount_type == DiscountType.FIXED_AMOUNT:
-            cleaned["max_discount"] = None
+        if isinstance(discount_value, (int, float)) and discount_value > 100:
+            errors["discount_value"] = "Phần trăm giảm không được vượt quá 100"
 
         if errors:
             return None, {"message": "Dữ liệu không hợp lệ", "errors": errors}
@@ -265,10 +251,9 @@ class VoucherController:
             voucher = Voucher(
                 name=payload["name"],
                 code=payload["code"],
-                description=payload.get("description"),
-                discount_type=payload["discount_type"],
+                discount_type=DiscountType.PERCENTAGE,
                 discount_value=payload["discount_value"],
-                minimum_order=payload.get("minimum_order", 0),
+                minimum_order=0,
                 max_discount=payload.get("max_discount"),
                 start_date=payload["start_date"],
                 end_date=payload["end_date"],
@@ -312,7 +297,8 @@ class VoucherController:
         if "dish_ids" in payload:
             dishes, dish_error = VoucherController._validate_dish_ids(
                 payload["dish_ids"],
-                restaurant_id
+                restaurant_id,
+                exclude_voucher_id=voucher.id
             )
             if dish_error:
                 return jsonify({

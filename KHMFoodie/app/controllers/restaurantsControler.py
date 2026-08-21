@@ -70,14 +70,28 @@ class RestaurantsController:
         data = []
 
         for d in dishes:
-            data.append({
+            voucher = d.get_active_voucher()
+
+            item = {
                 "id": d.id,
                 "name": d.name,
                 "category": d.category.value if d.category else None,
                 "description": d.description,
                 "price": d.price,
-                "image": d.image
-            })
+                "image": d.image,
+                "voucher": None,
+                "discount_price": None,
+            }
+
+            if voucher:
+                item["voucher"] = {
+                    "code": voucher.code,
+                    "discount_type": voucher.discount_type.name,
+                    "discount_value": voucher.discount_value,
+                }
+                item["discount_price"] = voucher.apply_discount(d.price)
+
+            data.append(item)
 
         return jsonify({"data": data}), 200
 
