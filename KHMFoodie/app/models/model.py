@@ -104,6 +104,12 @@ class Dish(Base):
     category = Column(Enum(DishCategory), nullable=False)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
     restaurant = relationship('Restaurant', backref=backref('dishes', lazy=True))
+    voucher_links = relationship(
+        'VoucherDish',
+        back_populates='dish',
+        cascade='all, delete-orphan',
+        lazy=True
+    )
 
 class Cart(Base):
     __tablename__ = 'cart'
@@ -123,6 +129,28 @@ class Voucher(Base):
     usage_limit = Column(Integer, default=1)
     used_count = Column(Integer, default=0)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=True)
+    dish_links = relationship(
+        'VoucherDish',
+        back_populates='voucher',
+        cascade='all, delete-orphan',
+        lazy=True
+    )
+
+class VoucherDish(db.Model):
+    __tablename__ = 'voucher_dish'
+
+    voucher_id = Column(
+        Integer,
+        ForeignKey('voucher.id', ondelete='CASCADE'),
+        primary_key=True
+    )
+    dish_id = Column(
+        Integer,
+        ForeignKey('dish.id', ondelete='CASCADE'),
+        primary_key=True
+    )
+    voucher = relationship('Voucher', back_populates='dish_links')
+    dish = relationship('Dish', back_populates='voucher_links')
 
 class CartItems(Base):
     __tablename__ = 'cart_items'

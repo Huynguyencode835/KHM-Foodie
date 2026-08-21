@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models.model import Voucher
+from app.models.model import Voucher, VoucherDish
 
 
 class VouchersDao:
@@ -19,8 +19,10 @@ class VouchersDao:
         ).first()
 
     @staticmethod
-    def create_voucher(voucher):
+    def create_voucher(voucher, dishes):
         db.session.add(voucher)
+        db.session.flush()
+        VouchersDao.replace_dishes(voucher, dishes)
         db.session.commit()
         return voucher
 
@@ -28,6 +30,13 @@ class VouchersDao:
     def save(voucher):
         db.session.commit()
         return voucher
+
+    @staticmethod
+    def replace_dishes(voucher, dishes):
+        voucher.dish_links = [
+            VoucherDish(voucher=voucher, dish=dish)
+            for dish in dishes
+        ]
 
     @staticmethod
     def soft_delete(voucher):

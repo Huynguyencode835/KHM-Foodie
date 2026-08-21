@@ -1,10 +1,11 @@
 from datetime import datetime
 from flask import request, jsonify, abort
 from flask_login import current_user, login_required
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from app.extensions import db
 from app.models.model import Voucher, DiscountType, UserRole
+from app.dao.dishesDao import DishesDao
 from app.dao.vouchersDao import VouchersDao
 
 
@@ -22,6 +23,17 @@ class VoucherController:
 
     @staticmethod
     def _serialize_voucher(voucher):
+        dishes = [
+            {
+                "id": link.dish.id,
+                "name": link.dish.name,
+                "price": link.dish.price,
+                "active": link.dish.active,
+            }
+            for link in voucher.dish_links
+            if link.dish
+        ]
+
         return {
             "id": voucher.id,
             "name": voucher.name,
@@ -36,10 +48,38 @@ class VoucherController:
             "usage_limit": voucher.usage_limit,
             "used_count": voucher.used_count,
             "restaurant_id": voucher.restaurant_id,
+            "dish_ids": [dish["id"] for dish in dishes],
+            "dishes": dishes,
             "active": voucher.active,
             "created_at": voucher.created_at.isoformat() if voucher.created_at else None,
             "created_updated_at": voucher.created_updated_at.isoformat() if voucher.created_updated_at else None,
         }
+
+    @staticmethod
+    def _validate_dish_ids(dish_ids, restaurant_id):
+        if not isinstance(dish_ids, list):
+            return None, {"dish_ids": "dish_ids phải là một danh sách"}
+
+        if not dish_ids:
+            return None, {"dish_ids": "Voucher phải áp dụng ít nhất một món"}
+
+        if any(isinstance(dish_id, bool) or not isinstance(dish_id, int) for dish_id in dish_ids):
+            return None, {"dish_ids": "Mỗi dish_id phải là số nguyên"}
+
+        if len(dish_ids) != len(set(dish_ids)):
+            return None, {"dish_ids": "Danh sách món không được trùng"}
+
+        dishes = DishesDao.get_active_by_ids_and_restaurant(dish_ids, restaurant_id)
+        found_ids = {dish.id for dish in dishes}
+        invalid_ids = [dish_id for dish_id in dish_ids if dish_id not in found_ids]
+        if invalid_ids:
+            return None, {
+                "dish_ids": "Món không tồn tại, không hoạt động hoặc không thuộc nhà hàng này",
+                "invalid_ids": invalid_ids,
+            }
+
+        dishes_by_id = {dish.id: dish for dish in dishes}
+        return [dishes_by_id[dish_id] for dish_id in dish_ids], None
 
     @staticmethod
     def _parse_datetime(value, field_name):
@@ -71,7 +111,8 @@ class VoucherController:
 
         allowed_fields = {
             "name", "code", "description", "discount_type", "discount_value",
-            "minimum_order", "max_discount", "start_date", "end_date", "usage_limit"
+            "minimum_order", "max_discount", "start_date", "end_date", "usage_limit",
+            "dish_ids"
         }
 
         for key in data:
@@ -84,6 +125,14 @@ class VoucherController:
             for field in required_fields:
                 if cleaned.get(field) in [None, ""]:
                     errors[field] = f"{field} là bắt buộc"
+            if "dish_ids" not in cleaned:
+                errors["dish_ids"] = "dish_ids là bắt buộc"
+
+        if "dish_ids" in cleaned:
+            if not isinstance(cleaned["dish_ids"], list):
+                errors["dish_ids"] = "dish_ids phải là một danh sách"
+            elif not cleaned["dish_ids"]:
+                errors["dish_ids"] = "Voucher phải áp dụng ít nhất một món"
 
         if "name" in cleaned and cleaned["name"] is not None:
             cleaned["name"] = str(cleaned["name"]).strip()
@@ -174,6 +223,26 @@ class VoucherController:
 
     @staticmethod
     @login_required
+    def list_dishes():
+        restaurant_id = VoucherController._require_restaurant()
+        dishes = DishesDao.get_list_dishes_by_restaurant(restaurant_id)
+
+        return jsonify({
+            "items": [
+                {
+                    "id": dish.id,
+                    "name": dish.name,
+                    "description": dish.description,
+                    "price": dish.price,
+                    "category": dish.category.value if dish.category else None,
+                    "image": dish.image,
+                }
+                for dish in dishes
+            ]
+        }), 200
+
+    @staticmethod
+    @login_required
     def create_voucher():
         restaurant_id = VoucherController._require_restaurant()
 
@@ -181,6 +250,16 @@ class VoucherController:
         payload, error = VoucherController._validate_payload(data, is_update=False)
         if error:
             return jsonify(error), 400
+
+        dishes, dish_error = VoucherController._validate_dish_ids(
+            payload["dish_ids"],
+            restaurant_id
+        )
+        if dish_error:
+            return jsonify({
+                "message": "Danh sách món không hợp lệ",
+                "errors": dish_error,
+            }), 400
 
         try:
             voucher = Voucher(
@@ -197,7 +276,7 @@ class VoucherController:
                 restaurant_id=restaurant_id
             )
 
-            voucher = VouchersDao.create_voucher(voucher)
+            voucher = VouchersDao.create_voucher(voucher, dishes)
 
             return jsonify({
                 "message": "Tạo voucher thành công",
@@ -209,6 +288,11 @@ class VoucherController:
             return jsonify({
                 "message": "Mã voucher đã tồn tại"
             }), 409
+        except SQLAlchemyError:
+            db.session.rollback()
+            return jsonify({
+                "message": "Không thể tạo voucher"
+            }), 500
 
     @staticmethod
     @login_required
@@ -224,9 +308,32 @@ class VoucherController:
         if error:
             return jsonify(error), 400
 
+        dishes = None
+        if "dish_ids" in payload:
+            dishes, dish_error = VoucherController._validate_dish_ids(
+                payload["dish_ids"],
+                restaurant_id
+            )
+            if dish_error:
+                return jsonify({
+                    "message": "Danh sách món không hợp lệ",
+                    "errors": dish_error,
+                }), 400
+        elif not voucher.dish_links:
+            return jsonify({
+                "message": "Voucher phải áp dụng ít nhất một món",
+                "errors": {
+                    "dish_ids": "Hãy gửi danh sách món để hoàn thiện voucher này"
+                }
+            }), 400
+
         try:
             for key, value in payload.items():
-                setattr(voucher, key, value)
+                if key != "dish_ids":
+                    setattr(voucher, key, value)
+
+            if dishes is not None:
+                VouchersDao.replace_dishes(voucher, dishes)
 
             voucher = VouchersDao.save(voucher)
 
@@ -240,6 +347,11 @@ class VoucherController:
             return jsonify({
                 "message": "Mã voucher đã tồn tại"
             }), 409
+        except SQLAlchemyError:
+            db.session.rollback()
+            return jsonify({
+                "message": "Không thể cập nhật voucher"
+            }), 500
 
     @staticmethod
     @login_required

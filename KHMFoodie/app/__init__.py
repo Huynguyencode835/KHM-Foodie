@@ -5,7 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
-from app.extensions import db
+from app.extensions import db, migrate
 from flask_admin import Admin
 from app.models.model import User, Restaurant, Dish
 from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView
@@ -44,6 +44,7 @@ def create_app(config_name='dev'):
     # Init extensions
     login_manager.init_app(app)
     db.init_app(app)
+    migrate.init_app(app, db)
 
     # Admin
     from app.models.model import User, Restaurant, Dish
