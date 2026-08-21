@@ -1,0 +1,183 @@
+{% extends "layout/baseRestaurent.html" %}
+{% block page_title %}Quản lý Thực đơn{% endblock %}
+{% block page_description %}
+Xem và quản lý các món ăn trong thực đơn của nhà hàng.
+{% endblock %}
+{% block head %}
+<style>
+    .dish-disabled {
+        opacity: 0.6;
+        filter: grayscale(0.6);
+    }
+
+    .dish-selected {
+        border-color: #d34000;
+        box-shadow: 0 0 0 2px rgba(211, 64, 0, 0.25);
+    }
+
+    .dish-select-label {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #e6beb2;
+    }
+
+    .select-mode .dish-select-label {
+        display: flex;
+    }
+
+    .dish-select-input:checked+.dish-select-check {
+        color: #ffffff;
+    }
+
+    .dish-select-label:has(.dish-select-input:checked) {
+        background: #a93100;
+        border-color: #a93100;
+    }
+
+    .dish-toggle-input:checked+.dish-toggle-track {
+        background: #a93100;
+    }
+
+    .dish-toggle-input:checked+.dish-toggle-track .dish-toggle-dot {
+        transform: translateX(20px);
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="w-full">
+    <div class="max-w-container-max mx-auto px-gutter py-lg w-full">
+        {% include "partials/dishModal.html" %}
+        <div
+            class="flex flex-col xl:flex-row gap-md items-start xl:items-center border-b border-outline-variant mb-md pb-md">
+            <div
+                class="flex flex-col md:flex-row flex-wrap items-stretch justify-between md:items-center gap-sm w-full">
+                <select id="dish-category-select"
+                    class="shrink-0 min-w-[236px] px-4 py-2 rounded-full border border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary text-body-md font-label-md cursor-pointer">
+                    <option value="all">Tất cả</option>
+                    <option value="Món chính">Món chính</option>
+                    <option value="Món khai vị">Món khai vị</option>
+                    <option value="Món tráng miệng">Món tráng miệng</option>
+                    <option value="Đồ uống">Đồ uống</option>
+                    <option value="Món ăn kèm">Món ăn kèm</option>
+                </select>
+                <div class="relative flex-1 min-w-[220px]">
+                    <span
+                        class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary">search</span>
+                    <input id="dish-search-input"
+                        class="w-full pl-10 pr-4 py-2 rounded-full border border-outline-variant bg-surface-container-low focus:outline-none focus:border-primary text-body-md"
+                        placeholder="Tìm kiếm món ăn..." type="text">
+                </div>
+                <div class="flex items-center gap-sm shrink-0">
+                    <button id="add-dish-btn"
+                        class="px-4 py-2 rounded-full bg-primary text-white font-label-md flex items-center gap-xs hover:bg-primary-container transition-all">
+                        <span class="material-symbols-outlined text-sm">add</span> Thêm món ăn
+                    </button>
+                    <button id="delete-multi-btn"
+                        class="px-4 py-2 rounded-full border border-outline-variant text-secondary font-label-md flex items-center gap-xs hover:bg-error-container hover:text-error transition-all">
+                        <span class="material-symbols-outlined text-sm">delete</span> Xóa
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-lg">
+            
+
+            <div class="lg:col-span-9">
+                <div id="dish-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md pb-md">
+                </div>
+                <div id="dish-pagination" class="flex items-center justify-center gap-2 pb-md hidden">
+                    <button id="page-prev"
+                        class="px-3 py-1.5 rounded-lg border border-outline-variant text-secondary hover:bg-surface-container-highest disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1"
+                        disabled>
+                        <span class="material-symbols-outlined text-sm">chevron_left</span>
+                        Trước
+                    </button>
+                    <div id="page-numbers" class="flex items-center gap-1"></div>
+                    <button id="page-next"
+                        class="px-3 py-1.5 rounded-lg border border-outline-variant text-secondary hover:bg-surface-container-highest disabled:opacity-30 disabled:cursor-not-allowed transition-all flex items-center gap-1">
+                        Sau
+                        <span class="material-symbols-outlined text-sm">chevron_right</span>
+                    </button>
+                </div>
+            </div>
+
+            <aside class="lg:col-span-3">
+                <div class="sticky top-24 space-y-md">
+                    <div
+                        class="bg-surface-container-lowest rounded-2xl shadow-[0px_10px_30px_rgba(0,0,0,0.12)] p-md border border-outline-variant/20 overflow-hidden">
+                        <div class="flex items-center justify-between mb-md">
+                            <h3 class="font-headline-md text-headline-md">Thống kê thực đơn</h3>
+                            <span class="material-symbols-outlined text-secondary">insights</span>
+                        </div>
+                        <div class="space-y-sm">
+                            <div
+                                class="flex items-center gap-sm p-sm rounded-xl bg-surface-container-low border border-outline-variant/20">
+                                <span
+                                    class="shrink-0 w-10 h-10 rounded-xl bg-primary-fixed flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined">restaurant_menu</span>
+                                </span>
+                                <div class="min-w-0">
+                                    <p class="font-label-md text-on-surface truncate">Tổng số món ăn</p>
+                                    <p id="stat-total" class="font-headline-md text-headline-md text-primary font-bold">0</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center gap-sm p-sm rounded-xl bg-surface-container-low border border-outline-variant/20">
+                                <span
+                                    class="shrink-0 w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+                                    <span class="material-symbols-outlined">toggle_on</span>
+                                </span>
+                                <div class="min-w-0">
+                                    <p class="font-label-md text-on-surface truncate">Món đang bật</p>
+                                    <p id="stat-active" class="font-headline-md text-headline-md text-emerald-600 font-bold">0</p>
+                                </div>
+                            </div>
+                            <div
+                                class="flex items-center gap-sm p-sm rounded-xl bg-surface-container-low border border-outline-variant/20">
+                                <span
+                                    class="shrink-0 w-10 h-10 rounded-xl bg-error-container flex items-center justify-center text-error">
+                                    <span class="material-symbols-outlined">toggle_off</span>
+                                </span>
+                                <div class="min-w-0">
+                                    <p class="font-label-md text-on-surface truncate">Món đang tắt</p>
+                                    <p id="stat-inactive" class="font-headline-md text-headline-md text-error font-bold">0</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>window.RESTAURANT_ID = {{ current_user.id }};</script>
+<script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
+<script src="{{ url_for('static', filename='js/restaurantDetail.js') }}"></script>
+<script src="{{ url_for('static', filename='js/dishesManager.js') }}"></script>
+<script>
+    (function () {
+        const grid = document.getElementById('dish-grid');
+        const categorySelect = document.getElementById('dish-category-select');
+
+        if (categorySelect) {
+            categorySelect.addEventListener('change', function () {
+                currentCategory = this.value;
+                applyDishFilters();
+            });
+        }
+
+        if (grid) {
+            grid.addEventListener('change', function (e) {
+                const card = e.target.closest('.group');
+                if (!card) return;
+                if (e.target.classList.contains('dish-select-input')) {
+                    card.classList.toggle('dish-selected', e.target.checked);
+                }
+            });
+        }
+    })();
+</script>
+{% endblock %}

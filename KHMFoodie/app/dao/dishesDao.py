@@ -1,5 +1,7 @@
-from app.models.model import Dish, DishCategory
-from sqlalchemy import or_
+from app.models.model import Dish, DishCategory, CartItems
+from sqlalchemy import or_, func
+from app.extensions import db
+from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 
 class DishesDao:
@@ -11,8 +13,9 @@ class DishesDao:
             Dish.category,
             Dish.description,
             Dish.price,
-            Dish.image
-        ).filter_by(restaurant_id=restaurant_id, active=True)
+            Dish.image,
+            Dish.active
+        ).filter_by(restaurant_id=restaurant_id)
 
         if category and category != 'all':
             category_enum = next((c for c in DishCategory if c.value == category), None)
@@ -33,3 +36,88 @@ class DishesDao:
             error_out=False
         )
         return pagination
+
+    @staticmethod
+    def get_dishes_stats(restaurant_id):
+        rows = db.session.query(
+            Dish.active, func.count(Dish.id)
+        ).filter_by(restaurant_id=restaurant_id).group_by(Dish.active).all()
+
+        active = next((count for is_active, count in rows if is_active), 0)
+        total = sum(count for _, count in rows)
+
+        return {
+            "total": total,
+            "active": active,
+            "inactive": total - active
+        }
+
+    @staticmethod
+    def create_dishes(name, price, category, restaurant_id, description=None, image=None):
+        try:
+            if isinstance(category, str):
+                if category in DishCategory.__members__:
+                    category = DishCategory[category]
+                elif category in DishCategory._value2member_map_:
+                    category = DishCategory(category)
+                else:
+                    raise ValueError(f"Category không hợp lệ: {category}")
+
+            new_dish = Dish(
+                name=name,
+                description=description,
+                image=image,
+                price=price,
+                category=category,
+                restaurant_id=restaurant_id
+            )
+
+            db.session.add(new_dish)
+            db.session.commit()
+            return new_dish
+
+        except ValueError as ve:
+            print(f"Lỗi giá trị: {ve}")
+            db.session.rollback()
+            return None
+        except SQLAlchemyError as e:
+            print(f"Lỗi khi tạo món ăn: {e}")
+            db.session.rollback()
+            return None
+
+    @staticmethod
+    def change_dishe_status(id, restaurant_id):
+        try:
+            dish = Dish.query.filter_by(id=id, restaurant_id=restaurant_id).first()
+
+            if not dish:
+                return None
+
+            dish.active = not dish.active
+            db.session.commit()
+            return dish
+
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise e
+
+    @staticmethod
+    def delete_dishes(id, restaurant_id):
+        try:
+            dish = Dish.query.filter_by(id=id, restaurant_id=restaurant_id).first()
+
+            if not dish:
+                return None
+
+            CartItems.query.filter_by(dish_id=dish.id).delete()
+
+            db.session.delete(dish)
+            db.session.commit()
+            return dish
+
+        except IntegrityError as e:
+            db.session.rollback()
+            raise ValueError("Món ăn đang được sử dụng trong đơn hàng, không thể xóa")
+        except SQLAlchemyError as e:
+            db.session.rollback()
+            raise e

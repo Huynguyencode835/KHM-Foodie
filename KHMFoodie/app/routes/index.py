@@ -10,6 +10,8 @@ from app.routes.meRoute import me_bp
 from app.routes.adminRoute import admin_bp
 from app.routes.notificationRoute import notification_bp
 from app.routes.promotionsRoute import promotions_bp
+from app.routes.paymentRoute import payment_bp
+from app.routes.restaurantMenuRoute import restaurantMenu_bp
 
 
 def route_web(app):
@@ -31,3 +33,5 @@ def route_web(app):
     app.register_blueprint(me_bp, url_prefix='/')
     app.register_blueprint(promotions_bp, url_prefix='/')
     app.register_blueprint(admin_bp)
+    app.register_blueprint(payment_bp, url_prefix='/')
+    app.register_blueprint(restaurantMenu_bp, url_prefix='/')

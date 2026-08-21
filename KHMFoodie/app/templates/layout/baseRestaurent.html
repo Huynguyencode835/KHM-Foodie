@@ -227,8 +227,8 @@
             {% else %}
             {% set sidebar_menu_items = [
             ('dashboard', 'Tổng quan', 'dashboard', '#'),
-            ('orders', 'Đơn hàng', 'receipt_long', '#'),
-            ('menu', 'Thực đơn', 'restaurant_menu', '#'),
+            ('orders', 'Đơn hàng', 'receipt_long', '/customer-requirements'),
+            ('menu', 'Thực đơn', 'restaurant_menu', '/restaurant_menu'),
             ('reviews', 'Đánh giá', 'star', '#'),
             ('promotions', 'Khuyến mãi', 'local_offer', '/promotions'),
             ('analytics', 'Thống kê', 'insights', '#'),
@@ -247,14 +247,15 @@
         </nav>
         <div class="pt-sm border-t border-outline-variant space-y-1">
             {% if current_user.role.value != 'Admin' %}
-            {% set sidebar_is_open = current_user.restaurant.status if current_user.restaurant and current_user.restaurant.status is not none else True %}
-            <button id="sidebar-restaurant-toggle"
-                type="button"
-                data-restaurant-id="{{ current_user.id }}"
+            {% set sidebar_is_open = current_user.restaurant.status if current_user.restaurant and
+            current_user.restaurant.status is not none else True %}
+            <button id="sidebar-restaurant-toggle" type="button" data-restaurant-id="{{ current_user.id }}"
                 data-is-open="{{ 'true' if sidebar_is_open else 'false' }}"
                 class="w-full flex items-center justify-center space-x-2 py-3 px-4 {{ 'bg-tertiary text-on-tertiary' if sidebar_is_open else 'bg-error-container text-error' }} rounded-xl font-bold mb-4 hover:opacity-90 transition-opacity">
-                <span id="sidebar-restaurant-toggle-icon" class="material-symbols-outlined text-[18px]">storefront</span>
-                <span id="sidebar-restaurant-toggle-label" class="text-label-md">{% if sidebar_is_open %}&#272;&#243;ng c&#7917;a h&#224;ng{% else %}M&#7903; c&#7917;a h&#224;ng{% endif %}</span>
+                <span id="sidebar-restaurant-toggle-icon"
+                    class="material-symbols-outlined text-[18px]">storefront</span>
+                <span id="sidebar-restaurant-toggle-label" class="text-label-md">{% if sidebar_is_open %}&#272;&#243;ng
+                    c&#7917;a h&#224;ng{% else %}M&#7903; c&#7917;a h&#224;ng{% endif %}</span>
             </button>
             {% endif %}
             <a class="flex items-center space-x-3 px-4 py-2 text-on-surface-variant hover:text-on-surface-variant hover:no-underline no-underline hover:bg-surface-variant rounded-lg transition-all"
@@ -271,22 +272,34 @@
     </aside>
 
     {% if current_user.role.value != 'Admin' %}
-    <div id="restaurant-toggle-modal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 px-4 py-6">
-        <div class="w-full max-w-xl rounded-2xl bg-surface-container-lowest shadow-2xl border border-outline-variant overflow-hidden">
+    <div id="restaurant-toggle-modal"
+        class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/50 px-4 py-6">
+        <div
+            class="w-full max-w-xl rounded-2xl bg-surface-container-lowest shadow-2xl border border-outline-variant overflow-hidden">
             <div class="p-6 sm:p-8">
                 <div class="flex items-start gap-4">
-                    <div id="restaurant-toggle-modal-icon-wrap" class="shrink-0 w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
-                        <span id="restaurant-toggle-modal-icon" class="material-symbols-outlined block w-7 h-7 overflow-hidden text-[28px] leading-none text-primary">storefront</span>
+                    <div id="restaurant-toggle-modal-icon-wrap"
+                        class="shrink-0 w-14 h-14 rounded-full bg-primary-fixed flex items-center justify-center overflow-hidden">
+                        <span id="restaurant-toggle-modal-icon"
+                            class="material-symbols-outlined block w-7 h-7 overflow-hidden text-[28px] leading-none text-primary">storefront</span>
                     </div>
                     <div class="min-w-0 flex-1 space-y-2">
-                        <h3 id="restaurant-toggle-modal-title" class="font-headline-md text-headline-md font-bold text-on-surface leading-tight">X&#225;c nh&#7853;n thay &#273;&#7893;i</h3>
-                        <p id="restaurant-toggle-modal-message" class="text-body-md text-on-surface-variant leading-relaxed">B&#7841;n c&#243; ch&#7855;c mu&#7889;n thay &#273;&#7893;i tr&#7841;ng th&#225;i nh&#224; h&#224;ng?</p>
+                        <h3 id="restaurant-toggle-modal-title"
+                            class="font-headline-md text-headline-md font-bold text-on-surface leading-tight">X&#225;c
+                            nh&#7853;n thay &#273;&#7893;i</h3>
+                        <p id="restaurant-toggle-modal-message"
+                            class="text-body-md text-on-surface-variant leading-relaxed">B&#7841;n c&#243; ch&#7855;c
+                            mu&#7889;n thay &#273;&#7893;i tr&#7841;ng th&#225;i nh&#224; h&#224;ng?</p>
                     </div>
                 </div>
             </div>
-            <div class="flex justify-end items-center gap-3 px-6 sm:px-8 py-5 bg-surface-container-low border-t border-outline-variant">
-                <button id="restaurant-toggle-cancel" type="button" class="px-6 py-3 rounded-lg font-bold text-on-surface hover:bg-surface-container-high transition-colors">H&#7911;y</button>
-                <button id="restaurant-toggle-confirm" type="button" class="px-6 py-3 rounded-lg font-bold bg-primary text-on-primary hover:opacity-90 transition-opacity">X&#225;c nh&#7853;n</button>
+            <div
+                class="flex justify-end items-center gap-3 px-6 sm:px-8 py-5 bg-surface-container-low border-t border-outline-variant">
+                <button id="restaurant-toggle-cancel" type="button"
+                    class="px-6 py-3 rounded-lg font-bold text-on-surface hover:bg-surface-container-high transition-colors">H&#7911;y</button>
+                <button id="restaurant-toggle-confirm" type="button"
+                    class="px-6 py-3 rounded-lg font-bold bg-primary text-on-primary hover:opacity-90 transition-opacity">X&#225;c
+                    nh&#7853;n</button>
             </div>
         </div>
     </div>
@@ -299,18 +312,46 @@
         <header
             class="h-20 bg-surface shadow-[0px_4px_20px_rgba(0,0,0,0.05)] flex items-center justify-between gap-4 px-gutter z-40 sticky top-0">
             <div class="min-w-0 flex-1">
-                <h1 class="truncate font-headline-md text-headline-md font-bold text-on-surface">{% block page_title %}{% endblock %}</h1>
-                <p class="hidden md:block truncate text-body-md text-secondary">{% block page_description %}{% endblock %}</p>
+                <h1 class="truncate font-headline-md text-headline-md font-bold text-on-surface">{% block page_title
+                    %}{% endblock %}</h1>
+                <p class="hidden md:block truncate text-body-md text-secondary">{% block page_description %}{% endblock
+                    %}</p>
             </div>
             <div class="ml-auto flex shrink-0 items-center justify-end gap-2 md:gap-4">
                 <!-- Notification bell: always visible -->
-                <div class="relative">
-                    <a href="/notification">
-                        <span
-                            class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">notifications</span>
+                <div class="flex items-center gap-2 md:gap-4">
+
+                    <div class="relative">
+                        <button onclick="window.location.href='/notification'"
+                            class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">
+                            notifications
+                        </button>
                         <span id="notif-badge"
                             class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center hidden">0</span>
+                    </div>
+                    <div class="relative">
+                        <button
+                            class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">shopping_cart</button>
+                        <span
+                            class="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
+                    </div>
+                    {% if current_user.is_authenticated %}
+
+                    <a href="/me">
+                        <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+                            <img class="w-full h-full object-cover" alt="{{ current_user.name }}"
+                                src="{{ current_user.avatar }}">
+                        </div>
                     </a>
+                    {% else %}
+                    <a href="/login"
+                        class="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:opacity-90 scale-95 hover:scale-100 transition-transform duration-150">Tài
+                        khoản</a>
+                    <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
+                        <a href="/login"
+                            class="material-symbols-outlined text-on-surface-variant w-full h-full flex items-center justify-center">person</a>
+                    </div>
+                    {% endif %}
                 </div>
                 {% block itemHeader %}{% endblock %}
             </div>
