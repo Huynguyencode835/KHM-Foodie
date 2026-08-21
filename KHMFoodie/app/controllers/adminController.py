@@ -40,12 +40,17 @@ class AdminController:
                 "id": r.id,
                 "name": r.name,
                 "cover_image": r.cover_image,
+                "description": r.description,
                 "cuisine_type": r.cuisine_type.value if r.cuisine_type else None,
                 "approval_status": r.approval_status.value if r.approval_status else None,
+                "rejection_reason": r.rejection_reason,
+                "tax_code": r.tax_code,
                 "created_at": r.created_at.isoformat() if r.created_at else None,
                 "owner": {
                     "name": user.name if user else None,
+                    "username": user.username if user else None,
                     "email": user.email if user else None,
+                    "phonenumber": user.phonenumber if user else None,
                     "address": user.address if user else None,
                     "avatar": user.avatar if user else None,
                 } if user else None,
@@ -79,11 +84,17 @@ class AdminController:
         # Áp dụng cho cả trường hợp restaurant đang PENDING lẫn đã APPROVED —
         # admin có toàn quyền revoke. Không có luồng "undo reject", muốn mở
         # lại phải gọi approve.
-        r = RestaurantsDao.reject_restaurant(restaurant_id)
+        data = request.get_json() 
+        reason = data.get("reason", "")
+        if not str(reason).strip():
+            return jsonify({"success": False, "message": "Reject reason is required"}), 400
+
+        r = RestaurantsDao.reject_restaurant(restaurant_id, reason=reason)
         if not r:
             return jsonify({"success": False, "message": "Restaurant not found"}), 404
         return jsonify({
             "success": True,
             "id": r.id,
             "approval_status": r.approval_status.value,
+            "rejection_reason": r.rejection_reason,
         }), 200

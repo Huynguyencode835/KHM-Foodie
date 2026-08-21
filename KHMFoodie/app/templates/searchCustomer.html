@@ -2,11 +2,19 @@
 
 {% block itemHeader %}
 <div
-    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200 focus-within:border-primary focus-within:shadow-sm">
-    <span class="material-symbols-outlined text-secondary text-[18px]" id="header-search-icon">search</span>
-    <input type="text" id="header-search-input" value="{{ keyword if keyword else '' }}"
+    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 w-72 lg:w-80 transition-all duration-200 focus-within:outline-none">
+    
+    <span class="material-symbols-outlined text-secondary text-[18px]" id="header-search-icon">
+        search
+    </span>
+
+    <input
+        type="text"
+        id="header-search-input"
+        value="{{ keyword if keyword else '' }}"
         placeholder="Tìm món ăn, nhà hàng..."
-        class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full" />
+        class="bg-transparent border-none outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full"
+    />
 </div>
 {% endblock %}
 
@@ -66,13 +74,13 @@
         <section id="restaurants-section" class="space-y-lg">
             <!-- Grid nhà hàng -->
             <div id="restaurant-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-                {% for r in restaurants %}
+                {% for r in restaurants_pagination.items %}
                 {% with id=r.id, cover_image=r.cover_image or (r.user.avatar if r.user else ''), name=r.name,
                 cuisine_type=r.cuisine_type,
                 address=r.user.address if r.user else '',
                 opening_time=r.opening_time, closing_time=r.closing_time %}
                 <div
-                    class="w-full group bg-white rounded-2xl overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-300 restaurant-card{% if loop.index > 6 %} hidden{% endif %}">
+                    class="w-full group bg-white rounded-2xl overflow-hidden shadow-[0px_4px_20px_rgba(0,0,0,0.05)] hover:-translate-y-2 transition-all duration-300">
                     {% include "restaurantCard.html" %}
                 </div>
                 {% endwith %}
@@ -81,19 +89,51 @@
                 </p>
                 {% endfor %}
             </div>
+            {% macro page_link(p, tab_name) %}
+            <a href="{{ url_for('search_bp.search_web', q=keyword, tab=tab_name, page=p) }}"
+                class="w-8 h-8 rounded-lg text-sm font-label-md transition-all flex items-center justify-center {% if p == page %}bg-primary text-white{% else %}text-secondary hover:bg-surface-container-highest{% endif %}">
+                {{ p }}
+            </a>
+            {% endmacro %}
 
-            <!-- Nút xem thêm nhà hàng -->
-            <div id="show-more-wrapper" class="text-center {% if restaurants|length <= 6 %}hidden{% endif %}">
-                <button id="show-more-btn" onclick="showAllRestaurants()"
-                    class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-full font-label-md hover:opacity-90 transition-all duration-200">
-                    <span>Xem thêm nhà hàng</span>
-                    <span class="material-symbols-outlined text-[18px]">expand_more</span>
-                </button>
+            {% macro render_pagination(pagination, tab_name) %}
+            {% set total = pagination.pages %}
+            <div class="flex items-center justify-center gap-2 pb-md {% if total <= 1 %}hidden{% endif %}">
+                {% if page > 1 %}
+                <a href="{{ url_for('search_bp.search_web', q=keyword, tab=tab_name, page=page-1) }}"
+                    class="px-3 py-1.5 rounded-lg border border-outline-variant text-secondary hover:bg-surface-container-highest transition-all flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">chevron_left</span> Trước
+                </a>
+                {% endif %}
+                <div class="flex items-center gap-1">
+                    {% set start = [1, page - 2] | max %}
+                    {% set end = [total, page + 2] | min %}
+                    {% if start > 1 %}
+                    {{ page_link(1, tab_name) }}
+                    {% if start > 2 %}<span class="px-1 text-secondary text-sm">...</span>{% endif %}
+                    {% endif %}
+                    {% for p in range(start, end + 1) %}
+                    {{ page_link(p, tab_name) }}
+                    {% endfor %}
+                    {% if end < total %} {% if end < total - 1 %}<span class="px-1 text-secondary text-sm">...</span>{%
+                        endif %}
+                        {{ page_link(total, tab_name) }}
+                        {% endif %}
+                </div>
+                {% if page < total %} <a
+                    href="{{ url_for('search_bp.search_web', q=keyword, tab=tab_name, page=page+1) }}"
+                    class="px-3 py-1.5 rounded-lg border border-outline-variant text-secondary hover:bg-surface-container-highest transition-all flex items-center gap-1">
+                    Sau <span class="material-symbols-outlined text-sm">chevron_right</span>
+                    </a>
+                    {% endif %}
             </div>
+            {% endmacro %}
+
+            {{ render_pagination(restaurants_pagination, 'restaurants') }}
         </section>
 
         <!-- Khối kết quả món ăn -->
-        <section id="dishes-section" class="hidden space-y-lg">
+        <section id="dishes-section" class="{% if current_tab != 'dishes' %}hidden{% endif %} space-y-lg">
             <!-- Tiêu đề riêng cho món ăn -->
             <div class="flex items-center gap-4">
                 <hr class="flex-1 border-outline-variant">
@@ -103,7 +143,7 @@
 
             <!-- Grid món ăn -->
             <div id="dish-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
-                {% for d in dishes %}
+                {% for d in dishes_pagination.items %}
                 <div class="group bg-white rounded-xl overflow-hidden custom-shadow hover:-translate-y-1 transition-all duration-300 dish-card"
                     data-price="{{ d.price }}" data-restaurant-id="{{ d.restaurant_id }}">
                     <div class="relative h-48">
@@ -136,67 +176,21 @@
                 <p class="col-span-full text-center py-10 text-on-surface-variant">Không tìm thấy món ăn nào phù hợp</p>
                 {% endfor %}
             </div>
+            {{ render_pagination(dishes_pagination, 'dishes') }}
         </section>
     </div>
 </div>
-
 <script>
-    // Hiện tất cả card nhà hàng khi bấm "Xem thêm"
-    function showAllRestaurants() {
-        document.querySelectorAll('.restaurant-card.hidden').forEach(function (card) {
-            card.classList.remove('hidden');
-        });
-        document.getElementById('show-more-wrapper').classList.add('hidden');
+    const hasRestaurants = {{ 'true' if restaurants_pagination.items else 'false' }};
+    const hasDishes = {{ 'true' if dishes_pagination.items else 'false' }};
+
+    function goToTab(view) {
+        var url = new URL(window.location.href);
+        url.searchParams.set('tab', view);
+        url.searchParams.set('page', 1);
+        window.location.href = url.toString();
     }
 
-    // Xác định dữ liệu hiện có để chọn tab mặc định hợp lý
-    // Nếu không có nhà hàng nhưng có món ăn, nên mở tab món ăn trước
-    const hasRestaurants = {{ 'true' if restaurants else 'false' }};
-    const hasDishes = {{ 'true' if dishes else 'false' }};
-
-    // Trạng thái hiện tại của sidebar
-    let currentView = hasRestaurants ? 'restaurants' : (hasDishes ? 'dishes' : 'restaurants');
-
-    // Hàm cập nhật giao diện sidebar và vùng nội dung
-    function setCurrentView(view) {
-        currentView = view;
-
-        const restaurantsBtn = document.getElementById('view-restaurants-btn');
-        const dishesBtn = document.getElementById('view-dishes-btn');
-
-        const restaurantsSection = document.getElementById('restaurants-section');
-        const dishesSection = document.getElementById('dishes-section');
-
-        const dishSortBox = document.getElementById('dish-sort-box');
-
-        // Reset style 2 nút về trạng thái chưa active
-        restaurantsBtn.className = 'w-full px-4 py-3 rounded-xl bg-white border border-outline-variant text-on-surface font-label-md text-left transition-all duration-200';
-        dishesBtn.className = 'w-full px-4 py-3 rounded-xl bg-white border border-outline-variant text-on-surface font-label-md text-left transition-all duration-200';
-
-        if (view === 'restaurants') {
-            // Active nút nhà hàng
-            restaurantsBtn.className = 'w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-label-md text-left transition-all duration-200';
-
-            // Chỉ hiện section nhà hàng
-            restaurantsSection.classList.remove('hidden');
-            dishesSection.classList.add('hidden');
-
-            // Ẩn sort món ăn vì không áp dụng cho nhà hàng
-            dishSortBox.classList.add('hidden');
-        } else {
-            // Active nút món ăn
-            dishesBtn.className = 'w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-label-md text-left transition-all duration-200';
-
-            // Chỉ hiện section món ăn
-            restaurantsSection.classList.add('hidden');
-            dishesSection.classList.remove('hidden');
-
-            // Hiện sort món ăn
-            dishSortBox.classList.remove('hidden');
-        }
-    }
-
-    // Sắp xếp món ăn theo giá
     function applyDishSort() {
         const select = document.getElementById('dish-sort-select');
         const grid = document.getElementById('dish-grid');
@@ -204,88 +198,44 @@
 
         const cards = Array.from(grid.querySelectorAll('.dish-card'));
         const value = select.value;
-
         if (value === 'default') return;
 
         cards.sort((a, b) => {
             const pA = parseFloat(a.dataset.price);
             const pB = parseFloat(b.dataset.price);
-
             return value === 'price-asc' ? pA - pB : pB - pA;
         });
-
-        // Gắn lại card sau khi sort
         cards.forEach(card => grid.appendChild(card));
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Gắn sự kiện cho 2 nút trong sidebar
-        const restaurantsBtn = document.getElementById('view-restaurants-btn');
-        const dishesBtn = document.getElementById('view-dishes-btn');
-        const dishSortSelect = document.getElementById('dish-sort-select');
-
-        if (restaurantsBtn) {
-            restaurantsBtn.addEventListener('click', function () {
-                setCurrentView('restaurants');
-            });
+        var currentTab = '{{ current_tab }}';
+        var viewBtn = document.getElementById('view-' + currentTab + '-btn');
+        if (viewBtn) {
+            viewBtn.className = 'w-full px-4 py-3 rounded-xl bg-primary text-on-primary font-label-md text-left transition-all duration-200';
         }
 
-        if (dishesBtn) {
-            dishesBtn.addEventListener('click', function () {
-                setCurrentView('dishes');
-            });
+        if (currentTab === 'restaurants') {
+            document.getElementById('restaurants-section').classList.remove('hidden');
+            document.getElementById('dishes-section').classList.add('hidden');
+            document.getElementById('dish-sort-box').classList.add('hidden');
+        } else {
+            document.getElementById('restaurants-section').classList.add('hidden');
+            document.getElementById('dishes-section').classList.remove('hidden');
+            document.getElementById('dish-sort-box').classList.remove('hidden');
         }
 
-        if (dishSortSelect) {
-            dishSortSelect.addEventListener('change', applyDishSort);
-        }
+        document.getElementById('view-restaurants-btn').addEventListener('click', function () { goToTab('restaurants'); });
+        document.getElementById('view-dishes-btn').addEventListener('click', function () { goToTab('dishes'); });
 
-        // Khởi tạo tab mặc định khi trang vừa load
-        setCurrentView(currentView);
+        document.getElementById('dish-sort-select').addEventListener('change', applyDishSort);
 
-        // Cho phép bấm món ăn để đi sang trang chi tiết nhà hàng
         document.querySelectorAll('.dish-card').forEach(function (card) {
             card.addEventListener('click', function () {
-                const restaurantId = this.dataset.restaurantId;
-                if (restaurantId) {
-                    window.location.href = '/restaurants/' + restaurantId;
-                }
+                var restaurantId = this.dataset.restaurantId;
+                if (restaurantId) window.location.href = '/restaurants/' + restaurantId;
             });
         });
     });
-
-    function showAllRestaurants() {
-        document.querySelectorAll('.restaurant-card.hidden').forEach(function (card) {
-            card.classList.remove('hidden');
-        });
-        document.getElementById('show-more-wrapper').classList.add('hidden');
-    }
-
-    window.addEventListener('scroll', function () {
-        const header = document.querySelector('header');
-
-        const searchBar = document.querySelector('#search-bar');
-        if (searchBar) {
-            const headerHeight = header.offsetHeight;
-            searchBar.style.top = headerHeight + 'px';
-        }
-
-        const sidebar = document.querySelector('#filter-sidebar');
-        if (sidebar && window.innerWidth >= 768) {
-            const searchBarHeight = searchBar ? searchBar.offsetHeight : 0;
-            sidebar.style.top = (header.offsetHeight + searchBarHeight) + 'px';
-        }
-    });
-
-    window.dispatchEvent(new Event('scroll'));
-
-
-
-
-    function showAllDishes() {
-        const cards = document.querySelectorAll('.dish-card');
-        cards.forEach(function (card) { card.style.display = ''; });
-        document.getElementById('show-more-dish-wrapper').classList.add('hidden');
-    }
 </script>
 {% endblock %}
