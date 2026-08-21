@@ -1,3 +1,4 @@
+from flask_migrate import Migrate
 import json
 import base64
 from flask_sqlalchemy import SQLAlchemy
@@ -6,6 +7,7 @@ from flask_mail import Mail
 from firebase_admin import credentials, firestore
 
 db = SQLAlchemy()
+migrate = Migrate()
 mail = Mail()
 firestore_db = None
 

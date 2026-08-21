@@ -4,7 +4,7 @@
 <div class="flex items-center space-x-3 cursor-pointer">
     <div class="text-right hidden sm:block">
         <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
-        <p class="text-caption text-secondary">Quan ly</p>
+        <p class="text-caption text-secondary">Quản lý</p>
     </div>
     <a href="/me">
         <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
@@ -19,32 +19,32 @@
     <div class="max-w-7xl mx-auto space-y-6 min-h-full flex flex-col">
         <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-                <h2 class="font-headline-lg text-headline-lg text-on-background">Khuyen mai</h2>
-                <p class="text-body-md text-secondary">Quan ly voucher va uu dai cua nha hang.</p>
+                <h2 class="font-headline-lg text-headline-lg text-on-background">Khuyến mãi</h2>
+                <p class="text-body-md text-secondary">Quản lý voucher và ưu đãi của nhà hàng.</p>
             </div>
             <div class="flex items-center gap-3">
                 <button id="refresh-vouchers-btn"
                     class="px-4 py-3 rounded-lg border border-outline-variant text-secondary font-bold hover:bg-surface-container transition-colors">
-                    Lam moi
+                    Làm mới
                 </button>
                 <button id="open-create-modal-btn"
                     class="px-5 py-3 bg-primary text-white rounded-lg font-bold shadow-lg shadow-primary/20 hover:bg-primary-container transition-colors">
-                    Tao voucher
+                    Tạo voucher
                 </button>
             </div>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-4">
             <div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
-                <p class="text-caption text-secondary">Tong voucher</p>
+                <p class="text-caption text-secondary">Tổng voucher</p>
                 <p id="voucher-stat-total" class="text-display-lg text-on-surface mt-2">0</p>
             </div>
             <div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
-                <p class="text-caption text-secondary">Dang hoat dong</p>
+                <p class="text-caption text-secondary">Đang hoạt động</p>
                 <p id="voucher-stat-active" class="text-display-lg text-on-surface mt-2">0</p>
             </div>
             <div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
-                <p class="text-caption text-secondary">Sap het han</p>
+                <p class="text-caption text-secondary">Sắp hết hạn</p>
                 <p id="voucher-stat-expiring" class="text-display-lg text-on-surface mt-2">0</p>
             </div>
         </div>
@@ -52,24 +52,24 @@
         <section class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] p-6 space-y-4 flex-1">
             <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                    <h3 class="font-headline-md text-headline-md text-on-surface">Danh sach voucher</h3>
-                    <p class="text-body-md text-secondary">Tim kiem theo ma hoac ten voucher.</p>
+                    <h3 class="font-headline-md text-headline-md text-on-surface">Danh sách voucher</h3>
+                    <p class="text-body-md text-secondary">Tìm kiếm theo mã hoặc tên voucher.</p>
                 </div>
                 <div class="w-full lg:w-96">
-                    <input id="voucher-search-input" type="search" placeholder="Tim voucher..."
+                    <input id="voucher-search-input" type="search" placeholder="Tìm voucher..."
                         class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright text-body-md focus:outline-none focus:ring-2 focus:ring-primary/30">
                 </div>
             </div>
 
             <div id="voucher-loading"
                 class="hidden rounded-lg border border-dashed border-outline-variant px-4 py-6 text-center text-secondary">
-                Dang tai danh sach voucher...
+                Đang tải danh sách voucher...
             </div>
             <div id="voucher-error"
                 class="hidden rounded-lg border border-error-container bg-error-container px-4 py-4 text-error"></div>
             <div id="voucher-empty"
                 class="hidden rounded-lg border border-dashed border-outline-variant px-4 py-10 text-center text-secondary">
-                Chua co voucher nao. Hay tao voucher dau tien.
+                Chưa có voucher nào. Hãy tạo voucher đầu tiên.
             </div>
 
             <div id="voucher-list" class="space-y-4"></div>
@@ -83,8 +83,8 @@
         <div class="w-full max-w-3xl rounded-2xl bg-surface-container-lowest shadow-2xl overflow-hidden">
             <div class="flex items-center justify-between px-6 py-5 border-b border-outline-variant">
                 <div>
-                    <h3 id="voucher-modal-title" class="font-headline-md text-headline-md text-on-surface">Tao voucher</h3>
-                    <p class="text-body-md text-secondary">Dien day du thong tin voucher cua nha hang.</p>
+                    <h3 id="voucher-modal-title" class="font-headline-md text-headline-md text-on-surface">Tạo voucher</h3>
+                    <p class="text-body-md text-secondary">Điền đầy đủ thông tin voucher của nhà hàng.</p>
                 </div>
                 <button id="close-voucher-modal-btn"
                     class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center text-secondary transition-colors">
@@ -97,13 +97,13 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-2">
-                        <label for="voucher-name" class="text-label-md font-bold text-on-surface-variant">Ten voucher</label>
+                        <label for="voucher-name" class="text-label-md font-bold text-on-surface-variant">Tên voucher</label>
                         <input id="voucher-name" type="text"
                             class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
                         <p class="field-error text-caption text-error hidden" data-error-for="voucher-name"></p>
                     </div>
                     <div class="space-y-2">
-                        <label for="voucher-code" class="text-label-md font-bold text-on-surface-variant">Ma voucher</label>
+                        <label for="voucher-code" class="text-label-md font-bold text-on-surface-variant">Mã voucher</label>
                         <input id="voucher-code" type="text"
                             class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
                         <p class="field-error text-caption text-error hidden" data-error-for="voucher-code"></p>
@@ -111,30 +111,44 @@
                 </div>
 
                 <div class="space-y-2">
-                    <label for="voucher-description" class="text-label-md font-bold text-on-surface-variant">Mo ta</label>
-                    <textarea id="voucher-description" rows="3"
-                        class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright resize-none"></textarea>
-                    <p class="field-error text-caption text-error hidden" data-error-for="voucher-description"></p>
+                    <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <label class="text-label-md font-bold text-on-surface-variant">Món áp dụng</label>
+                            <p class="text-caption text-secondary">Chọn các món mà voucher này được áp dụng.</p>
+                        </div>
+                        <span id="voucher-selected-dishes-count" class="text-caption font-bold text-primary">0 món đã chọn</span>
+                    </div>
+                    <div id="voucher-dish-loading"
+                        class="hidden rounded-lg border border-dashed border-outline-variant px-4 py-5 text-center text-secondary">
+                        Đang tải danh sách món...
+                    </div>
+                    <div id="voucher-dish-list"
+                        class="grid max-h-64 grid-cols-1 gap-2 overflow-y-auto rounded-lg border border-outline-variant bg-surface-bright p-2 sm:grid-cols-2">
+                    </div>
+                    <p id="voucher-dish-empty" class="hidden rounded-lg border border-dashed border-outline-variant px-4 py-5 text-center text-secondary">
+                        Nhà hàng chưa có món ăn đang bán.
+                    </p>
+                    <p class="field-error text-caption text-error hidden" data-error-for="voucher-dish-list"></p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="space-y-2">
-                        <label for="voucher-discount-type" class="text-label-md font-bold text-on-surface-variant">Loai giam</label>
-                        <select id="voucher-discount-type"
-                            class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
-                            <option value="PERCENTAGE">Phan tram</option>
-                            <option value="FIXED_AMOUNT">So tien co dinh</option>
-                        </select>
-                        <p class="field-error text-caption text-error hidden" data-error-for="voucher-discount-type"></p>
-                    </div>
-                    <div class="space-y-2">
-                        <label for="voucher-discount-value" class="text-label-md font-bold text-on-surface-variant">Gia tri giam</label>
-                        <input id="voucher-discount-value" type="number" min="0" step="0.01"
-                            class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
+                        <label for="voucher-discount-value" class="text-label-md font-bold text-on-surface-variant">Giảm bao nhiêu % ?</label>
+                        <div class="relative">
+                            <input id="voucher-discount-value" type="number" min="0" max="100" step="0.01"
+                                class="w-full px-4 py-3 pr-9 rounded-lg border border-outline-variant bg-surface-bright">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 text-secondary">%</span>
+                        </div>
                         <p class="field-error text-caption text-error hidden" data-error-for="voucher-discount-value"></p>
                     </div>
                     <div class="space-y-2">
-                        <label for="voucher-usage-limit" class="text-label-md font-bold text-on-surface-variant">Gioi han luot dung</label>
+                        <label for="voucher-max-discount" class="text-label-md font-bold text-on-surface-variant">Giảm tối đa</label>
+                        <input id="voucher-max-discount" type="number" min="0" step="0.01"
+                            class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
+                        <p class="field-error text-caption text-error hidden" data-error-for="voucher-max-discount"></p>
+                    </div>
+                    <div class="space-y-2">
+                        <label for="voucher-usage-limit" class="text-label-md font-bold text-on-surface-variant">Giới hạn lượt dùng</label>
                         <input id="voucher-usage-limit" type="number" min="1" step="1"
                             class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
                         <p class="field-error text-caption text-error hidden" data-error-for="voucher-usage-limit"></p>
@@ -143,29 +157,13 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-2">
-                        <label for="voucher-minimum-order" class="text-label-md font-bold text-on-surface-variant">Don toi thieu</label>
-                        <input id="voucher-minimum-order" type="number" min="0" step="0.01"
-                            class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
-                        <p class="field-error text-caption text-error hidden" data-error-for="voucher-minimum-order"></p>
-                    </div>
-                    <div class="space-y-2">
-                        <label for="voucher-max-discount" class="text-label-md font-bold text-on-surface-variant">Giam toi da</label>
-                        <input id="voucher-max-discount" type="number" min="0" step="0.01"
-                            class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
-                        <p class="text-caption text-secondary">Chi ap dung cho voucher phan tram.</p>
-                        <p class="field-error text-caption text-error hidden" data-error-for="voucher-max-discount"></p>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label for="voucher-start-date" class="text-label-md font-bold text-on-surface-variant">Bat dau</label>
+                        <label for="voucher-start-date" class="text-label-md font-bold text-on-surface-variant">Bắt đầu</label>
                         <input id="voucher-start-date" type="datetime-local"
                             class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
                         <p class="field-error text-caption text-error hidden" data-error-for="voucher-start-date"></p>
                     </div>
                     <div class="space-y-2">
-                        <label for="voucher-end-date" class="text-label-md font-bold text-on-surface-variant">Ket thuc</label>
+                        <label for="voucher-end-date" class="text-label-md font-bold text-on-surface-variant">Kết thúc</label>
                         <input id="voucher-end-date" type="datetime-local"
                             class="w-full px-4 py-3 rounded-lg border border-outline-variant bg-surface-bright">
                         <p class="field-error text-caption text-error hidden" data-error-for="voucher-end-date"></p>
@@ -178,11 +176,11 @@
                 <div class="flex items-center justify-end gap-3 border-t border-outline-variant pt-5">
                     <button type="button" id="cancel-voucher-btn"
                         class="px-5 py-3 rounded-lg border border-outline-variant font-bold text-secondary hover:bg-surface-container transition-colors">
-                        Huy
+                        Hủy
                     </button>
                     <button id="voucher-submit-btn" type="submit"
                         class="px-6 py-3 rounded-lg bg-primary text-white font-bold shadow-lg shadow-primary/20 hover:bg-primary-container transition-colors">
-                        Luu voucher
+                        Lưu voucher
                     </button>
                 </div>
             </form>

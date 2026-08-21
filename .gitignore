@@ -6,6 +6,7 @@ dist/
 build/
 *.egg
 *.db
+*.pyc
 
 # Virtual env
 venv/
