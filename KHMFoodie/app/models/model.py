@@ -162,6 +162,7 @@ class Order(Base):
 
     status = Column(Enum(Status), default=Status.PENDING_PAYMENT, nullable=False)
     note = Column(String(300), nullable=True)
+    rejection_reason = Column(String(500), nullable=True)
 
     customer_name = Column(String(150), nullable=False)
     customer_phone = Column(String(50), nullable=True)

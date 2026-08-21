@@ -5,6 +5,7 @@ from app.routes.routes_API.adminRoute import admin_api
 from app.routes.routes_API.fcmRoute import fcm_api
 from app.routes.routes_API.cartRoute import cart_api
 from app.routes.routes_API.voucherRoute import voucher_api
+from app.routes.routes_API.ordersRoute import orders_api
 from app.routes.routes_API.dishesRoute import dishes_api
 
 
@@ -17,3 +18,4 @@ def route_api(app):
     app.register_blueprint(fcm_api, url_prefix="/api/fcm")
     app.register_blueprint(cart_api, url_prefix="/api/cart")
     app.register_blueprint(voucher_api, url_prefix="/api")
+    app.register_blueprint(orders_api, url_prefix="/api/orders")
