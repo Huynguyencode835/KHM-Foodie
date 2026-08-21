@@ -2,11 +2,13 @@
 
 {% block itemHeader %}
 <div
-    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200 focus-within:border-primary focus-within:shadow-sm">
+    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200">
     <span id="header-search-icon" class="material-symbols-outlined text-secondary text-[18px]">search</span>
     <input id="header-search-input" type="text" placeholder="Tìm món ăn, nhà hàng..."
-        class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full" />
+    class="bg-transparent border-none outline-none focus:outline-none focus:ring-0 focus:shadow-none focus-visible:outline-none appearance-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full"
+    style="outline: none; box-shadow: none;" />
 </div>
+
 {% endblock %}
 
 {% block content %}

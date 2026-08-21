@@ -6,10 +6,12 @@ from app.routes.routes_API.fcmRoute import fcm_api
 from app.routes.routes_API.cartRoute import cart_api
 from app.routes.routes_API.voucherRoute import voucher_api
 from app.routes.routes_API.ordersRoute import orders_api
+from app.routes.routes_API.dishesRoute import dishes_api
 
 
 def route_api(app):
     app.register_blueprint(restaurant_api, url_prefix="/api/restaurants")
+    app.register_blueprint(dishes_api, url_prefix="/api/dishes")
     app.register_blueprint(auth_api, url_prefix="/api/auth")
     app.register_blueprint(search_api, url_prefix="/api/search")
     app.register_blueprint(admin_api, url_prefix="/api/admin")

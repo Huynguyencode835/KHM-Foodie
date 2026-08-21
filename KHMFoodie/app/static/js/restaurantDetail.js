@@ -1,5 +1,6 @@
 const pathParts = window.location.pathname.split('/');
-const restaurantId = pathParts[pathParts.length - 1];
+const restaurantId = window.RESTAURANT_ID || pathParts[pathParts.length - 1];
+const isRestaurantMenuPage = Boolean(window.RESTAURANT_ID);
 
 function formatPrice(value) {
     return `${(value || 0).toLocaleString('vi-VN')}đ`;
@@ -90,8 +91,11 @@ async function fetchRestaurantData(id) {
     return res.json();
 }
 
-async function fetchDishesData(id, page) {
-    const res = await fetch(`/api/restaurants/${id}/dishes?page=${page}&per_page=12`);
+async function fetchDishesData(id, page, category, keyword) {
+    const params = new URLSearchParams({ page, per_page: 12 });
+    if (category && category !== 'all') params.append('category', category);
+    if (keyword) params.append('q', keyword);
+    const res = await fetch(`/api/restaurants/${id}/dishes?${params}`);
     if (!res.ok) return { data: [], pages: 1 };
     const json = await res.json();
     return { data: json.data || [], pages: json.pages || 1 };
@@ -153,7 +157,8 @@ function renderRestaurantDetail(data) {
 
 }
 
-function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào') {
+function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào', showAction = !isRestaurantMenuPage) {
+    console.log(dishes)
     const container = document.getElementById('dish-grid');
     if (!container) return;
 
@@ -167,14 +172,21 @@ function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào') {
     }
 
     container.innerHTML = dishes.map(d => `
-        <div class="bg-surface-container-lowest rounded-xl shadow-sm border border-transparent hover:border-primary-fixed hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden group flex flex-col">
-            <div class="h-40 bg-cover bg-center relative" style="background-image: url('${d.image || ''}')">
+        <div class="bg-surface-container-lowest rounded-xl shadow-lg border border-transparent hover:border-primary-fixed hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden group flex flex-col ${d.active ? '' : 'dish-disabled'}">
+            <div class="h-40 bg-cover rounded-xl bg-center relative" style="background-image: url('${d.image || ''}')">
                 <img src="${d.image || ''}" onerror="this.parentElement.style.backgroundImage='url(https://png.pngtree.com/png-vector/20210623/ourmid/pngtree-pho-noodle-vietnamese-food-png-png-image_3508276.jpg)'" class="hidden">
+                ${showAction ? '' : `
+                <label class="dish-select-label absolute top-2 left-2 w-6 h-6 rounded-full bg-white shadow cursor-pointer z-10" title="Chọn để xóa">
+                    <input type="checkbox" class="dish-select-input sr-only">
+                    <span class="dish-select-check material-symbols-outlined text-sm text-transparent">check</span>
+                </label>
+                `}
             </div>
             <div class="p-sm flex flex-col flex-1">
                 <h3 class="font-headline-lg font-bold line-clamp-1">${d.name}</h3>
                 <span class="text-caption text-secondary mb-xs">${d.category || ''}</span>
                 <p class="text-sm text-gray-500 italic line-clamp-2 mb-sm flex-1">${d.description || ''}</p>
+                ${showAction ? `
                 <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
                     <span class="font-headline-md text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>
                     <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
@@ -182,10 +194,40 @@ function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào') {
                         <span class="material-symbols-outlined text-sm">add</span> Thêm
                     </button>
                 </div>
+                ` : `
+                <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
+                    <span class="font-headline-md text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>
+                    <div class="flex items-center gap-sm shrink-0">
+                        <label class="dish-toggle relative inline-flex items-center cursor-pointer" title="Bật / tắt món ăn">
+                            <input type="checkbox" class="dish-toggle-input sr-only" ${d.active ? 'checked' : ''}>
+                            <span class="dish-toggle-track w-10 h-5 bg-secondary-fixed rounded-full relative transition-colors">
+                                <span class="dish-toggle-dot absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform"></span>
+                            </span>
+                        </label>
+                        <button class="dish-delete-btn w-7 h-7 rounded-lg border border-outline-variant flex items-center justify-center text-secondary hover:bg-error-container hover:text-error transition-all" data-dish-id="${d.id}" title="Xóa món ăn">
+                            <span class="material-symbols-outlined text-sm">delete</span>
+                        </button>
+                    </div>
+                </div>
+                `}
             </div>
         </div>
     `).join('');
 }
+
+let currentCategory = 'all';
+
+async function applyDishFilters() {
+    currentPage = 1;
+    const dishSearchInput = document.getElementById('dish-search-input');
+    const keyword = dishSearchInput ? dishSearchInput.value.trim().toLowerCase() : '';
+
+    const result = await fetchDishesData(restaurantId, 1, currentCategory, keyword);
+    renderDishes(result.data, 'Không tìm thấy món ăn phù hợp');
+    totalPages = result.pages;
+    renderPagination();
+}
+
 
 document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', function () {
@@ -206,24 +248,50 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 async function goToPage(page) {
     if (page < 1 || page > totalPages || page === currentPage) return;
     currentPage = page;
-    var result = await fetchDishesData(restaurantId, currentPage);
+    const dishSearchInput = document.getElementById('dish-search-input');
+    const keyword = dishSearchInput ? dishSearchInput.value.trim().toLowerCase() : '';
+    const result = await fetchDishesData(restaurantId, currentPage, currentCategory, keyword);
     renderDishes(result.data);
     renderPagination();
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
     if (!restaurantId) return;
-    refreshCart()
-    var dataPromise = fetchRestaurantData(restaurantId);
-    var dishesPromise = fetchDishesData(restaurantId, 1);
 
-    var data = await dataPromise;
-    var dishesResult = await dishesPromise;
+    const [data] = await Promise.all([
+        document.querySelector('[data-restaurant-name]') ? fetchRestaurantData(restaurantId) : Promise.resolve(null),
+        document.getElementById('cart-items') ? refreshCart() : Promise.resolve()
+    ]);
 
     renderRestaurantDetail(data);
+
     currentPage = 1;
-    totalPages = dishesResult.pages;
-    renderDishes(dishesResult.data);
-    renderPagination();
+    await applyDishFilters();
     bindPaginationButtons();
+
+    let searchTimeout;
+    const dishSearchInput = document.getElementById('dish-search-input');
+    if (dishSearchInput) {
+        dishSearchInput.addEventListener('input', function () {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(applyDishFilters, 300);
+        });
+    }
+
+    document.querySelectorAll('.dish-category-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            currentCategory = this.dataset.category;
+
+            document.querySelectorAll('.dish-category-btn').forEach(b => {
+                b.classList.remove('bg-primary', 'text-white');
+                b.classList.add('bg-transparent', 'text-secondary');
+            });
+
+            this.classList.remove('bg-transparent', 'text-secondary');
+            this.classList.add('bg-primary', 'text-white');
+
+            applyDishFilters();
+        });
+    });
+
 });
