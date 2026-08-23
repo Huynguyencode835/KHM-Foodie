@@ -9,6 +9,8 @@ from flask_login import UserMixin
 from enum import Enum as RoleEnum
 from app.extensions import db
 
+DEFAULT_MAX_CART_ITEMS = 20
+
 
 class Base(db.Model):
     __abstract__ = True
@@ -234,6 +236,10 @@ class PaymentTransaction(Base):
     def __str__(self):
         return f"PaymentTransaction({self.vnp_txn_ref}, {self.status})"
 
+
+class SystemConfig(Base):
+    __tablename__ = 'system_config'
+    max_cart_items = Column(Integer, default=DEFAULT_MAX_CART_ITEMS, nullable=False)
 
 
 def hash_password(raw_password: str) -> str:

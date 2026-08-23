@@ -1,8 +1,20 @@
+from sqlalchemy import func
+
 from app.models.model import Cart, CartItems, Dish
 from app.extensions import db
+from app.dao.systemConfigDao import SystemConfigDao
 
 
 class CartDao:
+
+    @staticmethod
+    def _cart_total_items(cart_id, exclude_item_id=None):
+        query = db.session.query(
+            func.coalesce(func.sum(CartItems.quantity), 0)
+        ).filter(CartItems.cart_id == cart_id)
+        if exclude_item_id:
+            query = query.filter(CartItems.id != exclude_item_id)
+        return query.scalar()
 
     @staticmethod
     def get_cart_by_user_and_restaurant(user_id, restaurant_id):
@@ -31,6 +43,10 @@ class CartDao:
             return None
 
         cart = CartDao.get_or_create_cart(user_id, restaurant_id)
+
+        max_items = SystemConfigDao.get_max_cart_items()
+        if CartDao._cart_total_items(cart.id) + quantity > max_items:
+            raise ValueError(f"Giỏ hàng chỉ được chứa tối đa {max_items} món.")
 
         item = CartItems.query.filter_by(cart_id=cart.id, dish_id=dish_id).first()
         if item:
@@ -61,6 +77,13 @@ class CartDao:
             db.session.delete(item)
             db.session.commit()
             return None
+
+        if quantity > item.quantity:
+            max_items = SystemConfigDao.get_max_cart_items()
+            others_total = CartDao._cart_total_items(item.cart_id, exclude_item_id=item.id)
+            if others_total + quantity > max_items:
+                raise ValueError(f"Giỏ hàng chỉ được chứa tối đa {max_items} món.")
+
         item.quantity = quantity
         db.session.commit()
         return item

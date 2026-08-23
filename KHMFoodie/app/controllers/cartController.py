@@ -51,7 +51,11 @@ class CartController:
         if not dish_id:
             return jsonify({"success": False, "message": "dish_id is required"}), 400
 
-        item = CartDao.add_item(current_user.id, restaurant_id, dish_id, quantity=quantity)
+        try:
+            item = CartDao.add_item(current_user.id, restaurant_id, dish_id, quantity=quantity)
+        except ValueError as e:
+            return jsonify({"success": False, "message": str(e)}), 400
+
         if not item:
             return jsonify({"success": False, "message": "Dish not found"}), 404
 
@@ -75,7 +79,11 @@ class CartController:
         if quantity is None:
             return jsonify({"success": False, "message": "quantity is required"}), 400
 
-        item = CartDao.update_item_quantity(cart_item_id, quantity)
+        try:
+            item = CartDao.update_item_quantity(cart_item_id, quantity)
+        except ValueError as e:
+            return jsonify({"success": False, "message": str(e)}), 400
+
         if not item:
             return jsonify({"success": True, "removed": True}), 200
 
