@@ -242,6 +242,15 @@ class SystemConfig(Base):
     max_cart_items = Column(Integer, default=DEFAULT_MAX_CART_ITEMS, nullable=False)
 
 
+class RestaurantConfig(Base):
+    """Cấu hình riêng của từng nhà hàng; tồn tại row = override, không có row = dùng giá trị admin."""
+    __tablename__ = 'restaurant_config'
+    name = Column(String(150), nullable=False, default=lambda: "restaurant-config")
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), primary_key=True)
+    max_cart_items = Column(Integer, nullable=False)
+    restaurant = relationship('Restaurant')
+
+
 def hash_password(raw_password: str) -> str:
     return str(hashlib.md5(raw_password.encode('utf-8')).hexdigest())
 

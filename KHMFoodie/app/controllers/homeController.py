@@ -30,6 +30,7 @@ def me_page():
         layout_template = 'layout/baseRestaurent.html'
         cuisine_types = [(c.name, c.value) for c in CuisineType]
         r = current_user.restaurant
+        from app.dao.systemConfigDao import SystemConfigDao
         return render_template(
             'mePage.html',
             layout_template=layout_template,
@@ -37,7 +38,9 @@ def me_page():
             cuisine_types=cuisine_types,
             opening_time=r.opening_time.strftime('%H:%M') if r and r.opening_time else '06:30',
             closing_time=r.closing_time.strftime('%H:%M') if r and r.closing_time else '22:30',
-            is_open=r.status if r and r.status is not None else True
+            is_open=r.status if r and r.status is not None else True,
+            system_max_cart_items=SystemConfigDao.get_max_cart_items(None),
+            restaurant_max_cart_items=SystemConfigDao.get_max_cart_items(current_user.id)
         )
 
     elif role == UserRole.CUSTOMER:
