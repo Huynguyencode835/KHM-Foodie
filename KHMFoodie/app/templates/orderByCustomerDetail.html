@@ -1,0 +1,395 @@
+{% extends "layout/baseCustomer.html" %}
+{% block content %}
+<main class="max-w-[800px] mx-auto px-sm md:px-gutter pt-xl pb-xl">
+
+    <!-- Loading State -->
+    <div id="loading-state" class="text-center py-xl">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-container-high mb-md animate-pulse">
+            <span class="material-symbols-outlined text-secondary">hourglass_empty</span>
+        </div>
+        <p class="font-body-md text-body-md text-secondary">Đang tải thông tin đơn hàng...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-state" class="hidden text-center py-xl">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-error-fixed/30 mb-md">
+            <span class="material-symbols-outlined text-error text-[32px]">error</span>
+        </div>
+        <h2 class="font-headline-md text-headline-md text-on-background mb-xs">Không tìm thấy đơn hàng</h2>
+        <p class="font-body-md text-body-md text-secondary mb-md">Đơn hàng không tồn tại hoặc bạn không có quyền truy cập.</p>
+        <a href="/order_customer"
+            class="inline-block bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all active:scale-95 duration-150">
+            Quay lại danh sách
+        </a>
+    </div>
+
+    <!-- Order Detail Content -->
+    <div id="order-content" class="hidden">
+
+        <!-- Status Hero Section -->
+        <section class="text-center mb-xl">
+            <div id="status-icon-wrap"
+                class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-md">
+                <span id="status-icon" class="material-symbols-outlined text-[48px]"
+                    style="font-variation-settings: 'wght' 700;"></span>
+            </div>
+            <h1 id="status-title" class="font-headline-lg text-headline-lg text-on-background mb-base"></h1>
+            <p id="status-subtitle" class="font-body-lg text-body-lg text-secondary max-w-md mx-auto"></p>
+        </section>
+
+        <!-- Main Content Card -->
+        <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] overflow-hidden">
+
+            <!-- Tracking Timeline -->
+            <div id="timeline-section" class="px-md py-lg bg-surface-container-low border-b border-outline-variant">
+                <div class="relative flex justify-between items-start">
+                    <div class="absolute top-5 left-0 w-full h-[3px] bg-outline-variant rounded-full z-0"></div>
+                    <div id="timeline-progress" class="absolute top-5 left-0 h-[3px] bg-primary rounded-full z-[1] transition-all duration-700 ease-out"
+                        style="width: 0%;"></div>
+
+                    <div class="relative z-10 flex flex-col items-center gap-xs">
+                        <div id="step-0" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                            <span class="material-symbols-outlined text-sm">receipt_long</span>
+                        </div>
+                        <span id="label-0" class="font-label-md text-label-md text-secondary transition-colors duration-300">Đã đặt hàng</span>
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center gap-xs">
+                        <div id="step-1" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                            <span class="material-symbols-outlined text-sm">restaurant</span>
+                        </div>
+                        <span id="label-1" class="font-label-md text-label-md text-secondary transition-colors duration-300">Đang chuẩn bị</span>
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center gap-xs">
+                        <div id="step-2" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                            <span class="material-symbols-outlined text-sm">delivery_dining</span>
+                        </div>
+                        <span id="label-2" class="font-label-md text-label-md text-secondary transition-colors duration-300">Đang giao</span>
+                    </div>
+                    <div class="relative z-10 flex flex-col items-center gap-xs">
+                        <div id="step-3" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                            <span class="material-symbols-outlined text-sm">check</span>
+                        </div>
+                        <span id="label-3" class="font-label-md text-label-md text-secondary transition-colors duration-300">Hoàn tất</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Order Details -->
+            <div class="p-md md:p-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
+                    <!-- Left Column: Summary -->
+                    <div class="space-y-md">
+                        <div>
+                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Mã đơn
+                                hàng</h3>
+                            <p id="detail-order-code" class="font-headline-md text-headline-md text-on-background"></p>
+                        </div>
+
+                        <div id="detail-restaurant" class="hidden">
+                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Nhà hàng</h3>
+                            <div class="flex items-center gap-sm">
+                                <img id="detail-restaurant-img" src="" alt=""
+                                    class="w-10 h-10 rounded-full object-cover hidden" />
+                                <p id="detail-restaurant-name" class="font-body-md text-body-md font-bold text-on-background"></p>
+                            </div>
+                        </div>
+
+                        <div id="detail-note-wrap" class="hidden">
+                            <div class="flex items-center gap-sm p-sm bg-tertiary-fixed/30 rounded-lg border border-tertiary-fixed">
+                                <span class="material-symbols-outlined text-tertiary">edit_note</span>
+                                <div>
+                                    <h3 class="font-label-md text-label-md text-on-tertiary-fixed-variant">Ghi chú</h3>
+                                    <p id="detail-note" class="font-body-md text-body-md text-tertiary"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="detail-rejection-wrap" class="hidden">
+                            <div class="flex items-center gap-sm p-sm bg-error-fixed/30 rounded-lg border border-error-fixed">
+                                <span class="material-symbols-outlined text-error">error</span>
+                                <div>
+                                    <h3 class="font-label-md text-label-md text-on-error-fixed-variant">Lý do</h3>
+                                    <p id="detail-rejection" class="font-body-md text-body-md text-error"></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Address & Total -->
+                    <div class="space-y-md">
+                        <div>
+                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Địa chỉ
+                                giao hàng</h3>
+                            <div class="flex items-start gap-xs">
+                                <span class="material-symbols-outlined text-primary mt-1">location_on</span>
+                                <div>
+                                    <p id="detail-customer-name" class="font-label-md text-label-md text-on-background"></p>
+                                    <p id="detail-address" class="font-body-md text-body-md text-secondary"></p>
+                                    <p id="detail-phone" class="font-body-md text-body-md text-secondary hidden"></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-sm border-t border-outline-variant space-y-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="font-body-md text-body-md text-secondary">Phí giao hàng</span>
+                                <span id="detail-shipping-fee" class="font-body-md text-body-md text-on-background"></span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider">Tổng thanh toán</h3>
+                                <p id="detail-total" class="font-headline-md text-headline-md text-primary font-extrabold"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item list -->
+                <div id="detail-items-wrap" class="mt-lg p-sm bg-surface-container-low rounded-lg border border-outline-variant divide-y divide-outline-variant hidden">
+                    <p id="detail-items-count" class="px-xs pb-xs font-label-md text-label-md text-secondary"></p>
+                    <div id="detail-items-list"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="mt-lg flex flex-col md:flex-row items-center gap-md">
+            <div id="action-positive" class="hidden w-full md:flex-1 md:flex items-center gap-md">
+                <button
+                    class="w-full md:flex-1 bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all hover:shadow-lg active:scale-95 duration-150 flex items-center justify-center gap-sm">
+                    <span class="material-symbols-outlined">track_changes</span>
+                    Theo dõi đơn hàng
+                </button>
+                <button
+                    class="w-full md:flex-1 bg-surface-container-high text-on-surface-variant py-2 px-md rounded-lg font-label-md text-label-md hover:bg-surface-container-highest transition-all active:scale-95 duration-150 flex items-center justify-center gap-sm">
+                    <span class="material-symbols-outlined">chat_bubble</span>
+                    Chat với nhà hàng
+                </button>
+            </div>
+            <a href="/"
+                class="w-full md:flex-1 bg-surface-container-lowest text-primary border-2 border-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-fixed transition-all active:scale-95 duration-150 text-center">
+                Tiếp tục khám phá
+            </a>
+        </div>
+
+        <p class="mt-md text-center font-body-md text-body-md text-secondary">
+            Cần hỗ trợ? Truy cập <a class="text-primary font-bold hover:underline" href="#">Trung tâm trợ giúp</a>
+        </p>
+    </div>
+</main>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function getStatusInfo(statusValue) {
+        const mapping = {
+            "Pending Payment": {
+                title: "Đang chờ thanh toán",
+                subtitle: "Đơn hàng của bạn đang chờ xác nhận thanh toán.",
+                icon: "hourglass_top",
+                step: 0,
+                is_terminal_negative: false,
+            },
+            "Payment Failed": {
+                title: "Thanh toán thất bại",
+                subtitle: "Giao dịch không thành công. Vui lòng thử thanh toán lại.",
+                icon: "error",
+                step: 0,
+                is_terminal_negative: true,
+            },
+            "Paid": {
+                title: "Đã tiếp nhận đơn hàng!",
+                subtitle: "Đơn hàng của bạn đã được tiếp nhận và đang chờ nhà hàng xác nhận.",
+                icon: "check_circle",
+                step: 0,
+                is_terminal_negative: false,
+            },
+            "Confirmed": {
+                title: "Nhà hàng đã xác nhận đơn hàng",
+                subtitle: "Nhà hàng sẽ sớm bắt đầu chuẩn bị món ăn cho bạn.",
+                icon: "task_alt",
+                step: 0,
+                is_terminal_negative: false,
+            },
+            "Preparing": {
+                title: "Đang chuẩn bị món ăn của bạn",
+                subtitle: "Nhà hàng đang chuẩn bị đơn hàng của bạn, sắp xong rồi!",
+                icon: "restaurant",
+                step: 1,
+                is_terminal_negative: false,
+            },
+            "Delivering": {
+                title: "Đơn hàng đang trên đường giao",
+                subtitle: "Tài xế đang giao đơn hàng đến địa chỉ của bạn.",
+                icon: "delivery_dining",
+                step: 2,
+                is_terminal_negative: false,
+            },
+            "Completed": {
+                title: "Đơn hàng đã hoàn tất!",
+                subtitle: "Cảm ơn bạn đã đặt hàng. Chúc bạn ngon miệng!",
+                icon: "check",
+                step: 3,
+                is_terminal_negative: false,
+            },
+            "Cancelled": {
+                title: "Đơn hàng đã bị huỷ",
+                subtitle: "Đơn hàng này đã bị huỷ và sẽ không được xử lý tiếp.",
+                icon: "cancel",
+                step: 0,
+                is_terminal_negative: true,
+            },
+        };
+        return mapping[statusValue] || {
+            title: "Trạng thái đơn hàng",
+            subtitle: "",
+            icon: "receipt_long",
+            step: 0,
+            is_terminal_negative: false,
+        };
+    }
+
+    function money(n) {
+        return Math.round(n).toLocaleString('vi-VN') + 'đ';
+    }
+
+    function showState(state) {
+        document.getElementById('loading-state').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('error-state').classList.toggle('hidden', state !== 'error');
+        document.getElementById('order-content').classList.toggle('hidden', state !== 'content');
+    }
+
+    function renderTimeline(step) {
+        const progressWidth = step === 0 ? 0 : (step / 3 * 100);
+        document.getElementById('timeline-progress').style.width = progressWidth + '%';
+
+        for (let i = 0; i <= 3; i++) {
+            const el = document.getElementById('step-' + i);
+            const label = document.getElementById('label-' + i);
+            if (i <= step) {
+                el.classList.remove('bg-surface-container-highest', 'text-secondary');
+                el.classList.add('text-on-primary');
+                el.style.backgroundColor = '#a93100';
+                el.querySelector('span').style.fontVariationSettings = "'FILL' 1";
+                if (label) {
+                    label.classList.remove('text-secondary');
+                    label.classList.add('text-primary');
+                }
+            } else {
+                el.classList.add('bg-surface-container-highest', 'text-secondary');
+                el.classList.remove('text-on-primary');
+                el.style.backgroundColor = '';
+                el.querySelector('span').style.fontVariationSettings = '';
+                if (label) {
+                    label.classList.add('text-secondary');
+                    label.classList.remove('text-primary');
+                }
+            }
+        }
+    }
+
+    async function loadOrder() {
+        const pathParts = window.location.pathname.split('/');
+        const orderId = pathParts[pathParts.length - 1];
+
+        try {
+            const res = await fetch('/api/orders_customer/' + orderId);
+            if (!res.ok) throw new Error('Not found');
+            const json = await res.json();
+            if (!json.success || !json.data) throw new Error('No data');
+
+            const order = json.data;
+            const statusInfo = getStatusInfo(order.status);
+
+            // Status hero
+            const iconWrap = document.getElementById('status-icon-wrap');
+            iconWrap.classList.add(statusInfo.is_terminal_negative ? 'bg-error-fixed' : 'bg-primary-fixed');
+            const iconEl = document.getElementById('status-icon');
+            iconEl.textContent = statusInfo.icon;
+            iconEl.classList.add(statusInfo.is_terminal_negative ? 'text-error' : 'text-primary');
+            document.getElementById('status-title').textContent = statusInfo.title;
+            document.getElementById('status-subtitle').textContent = statusInfo.subtitle;
+
+            // Timeline
+            const timelineSection = document.getElementById('timeline-section');
+            if (statusInfo.is_terminal_negative) {
+                timelineSection.classList.add('hidden');
+            } else {
+                timelineSection.classList.remove('hidden');
+                renderTimeline(statusInfo.step);
+            }
+
+            // Order code
+            document.getElementById('detail-order-code').textContent = '#' + String(order.id).padStart(5, '0');
+
+            // Restaurant
+            if (order.restaurant) {
+                const restEl = document.getElementById('detail-restaurant');
+                restEl.classList.remove('hidden');
+                document.getElementById('detail-restaurant-name').textContent = order.restaurant.name;
+                if (order.restaurant.cover_image) {
+                    const img = document.getElementById('detail-restaurant-img');
+                    img.src = order.restaurant.cover_image;
+                    img.alt = order.restaurant.name;
+                    img.classList.remove('hidden');
+                }
+            }
+
+            // Note
+            if (order.note) {
+                document.getElementById('detail-note-wrap').classList.remove('hidden');
+                document.getElementById('detail-note').textContent = order.note;
+            }
+
+            // Rejection reason
+            if (order.rejection_reason) {
+                document.getElementById('detail-rejection-wrap').classList.remove('hidden');
+                document.getElementById('detail-rejection').textContent = order.rejection_reason;
+            }
+
+            // Address
+            document.getElementById('detail-customer-name').textContent = order.customer_name || '';
+            document.getElementById('detail-address').textContent = order.delivery_address || 'Chưa có địa chỉ';
+            if (order.customer_phone) {
+                document.getElementById('detail-phone').textContent = order.customer_phone;
+                document.getElementById('detail-phone').classList.remove('hidden');
+            }
+
+            // Totals
+            document.getElementById('detail-shipping-fee').textContent = money(order.shipping_fee);
+            document.getElementById('detail-total').textContent = money(order.total_amount);
+
+            // Items
+            if (order.items && order.items.length > 0) {
+                const itemsWrap = document.getElementById('detail-items-wrap');
+                itemsWrap.classList.remove('hidden');
+                document.getElementById('detail-items-count').textContent = order.items.length + ' món ăn';
+
+                const listEl = document.getElementById('detail-items-list');
+                listEl.innerHTML = order.items.map(item => `
+                    <div class="flex items-center justify-between py-xs px-xs">
+                        <div class="flex items-center gap-sm">
+                            ${item.dish_image ? `<img src="${item.dish_image}" alt="${item.dish_name}" class="w-10 h-10 rounded-md object-cover" />` : ''}
+                            <div>
+                                <p class="font-body-md text-body-md text-on-background">${item.dish_name || ''}</p>
+                                <p class="font-label-md text-label-md text-secondary">x${item.quantity}</p>
+                            </div>
+                        </div>
+                        <p class="font-body-md text-body-md text-on-background">${money(item.subtotal)}</p>
+                    </div>
+                `).join('');
+            }
+
+            // Action buttons
+            if (!statusInfo.is_terminal_negative) {
+                document.getElementById('action-positive').classList.remove('hidden');
+                document.getElementById('action-positive').classList.add('md:flex');
+            }
+
+            showState('content');
+        } catch (e) {
+            showState('error');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOrder);
+</script>
+{% endblock %}

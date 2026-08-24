@@ -1,0 +1,159 @@
+{% extends "layout/baseCustomer.html" %}
+{% block content %}
+
+<div class="w-full">
+    <h1 class="font-headline-md text-headline-md font-bold text-on-surface mb-md">Đơn hàng của tôi</h1>
+
+    <div class="flex items-center justify-between gap-gutter flex-wrap mb-md">
+        <div id="order-filter-tabs" class="flex items-center gap-xs flex-wrap">
+            <button type="button" data-filter="all"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-primary text-on-primary shadow-sm transition-all duration-200">
+                Tất cả
+            </button>
+            <button type="button" data-filter="pending_confirm"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Chờ xác nhận
+            </button>
+            <button type="button" data-filter="waiting_pickup"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Chờ lấy hàng
+            </button>
+            <button type="button" data-filter="delivered"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Đã giao
+            </button>
+            <button type="button" data-filter="cancelled"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Đã hủy
+            </button>
+        </div>
+
+        <div class=" relative w-full sm:w-72 order-first sm:order-none">
+            <span
+                class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-xl text-secondary pointer-events-none">search</span>
+            <input id="order-search-input" type="text" placeholder="Tìm đơn hàng..."
+                class="w-full pl-11 pr-4 py-2.5 rounded-full bg-white border border-outline-variant text-sm text-on-surface placeholder:text-secondary focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-200">
+        </div>
+    </div>
+
+    <div id="order-list" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</div>
+
+<template id="order-card-template">
+    <div class="order-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+        <div class="flex items-center justify-between gap-3 mb-3">
+            <div class="flex items-center gap-3 min-w-0">
+                <img class="restaurant-img w-10 h-10 rounded-full object-cover flex-shrink-0" src="" alt="" />
+                <div class="min-w-0">
+                    <p class="restaurant-name font-medium text-sm text-gray-900 truncate"></p>
+                    <p class="order-code font-mono text-xs text-gray-500"></p>
+                </div>
+            </div>
+            <span class="status-badge text-xs font-medium px-2.5 py-1 rounded-md whitespace-nowrap"></span>
+        </div>
+
+        <p class="order-note text-sm text-gray-600 mb-3 hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline w-3.5 h-3.5 -mt-0.5 mr-1" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6h16M4 12h16M4 18h7" />
+            </svg>
+            <span class="order-note-text"></span>
+        </p>
+
+        <p class="order-rejection text-sm text-red-600 mb-3 hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline w-3.5 h-3.5 -mt-0.5 mr-1" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" y1="8" x2="12" y2="12" />
+                <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <span class="order-rejection-text"></span>
+        </p>
+
+        <div class="border-t border-gray-100 pt-3 mt-auto flex flex-col gap-1">
+            <div class="flex justify-between text-sm text-gray-500">
+                <span>Phí giao hàng</span>
+                <span class="shipping-fee"></span>
+            </div>
+            <div class="flex justify-between text-sm font-semibold text-gray-900">
+                <span>Tổng cộng</span>
+                <span class="total-amount"></span>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+    const statusMeta = {
+        "Pending Payment": { label: "Chờ thanh toán", badge: "bg-amber-50 text-amber-700" },
+        "Payment Failed": { label: "Thanh toán thất bại", badge: "bg-red-50 text-red-700" },
+        "Paid": { label: "Đã thanh toán", badge: "bg-emerald-50 text-emerald-700" },
+        "Confirmed": { label: "Đã xác nhận", badge: "bg-blue-50 text-blue-700" },
+        "Preparing": { label: "Đang chuẩn bị", badge: "bg-amber-50 text-amber-700" },
+        "Delivering": { label: "Đang giao", badge: "bg-blue-50 text-blue-700" },
+        "Completed": { label: "Hoàn tất", badge: "bg-emerald-50 text-emerald-700" },
+        "Cancelled": { label: "Đã huỷ", badge: "bg-red-50 text-red-700" }
+    };
+
+    function money(n) {
+        return Math.round(n).toLocaleString('vi-VN') + ' đ';
+    }
+
+    function renderOrders(orders) {
+        const list = document.getElementById('order-list');
+        const template = document.getElementById('order-card-template');
+        list.innerHTML = '';
+
+        orders.forEach(o => {
+            const meta = statusMeta[o.status] || { label: o.status, badge: "bg-gray-100 text-gray-700" };
+            const node = template.content.cloneNode(true);
+
+            const card = node.querySelector('.order-card');
+            card.addEventListener('click', () => {
+                window.location.href = '/order_customer/' + o.id;
+            });
+
+            node.querySelector('.restaurant-img').src = o.restaurant?.cover_image || '';
+            node.querySelector('.restaurant-img').alt = o.restaurant?.name || '';
+            node.querySelector('.restaurant-name').textContent = o.restaurant?.name || '';
+            node.querySelector('.order-code').textContent = '#' + String(o.id).padStart(5, '0');
+
+            const badge = node.querySelector('.status-badge');
+            badge.textContent = meta.label;
+            badge.className = 'status-badge text-xs font-medium px-2.5 py-1 rounded-md whitespace-nowrap ' + meta.badge;
+
+            if (o.note) {
+                const noteEl = node.querySelector('.order-note');
+                noteEl.classList.remove('hidden');
+                noteEl.querySelector('.order-note-text').textContent = o.note;
+            }
+
+            if (o.rejection_reason) {
+                const rejEl = node.querySelector('.order-rejection');
+                rejEl.classList.remove('hidden');
+                rejEl.querySelector('.order-rejection-text').textContent = o.rejection_reason;
+            }
+
+            node.querySelector('.shipping-fee').textContent = money(o.shipping_fee);
+            node.querySelector('.total-amount').textContent = money(o.total_amount);
+
+            list.appendChild(node);
+        });
+    }
+
+    async function loadOrders() {
+        try {
+            const res = await fetch('/api/orders_customer/');
+            const json = await res.json();
+            if (json.success && json.data) {
+                renderOrders(json.data);
+            }
+        } catch (e) {
+            console.error('Failed to load orders:', e);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadOrders);
+</script>
+
+{% endblock %}
