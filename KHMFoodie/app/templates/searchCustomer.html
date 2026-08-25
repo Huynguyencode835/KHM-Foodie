@@ -2,11 +2,19 @@
 
 {% block itemHeader %}
 <div
-    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 border border-outline-variant w-72 lg:w-80 transition-all duration-200 focus-within:border-primary focus-within:shadow-sm">
-    <span class="material-symbols-outlined text-secondary text-[18px]" id="header-search-icon">search</span>
-    <input type="text" id="header-search-input" value="{{ keyword if keyword else '' }}"
+    class="hidden md:flex items-center bg-surface-container-high rounded-full px-4 py-2 gap-2 w-72 lg:w-80 transition-all duration-200 focus-within:outline-none">
+    
+    <span class="material-symbols-outlined text-secondary text-[18px]" id="header-search-icon">
+        search
+    </span>
+
+    <input
+        type="text"
+        id="header-search-input"
+        value="{{ keyword if keyword else '' }}"
         placeholder="Tìm món ăn, nhà hàng..."
-        class="bg-transparent border-none outline-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full" />
+        class="bg-transparent border-none outline-none focus:outline-none focus-visible:outline-none focus:ring-0 focus:border-none text-body-md font-body-md text-on-surface placeholder:text-on-surface-variant w-full"
+    />
 </div>
 {% endblock %}
 
@@ -101,23 +109,23 @@
                     {% set start = [1, page - 2] | max %}
                     {% set end = [total, page + 2] | min %}
                     {% if start > 1 %}
-                        {{ page_link(1, tab_name) }}
-                        {% if start > 2 %}<span class="px-1 text-secondary text-sm">...</span>{% endif %}
+                    {{ page_link(1, tab_name) }}
+                    {% if start > 2 %}<span class="px-1 text-secondary text-sm">...</span>{% endif %}
                     {% endif %}
                     {% for p in range(start, end + 1) %}
-                        {{ page_link(p, tab_name) }}
+                    {{ page_link(p, tab_name) }}
                     {% endfor %}
-                    {% if end < total %}
-                        {% if end < total - 1 %}<span class="px-1 text-secondary text-sm">...</span>{% endif %}
+                    {% if end < total %} {% if end < total - 1 %}<span class="px-1 text-secondary text-sm">...</span>{%
+                        endif %}
                         {{ page_link(total, tab_name) }}
-                    {% endif %}
+                        {% endif %}
                 </div>
-                {% if page < total %}
-                <a href="{{ url_for('search_bp.search_web', q=keyword, tab=tab_name, page=page+1) }}"
+                {% if page < total %} <a
+                    href="{{ url_for('search_bp.search_web', q=keyword, tab=tab_name, page=page+1) }}"
                     class="px-3 py-1.5 rounded-lg border border-outline-variant text-secondary hover:bg-surface-container-highest transition-all flex items-center gap-1">
                     Sau <span class="material-symbols-outlined text-sm">chevron_right</span>
-                </a>
-                {% endif %}
+                    </a>
+                    {% endif %}
             </div>
             {% endmacro %}
 

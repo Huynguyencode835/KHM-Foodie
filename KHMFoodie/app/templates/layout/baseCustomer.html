@@ -131,6 +131,54 @@
 </head>
 
 <body class="bg-surface">
+    <div id="toast-container"
+        class="fixed top-5 right-4 md:right-8 z-[100] w-[calc(100vw-32px)] max-w-md flex flex-col gap-3 pointer-events-none"
+        aria-live="polite" aria-atomic="true">
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        {% set cfg = {
+        'success': {'icon': 'check_circle', 'accent': 'bg-emerald-500', 'iconbg': 'bg-emerald-100', 'icontext':
+        'text-emerald-600', 'border': 'border-emerald-200', 'bar': 'bg-emerald-500'},
+        'error': {'icon': 'error', 'accent': 'bg-red-500', 'iconbg': 'bg-red-100', 'icontext': 'text-red-600', 'border':
+        'border-red-200', 'bar': 'bg-red-500'},
+        'warning': {'icon': 'warning', 'accent': 'bg-amber-500', 'iconbg': 'bg-amber-100', 'icontext': 'text-amber-600',
+        'border': 'border-amber-200', 'bar': 'bg-amber-500'},
+        'info': {'icon': 'info', 'accent': 'bg-blue-500', 'iconbg': 'bg-blue-100', 'icontext': 'text-blue-600',
+        'border': 'border-blue-200', 'bar': 'bg-blue-500'}
+        } %}
+        {% set c = cfg.get(category, cfg['info']) %}
+
+        <div
+            class="toast group relative pointer-events-auto flex overflow-hidden bg-white/95 backdrop-blur-xl border {{ c.border }} rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.12)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_48px_rgba(0,0,0,0.16)]">
+            <div class="absolute left-0 top-0 bottom-0 w-1 {{ c.accent }}"></div>
+            <div class="flex items-start gap-3.5 w-full p-4 pl-5 pr-10">
+                <div class="shrink-0 flex items-center justify-center w-10 h-10 rounded-xl {{ c.iconbg }}">
+                    <span class="material-symbols-outlined text-[22px] {{ c.icontext }}">{{ c.icon }}</span>
+                </div>
+                <div class="flex-1 min-w-0 pt-0.5">
+                    <p class="text-sm font-semibold text-slate-800 leading-5">
+                        {% if category == 'success' %}Thành công
+                        {% elif category == 'error' %}Có lỗi xảy ra
+                        {% elif category == 'warning' %}Cảnh báo
+                        {% else %}Thông báo
+                        {% endif %}
+                    </p>
+                    <p class="mt-1 text-sm text-slate-600 leading-5 break-words">{{ message }}</p>
+                </div>
+                <button type="button" aria-label="Đóng thông báo"
+                    class="toast__close absolute top-3 right-3 flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-all duration-200">
+                    <span class="material-symbols-outlined text-[19px]">close</span>
+                </button>
+            </div>
+            <div class="toast__timer absolute left-0 bottom-0 h-[3px] w-full {{ c.bar }} opacity-70"></div>
+        </div>
+
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
     <!-- TopNavBar -->
     <header
         class="bg-surface dark:bg-surface-dim docked full-width top-0 z-50 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] sticky transition-all duration-300">
@@ -156,10 +204,14 @@
 
                 {% block itemHeader %}
                 {% endblock %}
-                <button onclick="window.location.href='/notification'"
-                    class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">
-                    notifications
-                </button>
+                <div class="relative">
+                    <button onclick="window.location.href='/notification'"
+                        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">
+                        notifications
+                    </button>
+                    <span id="notif-badge"
+                        class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center hidden">0</span>
+                </div>
                 <div class="relative">
                     <button
                         class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">shopping_cart</button>
@@ -282,6 +334,18 @@
         </div>
     </nav>
     {% block scripts %}{% endblock %}
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+    <script>
+        window.FIREBASE_VAPID_KEY = "{{ config.FIREBASE_VAPID_KEY }}";
+        {% if current_user.is_authenticated %}
+        if (!localStorage.getItem('user_id')) {
+            localStorage.setItem('user_id', '{{ current_user.id }}');
+        }
+        {% endif %}
+    </script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flashToast.js') }}"></script>
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script>

@@ -1,4 +1,4 @@
-from flask import jsonify, render_template, request
+from flask import render_template
 
 
 class NotificationController:

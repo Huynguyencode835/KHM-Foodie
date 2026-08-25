@@ -213,7 +213,7 @@ def send_restaurant_approved_email(recipient, restaurant_name, dashboard_url=Non
     """
     Gửi email thông báo nhà hàng đã được admin duyệt.
     """
-    dashboard_url = dashboard_url or f"{BASE_URL}/restaurant/dashboard"
+    dashboard_url = dashboard_url or f"{BASE_URL}/login"
 
     html_content = _render_email(
         heading="Chúc mừng! Nhà hàng đã được duyệt",
@@ -248,7 +248,7 @@ def send_restaurant_rejected_email(recipient, restaurant_name, reason=None, regi
     Tham số:
         reason (str, optional): Lý do từ chối, nếu có thì hiển thị cho chủ nhà hàng biết.
     """
-    register_url = register_url or f"{BASE_URL}/restaurant/register"
+    register_url = register_url or f"{BASE_URL}"
 
     body_lines = [
         f"Cảm ơn bạn đã quan tâm và gửi hồ sơ đăng ký nhà hàng <b>{restaurant_name}</b> lên "

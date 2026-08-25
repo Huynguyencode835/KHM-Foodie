@@ -2,7 +2,7 @@ import hashlib
 from datetime import datetime, time as dtime
 from sqlalchemy import (
     Column, Integer, String, DateTime, Boolean,
-    Float, Numeric, Enum, ForeignKey, Time, UniqueConstraint, Text
+    Float, Enum, ForeignKey, Time, UniqueConstraint, Text, Numeric
 )
 from sqlalchemy.orm import relationship, backref
 from flask_login import UserMixin
@@ -95,6 +95,15 @@ class DiscountType(RoleEnum):
     PERCENTAGE = "Phần trăm"
     FIXED_AMOUNT = "Số tiền cố định"
 
+class Status(RoleEnum):
+    PENDING_PAYMENT = "Pending Payment"
+    PAYMENT_FAILED = "Payment Failed"
+    PAID = "Paid"
+    CONFIRMED = "Confirmed"
+    PREPARING = "Preparing"
+    DELIVERING = "Delivering"
+    COMPLETED = "Completed"
+    CANCELLED = "Cancelled"
 
 class OrderStatus(RoleEnum):
     PENDING_PAYMENT = "Pending Payment"
@@ -115,6 +124,18 @@ class Dish(Base):
     category = Column(Enum(DishCategory), nullable=False)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
     restaurant = relationship('Restaurant', backref=backref('dishes', lazy=True))
+    voucher_links = relationship(
+        'VoucherDish',
+        back_populates='dish',
+        cascade='all, delete-orphan',
+        lazy=True
+    )
+
+    def get_active_voucher(self):
+        for link in self.voucher_links:
+            if link.voucher and link.voucher.is_valid_now():
+                return link.voucher
+        return None
 
 class Cart(Base):
     __tablename__ = 'cart'
@@ -138,6 +159,51 @@ class Voucher(Base):
     usage_limit = Column(Integer, default=1)
     used_count = Column(Integer, default=0)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=True)
+    dish_links = relationship(
+        'VoucherDish',
+        back_populates='voucher',
+        cascade='all, delete-orphan',
+        lazy=True
+    )
+
+    def is_valid_now(self, now=None):
+        now = now or datetime.utcnow()
+        if not self.active:
+            return False
+        if self.start_date and now < self.start_date:
+            return False
+        if self.end_date and now > self.end_date:
+            return False
+        if self.usage_limit is not None and self.used_count >= self.usage_limit:
+            return False
+        return True
+
+    def apply_discount(self, price):
+        if self.discount_type == DiscountType.PERCENTAGE:
+            discount = price * (self.discount_value / 100)
+            if self.max_discount:
+                discount = min(discount, self.max_discount)
+        else:
+            discount = self.discount_value
+
+        discount = max(0, min(discount, price))
+        return round(price - discount, 2)
+
+class VoucherDish(db.Model):
+    __tablename__ = 'voucher_dish'
+
+    voucher_id = Column(
+        Integer,
+        ForeignKey('voucher.id', ondelete='CASCADE'),
+        primary_key=True
+    )
+    dish_id = Column(
+        Integer,
+        ForeignKey('dish.id', ondelete='CASCADE'),
+        primary_key=True
+    )
+    voucher = relationship('Voucher', back_populates='dish_links')
+    dish = relationship('Dish', back_populates='voucher_links')
 
 class CartItems(Base):
     __tablename__ = 'cart_items'
@@ -162,8 +228,9 @@ class Order(Base):
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
     voucher_id = Column(Integer, ForeignKey('voucher.id'), nullable=True)
 
-    status = Column(Enum(OrderStatus), default=OrderStatus.PENDING_PAYMENT, nullable=False)
+    status = Column(Enum(Status), default=Status.PENDING_PAYMENT, nullable=False)
     note = Column(String(300), nullable=True)
+    rejection_reason = Column(String(500), nullable=True)
 
     customer_name = Column(String(150), nullable=False)
     customer_phone = Column(String(50), nullable=True)
@@ -191,7 +258,6 @@ class Order(Base):
 
     def __str__(self):
         return f"Order({self.id}, {self.status.value})"
-
 
 class OrderItem(Base):
     __tablename__ = 'order_items'

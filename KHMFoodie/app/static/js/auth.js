@@ -39,6 +39,9 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
         });
         const data = await res.json();
         if (res.ok) {
+            if (data.user && data.user.id) {
+                localStorage.setItem('user_id', data.user.id);
+            }
             window.location.href = data.redirect || '/';
         } else {
             alert(data.message || 'Đăng nhập thất bại');

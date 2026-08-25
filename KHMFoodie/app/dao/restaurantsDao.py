@@ -2,6 +2,8 @@ from app.models.model import Restaurant, User, Dish, RestaurantApprovalStatus
 from app.extensions import db
 from sqlalchemy import func
 from app.service.notificationByEmail import send_restaurant_approved_email,send_restaurant_rejected_email
+from app.service.notificationByFCM import send_push_notification
+
 
 class RestaurantsDao:
 
@@ -31,6 +33,8 @@ class RestaurantsDao:
             r.user.active = True
             r.active = True
         db.session.commit()
+        send_push_notification(r.user.id, "Nhà hàng của bạn đã được phê duyệt!",
+                                                       f"Nhà hàng {r.name} vừa được admin phê duyệt.")
         send_restaurant_approved_email(
             recipient=r.user.email,
             restaurant_name=r.user.name
@@ -50,7 +54,8 @@ class RestaurantsDao:
         db.session.commit()
         send_restaurant_rejected_email(
             recipient=r.user.email,
-            restaurant_name=r.user.name
+            restaurant_name=r.user.name,
+            reason=reason
         )
         return r
     
@@ -89,7 +94,7 @@ class RestaurantsDao:
         ).filter(
             Dish.active == True,
             Dish.name.ilike(f"%{keyword}%")
-        ).all()
+        ).paginate(page=page, per_page=per_page, error_out=False)
 
     @staticmethod
     def open_restaurant(restaurant_id):

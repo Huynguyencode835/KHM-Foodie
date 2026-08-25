@@ -6,11 +6,13 @@ dist/
 build/
 *.egg
 *.db
+*.pyc
 
 # Virtual env
 venv/
 .env
 *.env
+foodie-firebase-adminsdk.json
 
 # IDE
 .vscode/
