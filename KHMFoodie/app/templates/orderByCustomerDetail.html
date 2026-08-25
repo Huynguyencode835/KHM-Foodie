@@ -4,7 +4,8 @@
 
     <!-- Loading State -->
     <div id="loading-state" class="text-center py-xl">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-container-high mb-md animate-pulse">
+        <div
+            class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-container-high mb-md animate-pulse">
             <span class="material-symbols-outlined text-secondary">hourglass_empty</span>
         </div>
         <p class="font-body-md text-body-md text-secondary">Đang tải thông tin đơn hàng...</p>
@@ -16,7 +17,8 @@
             <span class="material-symbols-outlined text-error text-[32px]">error</span>
         </div>
         <h2 class="font-headline-md text-headline-md text-on-background mb-xs">Không tìm thấy đơn hàng</h2>
-        <p class="font-body-md text-body-md text-secondary mb-md">Đơn hàng không tồn tại hoặc bạn không có quyền truy cập.</p>
+        <p class="font-body-md text-body-md text-secondary mb-md">Đơn hàng không tồn tại hoặc bạn không có quyền truy
+            cập.</p>
         <a href="/order_customer"
             class="inline-block bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all active:scale-95 duration-150">
             Quay lại danh sách
@@ -26,58 +28,72 @@
     <!-- Order Detail Content -->
     <div id="order-content" class="hidden">
 
-        <!-- Status Hero Section -->
-        <section class="text-center mb-xl">
-            <div id="status-icon-wrap"
-                class="inline-flex items-center justify-center w-24 h-24 rounded-full mb-md">
-                <span id="status-icon" class="material-symbols-outlined text-[48px]"
-                    style="font-variation-settings: 'wght' 700;"></span>
-            </div>
-            <h1 id="status-title" class="font-headline-lg text-headline-lg text-on-background mb-base"></h1>
-            <p id="status-subtitle" class="font-body-lg text-body-lg text-secondary max-w-md mx-auto"></p>
-        </section>
+
 
         <!-- Main Content Card -->
         <div class="bg-surface-container-lowest rounded-xl shadow-[0px_4px_20px_rgba(0,0,0,0.05)] overflow-hidden">
+            <!-- Status Hero Section -->
+            <section class="text-center mb-sm mt-10">
+                <div id="status-icon-wrap"
+                    class="inline-flex items-center justify-center w-24 h-20 rounded-full mb-mds">
+                    <span id="status-icon" class="material-symbols-outlined text-[48px]"
+                        style="font-variation-settings: 'wght' 700;"></span>
+                </div>
+                <h1 id="status-title" class="font-headline-lg text-headline-lg text-on-background mb-base"></h1>
+                <p id="status-subtitle" class="font-body-lg text-body-lg text-secondary max-w-md mx-auto"></p>
+            </section>
 
             <!-- Tracking Timeline -->
             <div id="timeline-section" class="px-md py-lg bg-surface-container-low border-b border-outline-variant">
                 <div class="relative flex justify-between items-start">
                     <div class="absolute top-5 left-0 w-full h-[3px] bg-outline-variant rounded-full z-0"></div>
-                    <div id="timeline-progress" class="absolute top-5 left-0 h-[3px] bg-primary rounded-full z-[1] transition-all duration-700 ease-out"
+                    <div id="timeline-progress"
+                        class="absolute top-5 left-0 h-[3px] bg-primary rounded-full z-[1] transition-all duration-700 ease-out"
                         style="width: 0%;"></div>
 
                     <div class="relative z-10 flex flex-col items-center gap-xs">
-                        <div id="step-0" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                        <div id="step-0"
+                            class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
                             <span class="material-symbols-outlined text-sm">receipt_long</span>
                         </div>
-                        <span id="label-0" class="font-label-md text-label-md text-secondary transition-colors duration-300">Đã đặt hàng</span>
+                        <span id="label-0"
+                            class="font-label-md text-label-md text-secondary transition-colors duration-300">Đã đặt
+                            hàng</span>
                     </div>
                     <div class="relative z-10 flex flex-col items-center gap-xs">
-                        <div id="step-1" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                        <div id="step-1"
+                            class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
                             <span class="material-symbols-outlined text-sm">restaurant</span>
                         </div>
-                        <span id="label-1" class="font-label-md text-label-md text-secondary transition-colors duration-300">Đang chuẩn bị</span>
+                        <span id="label-1"
+                            class="font-label-md text-label-md text-secondary transition-colors duration-300">Đang chuẩn
+                            bị</span>
                     </div>
                     <div class="relative z-10 flex flex-col items-center gap-xs">
-                        <div id="step-2" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                        <div id="step-2"
+                            class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
                             <span class="material-symbols-outlined text-sm">delivery_dining</span>
                         </div>
-                        <span id="label-2" class="font-label-md text-label-md text-secondary transition-colors duration-300">Đang giao</span>
+                        <span id="label-2"
+                            class="font-label-md text-label-md text-secondary transition-colors duration-300">Đang
+                            giao</span>
                     </div>
                     <div class="relative z-10 flex flex-col items-center gap-xs">
-                        <div id="step-3" class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
+                        <div id="step-3"
+                            class="w-10 h-10 rounded-full flex items-center justify-center bg-surface-container-highest text-secondary transition-all duration-300">
                             <span class="material-symbols-outlined text-sm">check</span>
                         </div>
-                        <span id="label-3" class="font-label-md text-label-md text-secondary transition-colors duration-300">Hoàn tất</span>
+                        <span id="label-3"
+                            class="font-label-md text-label-md text-secondary transition-colors duration-300">Hoàn
+                            tất</span>
                     </div>
                 </div>
             </div>
 
             <!-- Order Details -->
             <div class="p-md md:p-lg">
+                
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
-                    <!-- Left Column: Summary -->
                     <div class="space-y-md">
                         <div>
                             <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Mã đơn
@@ -86,66 +102,82 @@
                         </div>
 
                         <div id="detail-restaurant" class="hidden">
-                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Nhà hàng</h3>
+                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Nhà
+                                hàng</h3>
                             <div class="flex items-center gap-sm">
                                 <img id="detail-restaurant-img" src="" alt=""
                                     class="w-10 h-10 rounded-full object-cover hidden" />
-                                <p id="detail-restaurant-name" class="font-body-md text-body-md font-bold text-on-background"></p>
-                            </div>
-                        </div>
-
-                        <div id="detail-note-wrap" class="hidden">
-                            <div class="flex items-center gap-sm p-sm bg-tertiary-fixed/30 rounded-lg border border-tertiary-fixed">
-                                <span class="material-symbols-outlined text-tertiary">edit_note</span>
-                                <div>
-                                    <h3 class="font-label-md text-label-md text-on-tertiary-fixed-variant">Ghi chú</h3>
-                                    <p id="detail-note" class="font-body-md text-body-md text-tertiary"></p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div id="detail-rejection-wrap" class="hidden">
-                            <div class="flex items-center gap-sm p-sm bg-error-fixed/30 rounded-lg border border-error-fixed">
-                                <span class="material-symbols-outlined text-error">error</span>
-                                <div>
-                                    <h3 class="font-label-md text-label-md text-on-error-fixed-variant">Lý do</h3>
-                                    <p id="detail-rejection" class="font-body-md text-body-md text-error"></p>
-                                </div>
+                                <p id="detail-restaurant-name"
+                                    class="font-body-md text-body-md font-bold text-on-background"></p>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Right Column: Address & Total -->
                     <div class="space-y-md">
                         <div>
-                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Địa chỉ
-                                giao hàng</h3>
+                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Địa
+                                chỉ giao hàng</h3>
                             <div class="flex items-start gap-xs">
                                 <span class="material-symbols-outlined text-primary mt-1">location_on</span>
                                 <div>
-                                    <p id="detail-customer-name" class="font-label-md text-label-md text-on-background"></p>
+                                    <p id="detail-customer-name" class="font-label-md text-label-md text-on-background">
+                                    </p>
                                     <p id="detail-address" class="font-body-md text-body-md text-secondary"></p>
-                                    <p id="detail-phone" class="font-body-md text-body-md text-secondary hidden"></p>
                                 </div>
                             </div>
                         </div>
-                        <div class="pt-sm border-t border-outline-variant space-y-xs">
-                            <div class="flex justify-between items-center">
-                                <span class="font-body-md text-body-md text-secondary">Phí giao hàng</span>
-                                <span id="detail-shipping-fee" class="font-body-md text-body-md text-on-background"></span>
+
+                        <div>
+                            <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider mb-xs">Số
+                                điện thoại</h3>
+                            <div class="flex items-start gap-xs">
+                                <span class="material-symbols-outlined text-primary mt-1">call</span>
+                                <p id="detail-phone" class="font-body-md text-body-md text-secondary hidden"></p>
                             </div>
-                            <div class="flex justify-between items-center">
-                                <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider">Tổng thanh toán</h3>
-                                <p id="detail-total" class="font-headline-md text-headline-md text-primary font-extrabold"></p>
+                        </div>
+                    </div>
+
+                    <div id="detail-note-wrap" class="hidden md:col-span-2">
+                        <div
+                            class="flex items-center gap-sm p-sm bg-tertiary-fixed/30 rounded-lg border border-tertiary-fixed">
+                            <span class="material-symbols-outlined text-tertiary">edit_note</span>
+                            <div>
+                                <h3 class="font-label-md text-label-md text-on-tertiary-fixed-variant">Ghi chú</h3>
+                                <p id="detail-note" class="font-body-md text-body-md text-tertiary"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="detail-rejection-wrap" class="hidden md:col-span-2">
+                        <div
+                            class="flex items-center gap-sm p-sm bg-error-fixed/30 rounded-lg border border-error-fixed">
+                            <span class="material-symbols-outlined text-error">error</span>
+                            <div>
+                                <h3 class="font-label-md text-label-md text-on-error-fixed-variant">Lý do</h3>
+                                <p id="detail-rejection" class="font-body-md text-body-md text-error"></p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Item list -->
-                <div id="detail-items-wrap" class="mt-lg p-sm bg-surface-container-low rounded-lg border border-outline-variant divide-y divide-outline-variant hidden">
+                <div id="detail-items-wrap"
+                    class="mt-lg p-sm bg-surface-container-low rounded-lg border border-outline-variant divide-y divide-outline-variant hidden">
                     <p id="detail-items-count" class="px-xs pb-xs font-label-md text-label-md text-secondary"></p>
                     <div id="detail-items-list"></div>
+                </div>
+
+                <!-- Payment Summary (moved below, full width) -->
+                <div class="mt-lg pt-md border-t border-outline-variant space-y-xs">
+                    <div class="flex justify-between items-center">
+                        <span class="font-body-md text-body-md text-secondary">Phí giao hàng</span>
+                        <span id="detail-shipping-fee" class="font-body-md text-body-md text-on-background"></span>
+                    </div>
+                    <div class="flex justify-between items-center pt-xs">
+                        <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider">Tổng
+                            thanh toán</h3>
+                        <p id="detail-total" class="font-headline-md text-headline-md text-primary font-extrabold"></p>
+                    </div>
                 </div>
             </div>
         </div>
