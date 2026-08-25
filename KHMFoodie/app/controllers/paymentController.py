@@ -1,14 +1,15 @@
 import uuid
 from decimal import Decimal
 
-from flask import request, jsonify, render_template, current_app
+from flask import request, jsonify, render_template, current_app, redirect, url_for
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.dao.cartDao import CartDao
 from app.dao.orderDao import OrderDao
-from app.dao.paymentDao import PaymentDao
-from app.models.model import OrderStatus
+from app.dao.paymentsDao import PaymentDao
+from app.dao.restaurantsDao import RestaurantsDao
+from app.models.model import Status
 from app.service.vnpayService import (
     build_payment_url,
     verify_signature,
@@ -44,8 +45,26 @@ class PaymentController:
 
     @staticmethod
     @login_required
+    def checkout(restaurant_id):
+        restaurant = RestaurantsDao.get_restaurant_by_id(restaurant_id)
+        cart = CartDao.get_cart_by_user_and_restaurant(current_user.id, restaurant_id)
+        if not restaurant or not cart or not cart.items:
+            return redirect(url_for("restaurant_bp.index", restaurant_id=restaurant_id))
+
+        cart_total = sum(item.price * item.quantity for item in cart.items)
+
+        return render_template(
+            "payment.html",
+            restaurant=restaurant,
+            cart=cart,
+            cart_total=cart_total,
+            customer=current_user,
+        )
+
+    @staticmethod
+    @login_required
     def create_payment(restaurant_id):
-        data = request.get_json() or {}
+        data = request.get_json(silent=True) or {}
 
         cart = CartDao.get_cart_by_user_and_restaurant(
             current_user.id,
@@ -83,7 +102,9 @@ class PaymentController:
             db.session.commit()
 
             return jsonify({
-                "payment_url": payment_url
+                "success": True,
+                "payment_url": payment_url,
+                "order_id": order.id,
             }), 200
 
         except ValueError as e:
@@ -172,7 +193,7 @@ class PaymentController:
             if transaction.status == PaymentDao.STATUS_SUCCESS:
                 order = OrderDao.update_order_status(
                     transaction.order_id,
-                    OrderStatus.PAID
+                    Status.PAID
                 )
 
                 if order and order.customer_email:
@@ -181,7 +202,7 @@ class PaymentController:
                             recipient=order.customer_email,
                             order_id=order.id,
                             total_amount=order.total_amount,
-                            restaurant_name=order.restaurant_name
+                            restaurant_name=order.restaurant.name if order.restaurant else "Nhà hàng"
                         )
                     except Exception as email_error:
                         current_app.logger.exception(email_error)
@@ -189,7 +210,7 @@ class PaymentController:
             elif transaction.status == PaymentDao.STATUS_FAILED:
                 OrderDao.update_order_status(
                     transaction.order_id,
-                    OrderStatus.PAYMENT_FAILED
+                    Status.PAYMENT_FAILED
                 )
 
             return _ipn_response("00", "Confirm Success")

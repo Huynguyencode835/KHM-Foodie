@@ -36,5 +36,4 @@ def route_web(app):
     app.register_blueprint(promotions_bp, url_prefix='/')
     app.register_blueprint(admin_bp)
     app.register_blueprint(payment_bp, url_prefix="/payment")
-    app.register_blueprint(payment_bp, url_prefix='/')
     app.register_blueprint(restaurantMenu_bp, url_prefix='/')
