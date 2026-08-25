@@ -9,6 +9,8 @@ from flask_login import UserMixin
 from enum import Enum as RoleEnum
 from app.extensions import db
 
+DEFAULT_MAX_CART_ITEMS = 20
+
 
 class Base(db.Model):
     __abstract__ = True
@@ -291,6 +293,19 @@ class PaymentTransaction(Base):
     def __str__(self):
         return f"PaymentTransaction({self.vnp_txn_ref}, {self.status})"
 
+
+class SystemConfig(Base):
+    __tablename__ = 'system_config'
+    max_cart_items = Column(Integer, default=DEFAULT_MAX_CART_ITEMS, nullable=False)
+
+
+class RestaurantConfig(Base):
+    """Cấu hình riêng của từng nhà hàng; tồn tại row = override, không có row = dùng giá trị admin."""
+    __tablename__ = 'restaurant_config'
+    name = Column(String(150), nullable=False, default=lambda: "restaurant-config")
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), primary_key=True)
+    max_cart_items = Column(Integer, nullable=False)
+    restaurant = relationship('Restaurant')
 
 
 def hash_password(raw_password: str) -> str:
