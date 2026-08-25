@@ -1,3 +1,5 @@
+from app.extensions import db
+from app.models.model import Dish, VoucherDish
 from app.models.model import Dish, DishCategory, CartItems
 from sqlalchemy import or_, func
 from app.extensions import db

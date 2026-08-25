@@ -1,9 +1,11 @@
 (function () {
     const API_URL = "/api/promotions";
+    const DISHES_API_URL = `${API_URL}/dishes`;
 
     const state = {
         vouchers: [],
         filtered: [],
+        dishes: [],
     };
 
     const els = {
@@ -28,14 +30,15 @@
         id: document.getElementById("voucher-id"),
         name: document.getElementById("voucher-name"),
         code: document.getElementById("voucher-code"),
-        description: document.getElementById("voucher-description"),
-        discountType: document.getElementById("voucher-discount-type"),
         discountValue: document.getElementById("voucher-discount-value"),
-        minimumOrder: document.getElementById("voucher-minimum-order"),
         maxDiscount: document.getElementById("voucher-max-discount"),
         usageLimit: document.getElementById("voucher-usage-limit"),
         startDate: document.getElementById("voucher-start-date"),
         endDate: document.getElementById("voucher-end-date"),
+        dishLoading: document.getElementById("voucher-dish-loading"),
+        dishList: document.getElementById("voucher-dish-list"),
+        dishEmpty: document.getElementById("voucher-dish-empty"),
+        selectedDishesCount: document.getElementById("voucher-selected-dishes-count"),
     };
 
     function escapeHtml(value) {
@@ -98,11 +101,116 @@
         els.formError.classList.remove("hidden");
     }
 
+    function getApiErrorMessage(data, fallbackMessage) {
+        const messages = [];
+        if (data?.message) messages.push(data.message);
+
+        const dishErrors = data?.errors?.dish_ids;
+        if (Array.isArray(dishErrors)) {
+            dishErrors.forEach((error) => {
+                const details = [error.dish_name, error.voucher_code]
+                    .filter(Boolean)
+                    .join(" - ");
+                messages.push(details ? `${error.dish_id}: ${details}` : String(error));
+            });
+        } else if (dishErrors) {
+            messages.push(String(dishErrors));
+        }
+
+        return messages.join("\n") || fallbackMessage;
+    }
+
     function setFieldError(fieldId, message) {
         const node = document.querySelector(`[data-error-for="${fieldId}"]`);
         if (!node) return;
         node.textContent = message;
         node.classList.remove("hidden");
+    }
+
+    function getSelectedDishIds() {
+        return Array.from(els.dishList.querySelectorAll("input[name='dish_ids']:checked"))
+            .map((input) => Number(input.value));
+    }
+
+    function getDishVoucher(dishId, editingVoucherId = null) {
+        return state.vouchers.find((voucher) => {
+            return voucher.id !== editingVoucherId
+                && voucher.is_valid
+                && Array.isArray(voucher.dish_ids)
+                && voucher.dish_ids.includes(dishId);
+        });
+    }
+
+    function updateSelectedDishesCount() {
+        const count = getSelectedDishIds().length;
+        els.selectedDishesCount.textContent = `${count} món đã chọn`;
+    }
+
+    function renderDishList(selectedDishIds = []) {
+        const selectedIds = new Set(selectedDishIds.map(Number));
+        const editingVoucherId = els.id.value ? Number(els.id.value) : null;
+
+        els.dishList.innerHTML = state.dishes.map((dish) => {
+            const currentVoucher = getDishVoucher(dish.id, editingVoucherId);
+            const statusLabel = dish.active === false ? "Ngừng bán" : "Đang bán";
+            const statusClass = dish.active === false
+                ? "text-error bg-error-container"
+                : "text-green-700 bg-green-100";
+            const voucherLabel = currentVoucher
+                ? `Đang dùng: ${escapeHtml(currentVoucher.code)}`
+                : "Chưa gán voucher";
+
+            return `
+                <label class="flex cursor-pointer items-start gap-3 rounded-lg border border-outline-variant/60 p-3 transition-colors hover:bg-surface-container-low">
+                    <input type="checkbox" name="dish_ids" value="${dish.id}"
+                        class="mt-1 h-4 w-4 accent-primary"
+                        ${selectedIds.has(dish.id) ? "checked" : ""}>
+                    <span class="min-w-0 flex-1">
+                        <span class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="truncate text-body-md font-bold text-on-surface">${escapeHtml(dish.name)}</span>
+                            <span class="whitespace-nowrap text-label-md font-bold text-primary">${escapeHtml(formatCurrency(dish.price))}</span>
+                        </span>
+                        <span class="mt-1 flex flex-wrap items-center gap-2 text-caption text-secondary">
+                            <span class="rounded-full px-2 py-1 ${statusClass}">${statusLabel}</span>
+                            <span>${escapeHtml(voucherLabel)}</span>
+                        </span>
+                    </span>
+                </label>
+            `;
+        }).join("");
+
+        els.dishList.querySelectorAll("input[name='dish_ids']").forEach((input) => {
+            input.addEventListener("change", updateSelectedDishesCount);
+        });
+
+        els.dishList.classList.toggle("hidden", !state.dishes.length);
+        els.dishEmpty.classList.toggle("hidden", Boolean(state.dishes.length));
+        updateSelectedDishesCount();
+    }
+
+    async function loadDishes() {
+        els.dishLoading.classList.remove("hidden");
+        els.dishList.classList.add("hidden");
+        els.dishEmpty.classList.add("hidden");
+
+        try {
+            const res = await fetch(DISHES_API_URL);
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.message || "Tải danh sách món thất bại");
+            }
+
+            state.dishes = data.items || [];
+            renderDishList();
+        } catch (err) {
+            state.dishes = [];
+            els.dishList.innerHTML = "";
+            els.dishEmpty.textContent = err.message || "Không thể tải danh sách món.";
+            els.dishEmpty.classList.remove("hidden");
+        } finally {
+            els.dishLoading.classList.add("hidden");
+        }
     }
 
     function getVoucherStatus(voucher) {
@@ -158,13 +266,8 @@
         showEmpty(false);
         els.list.innerHTML = items.map((voucher) => {
             const statusLabel = getVoucherStatus(voucher);
-            const discountLabel = voucher.discount_type === "PERCENTAGE"
-                ? `${voucher.discount_value}%`
-                : formatCurrency(voucher.discount_value);
-            const conditionLabel = [
-                `Đơn từ ${formatCurrency(voucher.minimum_order || 0)}`,
-                voucher.max_discount ? `Tối đa ${formatCurrency(voucher.max_discount)}` : null,
-            ].filter(Boolean).join(" • ");
+            const discountLabel = `${voucher.discount_value}%`;
+            const maxDiscountLabel = voucher.max_discount ? formatCurrency(voucher.max_discount) : "Không giới hạn";
 
             return `
                 <article class="rounded-2xl border border-outline-variant bg-surface-bright p-5 shadow-sm">
@@ -184,20 +287,14 @@
                                 </div>
                             </div>
 
-                            <p class="text-body-md text-secondary">${escapeHtml(voucher.description || "Chưa có mô tả cho voucher này.")}</p>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-3">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div class="rounded-xl bg-surface-container-lowest p-4">
-                                    <p class="text-caption text-secondary uppercase tracking-wide">Loại giảm</p>
-                                    <p class="text-body-md font-bold text-on-surface mt-2">${voucher.discount_type === "PERCENTAGE" ? "Phần trăm" : "Số tiền cố định"}</p>
-                                </div>
-                                <div class="rounded-xl bg-surface-container-lowest p-4">
-                                    <p class="text-caption text-secondary uppercase tracking-wide">Giá trị</p>
+                                    <p class="text-caption text-secondary uppercase tracking-wide">Giảm giá</p>
                                     <p class="text-body-md font-bold text-on-surface mt-2">${escapeHtml(discountLabel)}</p>
                                 </div>
                                 <div class="rounded-xl bg-surface-container-lowest p-4">
-                                    <p class="text-caption text-secondary uppercase tracking-wide">Điều kiện</p>
-                                    <p class="text-body-md font-bold text-on-surface mt-2">${escapeHtml(conditionLabel)}</p>
+                                    <p class="text-caption text-secondary uppercase tracking-wide">Giảm tối đa</p>
+                                    <p class="text-body-md font-bold text-on-surface mt-2">${escapeHtml(maxDiscountLabel)}</p>
                                 </div>
                                 <div class="rounded-xl bg-surface-container-lowest p-4">
                                     <p class="text-caption text-secondary uppercase tracking-wide">Lượt dùng</p>
@@ -222,7 +319,7 @@
         state.filtered = !keyword
             ? [...state.vouchers]
             : state.vouchers.filter((voucher) => {
-                return [voucher.code, voucher.name, voucher.description]
+                return [voucher.code, voucher.name]
                     .filter(Boolean)
                     .some((value) => String(value).toLowerCase().includes(keyword));
             });
@@ -247,6 +344,7 @@
 
             state.vouchers = data.items || [];
             applyFilter();
+            renderDishList(getSelectedDishIds());
         } catch (err) {
             state.vouchers = [];
             renderRows([]);
@@ -267,15 +365,7 @@
         els.form.reset();
         els.id.value = "";
         clearFormErrors();
-        syncMaxDiscountState();
-    }
-
-    function syncMaxDiscountState() {
-        const isFixedAmount = els.discountType.value === "FIXED_AMOUNT";
-        els.maxDiscount.disabled = isFixedAmount;
-        if (isFixedAmount) {
-            els.maxDiscount.value = "";
-        }
+        renderDishList();
     }
 
     function openCreateModal() {
@@ -284,7 +374,7 @@
         els.id.value = "";
         els.modalTitle.textContent = "Tạo voucher";
         els.submitBtn.textContent = "Tạo voucher";
-        syncMaxDiscountState();
+        renderDishList();
         openModal();
     }
 
@@ -296,15 +386,12 @@
         els.submitBtn.textContent = "Lưu thay đổi";
         els.name.value = voucher.name || "";
         els.code.value = voucher.code || "";
-        els.description.value = voucher.description || "";
-        els.discountType.value = voucher.discount_type || "PERCENTAGE";
         els.discountValue.value = voucher.discount_value ?? "";
-        els.minimumOrder.value = voucher.minimum_order ?? 0;
         els.maxDiscount.value = voucher.max_discount ?? "";
         els.usageLimit.value = voucher.usage_limit ?? 1;
         els.startDate.value = toDatetimeLocalValue(voucher.start_date);
         els.endDate.value = toDatetimeLocalValue(voucher.end_date);
-        syncMaxDiscountState();
+        renderDishList(voucher.dish_ids || []);
         openModal();
     }
 
@@ -312,14 +399,14 @@
         return {
             name: els.name.value.trim(),
             code: els.code.value.trim(),
-            description: els.description.value.trim(),
-            discount_type: els.discountType.value,
+            discount_type: "PERCENTAGE",
             discount_value: Number(els.discountValue.value),
-            minimum_order: Number(els.minimumOrder.value || 0),
+            minimum_order: 0,
             max_discount: els.maxDiscount.value ? Number(els.maxDiscount.value) : null,
             usage_limit: Number(els.usageLimit.value || 0),
             start_date: els.startDate.value,
             end_date: els.endDate.value,
+            dish_ids: getSelectedDishIds(),
         };
     }
 
@@ -335,20 +422,16 @@
             setFieldError("voucher-code", "Mã voucher không được để trống");
             valid = false;
         }
-        if (!payload.discount_type) {
-            setFieldError("voucher-discount-type", "Loại giảm là bắt buộc");
-            valid = false;
-        }
         if (!(payload.discount_value > 0)) {
-            setFieldError("voucher-discount-value", "Giá trị giảm phải lớn hơn 0");
-            valid = false;
-        }
-        if (!(payload.minimum_order >= 0)) {
-            setFieldError("voucher-minimum-order", "Đơn tối thiểu không được âm");
+            setFieldError("voucher-discount-value", "Phần trăm giảm phải lớn hơn 0");
             valid = false;
         }
         if (!(payload.usage_limit >= 1)) {
             setFieldError("voucher-usage-limit", "Giới hạn lượt dùng phải lớn hơn hoặc bằng 1");
+            valid = false;
+        }
+        if (!payload.dish_ids.length) {
+            setFieldError("voucher-dish-list", "Voucher phải áp dụng ít nhất một món");
             valid = false;
         }
         if (!payload.start_date) {
@@ -367,13 +450,9 @@
             valid = false;
         }
 
-        if (payload.discount_type === "PERCENTAGE" && payload.discount_value > 100) {
-            setFieldError("voucher-discount-value", "Voucher phần trăm không được vượt quá 100");
+        if (payload.discount_value > 100) {
+            setFieldError("voucher-discount-value", "Phần trăm giảm không được vượt quá 100");
             valid = false;
-        }
-
-        if (payload.discount_type === "FIXED_AMOUNT") {
-            payload.max_discount = null;
         }
 
         return valid;
@@ -402,7 +481,7 @@
 
             const data = await res.json();
             if (!res.ok) {
-                throw new Error(data.message || "Lưu voucher thất bại");
+                throw new Error(getApiErrorMessage(data, "Lưu voucher thất bại"));
             }
 
             closeModal();
@@ -458,7 +537,6 @@
     els.backdrop?.addEventListener("click", closeModal);
     els.form?.addEventListener("submit", submitForm);
     els.search?.addEventListener("input", applyFilter);
-    els.discountType?.addEventListener("change", syncMaxDiscountState);
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && !els.modal.classList.contains("hidden")) {
@@ -466,6 +544,6 @@
         }
     });
 
-    syncMaxDiscountState();
     loadVouchers();
+    loadDishes();
 })();
