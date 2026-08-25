@@ -1,12 +1,14 @@
-from flask import render_template, jsonify
+from flask import render_template, jsonify, request
 from app.dao.ordersDao import OrdersDao
 
-class OrderByCustomerController:
+class OrderForCustomerController:
 
     @staticmethod
     def loadOrders():
         try:
-            data = OrdersDao.get_orders_customer()
+            status = request.args.get("status", None)
+            keyword = request.args.get("keyword", None)
+            data = OrdersDao.get_orders_customer(status=status, keyword=keyword)
             return jsonify({
                 "success": True,
                 "data": data
@@ -33,8 +35,8 @@ class OrderByCustomerController:
         
     @staticmethod
     def index():
-        return render_template("orderByCustomer.html")
+        return render_template("OrderForCustomer.html")
 
     @staticmethod
     def order_detail_page(order_id):
-        return render_template("orderByCustomerDetail.html", order_id=order_id)
+        return render_template("OrderForCustomerDetail.html", order_id=order_id)

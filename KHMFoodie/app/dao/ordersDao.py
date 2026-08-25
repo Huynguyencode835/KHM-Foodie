@@ -16,10 +16,29 @@ class OrdersDao:
     from sqlalchemy.orm import joinedload
 
     @staticmethod
-    def get_orders_customer():
+    def get_orders_customer(status=None, keyword=None):
         query = Order.query.options(
-            db.joinedload(Order.restaurant).joinedload(Restaurant.user)
+            db.joinedload(Order.restaurant).joinedload(Restaurant.user),
+            db.joinedload(Order.items).joinedload(OrderItem.dish)
         ).filter(Order.user_id == current_user.id)
+
+        if status is not None:
+            try:
+                status_enum = status if isinstance(status, Status) else Status[status.upper()]
+                query = query.filter(Order.status == status_enum)
+            except (KeyError, AttributeError):
+                pass
+
+        if keyword:
+            like = f"%{keyword.strip()}%"
+            query = query.filter(
+                or_(
+                    Order.id.ilike(like),
+                    Order.note.ilike(like),
+                )
+            )
+
+        query = query.order_by(Order.created_at.desc())
 
         data = []
 
@@ -35,7 +54,18 @@ class OrdersDao:
                     "id": r.restaurant.id,
                     "name": r.restaurant.name,
                     "cover_image": r.restaurant.cover_image,
-                } if r.restaurant else None
+                } if r.restaurant else None,
+
+                "items": [
+                    {
+                        "id": item.id,
+                        "dish_id": item.dish_id,
+                        "dish_name": item.dish.name if item.dish else None,
+                        "dish_image": item.dish.image if item.dish else None,
+                        "quantity": item.quantity,
+                    }
+                    for item in r.items
+                ],
             })
 
         return data

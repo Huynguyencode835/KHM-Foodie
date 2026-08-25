@@ -13,7 +13,7 @@ from app.routes.promotionsRoute import promotions_bp
 from app.routes.paymentRoute import payment_bp
 from app.routes.ordersRoute import orders_bp
 from app.routes.restaurantMenuRoute import restaurantMenu_bp
-from app.routes.orderByCustomerRoute import orderCustomer_bp
+from app.routes.OrderForCustomerRoute import orderCustomer_bp
 
 
 def route_web(app):

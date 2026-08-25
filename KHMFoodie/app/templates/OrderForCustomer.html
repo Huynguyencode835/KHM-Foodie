@@ -10,17 +10,33 @@
                 class="px-4 py-2 rounded-full text-sm font-semibold bg-primary text-on-primary shadow-sm transition-all duration-200">
                 Tất cả
             </button>
-            <button type="button" data-filter="pending_confirm"
+            <button type="button" data-filter="pending_payment"
                 class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
-                Chờ xác nhận
+                Chờ thanh toán
             </button>
-            <button type="button" data-filter="waiting_pickup"
+            <button type="button" data-filter="payment_failed"
                 class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
-                Chờ lấy hàng
+                Thanh toán thất bại
             </button>
-            <button type="button" data-filter="delivered"
+            <button type="button" data-filter="paid"
                 class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
-                Đã giao
+                Đã thanh toán
+            </button>
+            <button type="button" data-filter="confirmed"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Đã xác nhận
+            </button>
+            <button type="button" data-filter="preparing"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Đang chuẩn bị
+            </button>
+            <button type="button" data-filter="delivering"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Đang giao
+            </button>
+            <button type="button" data-filter="completed"
+                class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
+                Hoàn tất
             </button>
             <button type="button" data-filter="cancelled"
                 class="px-4 py-2 rounded-full text-sm font-semibold bg-white text-secondary border border-outline-variant hover:border-primary hover:text-primary transition-all duration-200">
@@ -40,7 +56,8 @@
 </div>
 
 <template id="order-card-template">
-    <div class="order-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+    <div
+        class="order-card bg-white rounded-xl border border-gray-200 p-4 flex flex-col cursor-pointer hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
         <div class="flex items-center justify-between gap-3 mb-3">
             <div class="flex items-center gap-3 min-w-0">
                 <img class="restaurant-img w-10 h-10 rounded-full object-cover flex-shrink-0" src="" alt="" />
@@ -51,6 +68,9 @@
             </div>
             <span class="status-badge text-xs font-medium px-2.5 py-1 rounded-md whitespace-nowrap"></span>
         </div>
+
+        <!-- Items preview -->
+        <div class="order-items flex flex-col gap-1.5 mb-3 max-h-16 overflow-y-auto pr-1"></div>
 
         <p class="order-note text-sm text-gray-600 mb-3 hidden">
             <svg xmlns="http://www.w3.org/2000/svg" class="inline w-3.5 h-3.5 -mt-0.5 mr-1" viewBox="0 0 24 24"
@@ -83,77 +103,16 @@
     </div>
 </template>
 
-<script>
-    const statusMeta = {
-        "Pending Payment": { label: "Chờ thanh toán", badge: "bg-amber-50 text-amber-700" },
-        "Payment Failed": { label: "Thanh toán thất bại", badge: "bg-red-50 text-red-700" },
-        "Paid": { label: "Đã thanh toán", badge: "bg-emerald-50 text-emerald-700" },
-        "Confirmed": { label: "Đã xác nhận", badge: "bg-blue-50 text-blue-700" },
-        "Preparing": { label: "Đang chuẩn bị", badge: "bg-amber-50 text-amber-700" },
-        "Delivering": { label: "Đang giao", badge: "bg-blue-50 text-blue-700" },
-        "Completed": { label: "Hoàn tất", badge: "bg-emerald-50 text-emerald-700" },
-        "Cancelled": { label: "Đã huỷ", badge: "bg-red-50 text-red-700" }
-    };
+<template id="order-item-row-template">
+    <div class="flex items-center gap-2 px-10">
+        <img class="item-img w-7 h-7 rounded-md object-cover flex-shrink-0" src="" alt="" />
+        <p class="item-name text-xs text-gray-700 truncate flex-1"></p>
+        <span class="item-qty text-xs text-gray-500 flex-shrink-0"></span>
+    </div>
+</template>
 
-    function money(n) {
-        return Math.round(n).toLocaleString('vi-VN') + ' đ';
-    }
+{% endblock %}
 
-    function renderOrders(orders) {
-        const list = document.getElementById('order-list');
-        const template = document.getElementById('order-card-template');
-        list.innerHTML = '';
-
-        orders.forEach(o => {
-            const meta = statusMeta[o.status] || { label: o.status, badge: "bg-gray-100 text-gray-700" };
-            const node = template.content.cloneNode(true);
-
-            const card = node.querySelector('.order-card');
-            card.addEventListener('click', () => {
-                window.location.href = '/order_customer/' + o.id;
-            });
-
-            node.querySelector('.restaurant-img').src = o.restaurant?.cover_image || '';
-            node.querySelector('.restaurant-img').alt = o.restaurant?.name || '';
-            node.querySelector('.restaurant-name').textContent = o.restaurant?.name || '';
-            node.querySelector('.order-code').textContent = '#' + String(o.id).padStart(5, '0');
-
-            const badge = node.querySelector('.status-badge');
-            badge.textContent = meta.label;
-            badge.className = 'status-badge text-xs font-medium px-2.5 py-1 rounded-md whitespace-nowrap ' + meta.badge;
-
-            if (o.note) {
-                const noteEl = node.querySelector('.order-note');
-                noteEl.classList.remove('hidden');
-                noteEl.querySelector('.order-note-text').textContent = o.note;
-            }
-
-            if (o.rejection_reason) {
-                const rejEl = node.querySelector('.order-rejection');
-                rejEl.classList.remove('hidden');
-                rejEl.querySelector('.order-rejection-text').textContent = o.rejection_reason;
-            }
-
-            node.querySelector('.shipping-fee').textContent = money(o.shipping_fee);
-            node.querySelector('.total-amount').textContent = money(o.total_amount);
-
-            list.appendChild(node);
-        });
-    }
-
-    async function loadOrders() {
-        try {
-            const res = await fetch('/api/orders_customer/');
-            const json = await res.json();
-            if (json.success && json.data) {
-                renderOrders(json.data);
-            }
-        } catch (e) {
-            console.error('Failed to load orders:', e);
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', loadOrders);
-</script>
-
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/OrderForCustomer.js') }}"></script>
 {% endblock %}

@@ -7,7 +7,7 @@ from app.routes.routes_API.cartRoute import cart_api
 from app.routes.routes_API.voucherRoute import voucher_api
 from app.routes.routes_API.ordersRoute import orders_api
 from app.routes.routes_API.dishesRoute import dishes_api
-from app.routes.routes_API.orderByCustomerRoute import orderCustomer_api
+from app.routes.routes_API.OrderForCustomerRoute import orderCustomer_api
 
 
 def route_api(app):
