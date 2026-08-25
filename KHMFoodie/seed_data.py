@@ -6,8 +6,8 @@ from app.extensions import db
 from app.models.model import (
     User, Restaurant, Dish, Voucher, Order, OrderItem,
     UserRole, CuisineType, DishCategory, DiscountType, Status,
-    RestaurantApprovalStatus, PaymentTransaction,
-    hash_password, parse_time
+    RestaurantApprovalStatus, SystemConfig,
+    hash_password, parse_time, DEFAULT_MAX_CART_ITEMS
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -44,6 +44,7 @@ def seed(app=None):
             role=UserRole.CUSTOMER
         )
 
+        db.session.add(SystemConfig(name='system', max_cart_items=DEFAULT_MAX_CART_ITEMS))
         db.session.add_all([new_admin, new_customer])
         db.session.commit()
 

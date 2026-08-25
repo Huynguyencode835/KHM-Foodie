@@ -61,7 +61,8 @@ async function addToCart(dishId) {
     });
 
     if (!res.ok) {
-        alert('Không thể thêm món vào giỏ hàng');
+        const err = await res.json().catch(() => ({}));
+        window.showToast(err.message || 'Không thể thêm món vào giỏ hàng', 'error');
         return;
     }
     await refreshCart();
@@ -77,7 +78,8 @@ async function changeCartItemQuantity(cartItemId, newQuantity) {
         });
 
     if (!res.ok) {
-        alert('Không thể cập nhật giỏ hàng');
+        const err = await res.json().catch(() => ({}));
+        window.showToast(err.message || 'Không thể cập nhật giỏ hàng', 'error');
         return;
     }
     await refreshCart();
