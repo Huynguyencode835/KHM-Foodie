@@ -323,7 +323,8 @@
         const orderId = pathParts[pathParts.length - 1];
 
         try {
-            const res = await fetch('/api/orders_customer/' + orderId);
+            await loadingState.run(async () => {
+                const res = await fetch('/api/orders_customer/' + orderId);
             if (!res.ok) throw new Error('Not found');
             const json = await res.json();
             if (!json.success || !json.data) throw new Error('No data');
@@ -416,7 +417,8 @@
                 document.getElementById('action-positive').classList.add('md:flex');
             }
 
-            showState('content');
+                showState('content');
+            });
         } catch (e) {
             showState('error');
         }

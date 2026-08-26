@@ -333,11 +333,11 @@
                 if (data.success) {
                     loadPage(currentPage);
                 } else {
-                    alert(data.message || "Thao tác thất bại.");
+                    showToast(data.message || "Thao tác thất bại.", "error");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Lỗi mạng.");
+                showToast("Lỗi mạng.", "error");
             }
             return;
         }
@@ -383,12 +383,12 @@
                         closeApprovalModal();
                         loadPage(currentPage);
                     } else {
-                        alert(data.message || "Thao tác thất bại.");
+                        showToast(data.message || "Thao tác thất bại.", "error");
                         confirmBtn.disabled = false;
                     }
                 } catch (err) {
                     console.error(err);
-                    alert("Lỗi mạng.");
+                    showToast("Lỗi mạng.", "error");
                     confirmBtn.disabled = false;
                 }
             }, { once: true });
@@ -406,11 +406,11 @@
                 if (data.success) {
                     loadPage(currentPage);
                 } else {
-                    alert(data.message || "Thao tác thất bại.");
+                    showToast(data.message || "Thao tác thất bại.", "error");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Lỗi mạng.");
+                showToast("Lỗi mạng.", "error");
             }
             return;
         }
@@ -483,12 +483,12 @@
                         closeApprovalModal();
                         loadPage(currentPage);
                     } else {
-                        alert(data.message || "Thao tác thất bại.");
+                        showToast(data.message || "Thao tác thất bại.", "error");
                         confirmBtn.disabled = false;
                     }
                 } catch (err) {
                     console.error(err);
-                    alert("Lỗi mạng.");
+                    showToast("Lỗi mạng.", "error");
                     confirmBtn.disabled = false;
                 }
             }, { once: true });
