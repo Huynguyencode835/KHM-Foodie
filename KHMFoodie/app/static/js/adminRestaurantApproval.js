@@ -250,13 +250,24 @@
     }
 
     async function patchAction(id, kind, payload = {}) {
-        const url = kind === "approve" ? API_APPROVE(id) : API_REJECT(id);
+        try{
+            const url = kind === "approve" ? API_APPROVE(id) : API_REJECT(id);
         const init = { method: "PATCH", headers: { "Content-Type": "application/json" } };
         if (Object.keys(payload).length > 0) {
             init.body = JSON.stringify(payload);
         }
         const res = await fetch(url, init);
-        return res.json();
+         if(res.ok)
+            if(kind =="approve")
+                showToast("Duyệt nhà hàng thành công", "success")
+            else
+                showToast("Từ chối nhà hàng thành công", "success")
+            return res.json();
+        }
+        catch(e)
+        {
+            showToast(e.message,"error")
+        }
     }
 
     function getModalRoot() {
