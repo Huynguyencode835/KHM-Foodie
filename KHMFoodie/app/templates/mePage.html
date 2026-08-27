@@ -187,10 +187,23 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                     <div class="flex items-center space-x-3">
                         <div class="p-2 bg-secondary-fixed rounded-lg">
-                            <span class="material-symbols-outlined text-secondary">power_settings_new</span>
+                            <span class="material-symbols-outlined text-secondary">shopping_cart</span>
                         </div>
-                        <span class="text-body-md font-bold">Trạng thái hiện tại</span>
+                        <span class="text-body-md font-bold">Giới hạn giỏ hàng</span>
                     </div>
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-4">
+                            <input
+                                class="w-40 px-4 py-2.5 rounded-lg border border-outline-variant bg-surface-bright text-body-md"
+                                id="restaurant-max-cart-items" type="number" min="1" max="{{ system_max_cart_items }}"
+                                value="{{ restaurant_max_cart_items }}">
+                            <span class="text-body-md text-secondary">món / 1 giỏ</span>
+                        </div>
+                        <p class="text-caption text-secondary mt-1">Giới hạn tối đa theo cấu hình hệ thống:
+                            {{ system_max_cart_items }} món. Nhà hàng chỉ đặt được thấp hơn hoặc bằng con số này.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                     <div class="md:col-span-2">
                         <div class="flex items-center gap-4">
                             <label class="relative inline-flex items-center cursor-pointer">

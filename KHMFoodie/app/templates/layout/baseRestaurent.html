@@ -223,11 +223,12 @@
             ('restaurants', 'Nhà hàng', 'storefront', '/admin/restaurant/'),
             ('dishes', 'Món ăn', 'restaurant_menu', '/admin/dish/'),
             ('pending-approval', 'Duyệt nhà hàng', 'approval', '/admin/restaurants/pending'),
+            ('settings', 'Cấu hình hệ thống', 'settings', '/admin/systemconfig/'),
             ] %}
             {% else %}
             {% set sidebar_menu_items = [
             ('dashboard', 'Tổng quan', 'dashboard', '#'),
-            ('orders', 'Đơn hàng', 'receipt_long', '/customer-requirements'),
+            ('orders', 'Đơn hàng', 'receipt_long', '/restaurants/orders'),
             ('menu', 'Thực đơn', 'restaurant_menu', '/restaurant_menu'),
             ('reviews', 'Đánh giá', 'star', '#'),
             ('promotions', 'Khuyến mãi', 'local_offer', '/promotions'),

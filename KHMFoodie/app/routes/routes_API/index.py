@@ -8,6 +8,7 @@ from app.routes.routes_API.voucherRoute import voucher_api
 from app.routes.routes_API.paymentRoute import payment_api
 from app.routes.routes_API.ordersRoute import orders_api
 from app.routes.routes_API.dishesRoute import dishes_api
+from app.routes.routes_API.OrderForCustomerRoute import orderCustomer_api
 
 
 def route_api(app):
@@ -20,3 +21,6 @@ def route_api(app):
     app.register_blueprint(cart_api, url_prefix="/api/cart")
     app.register_blueprint(voucher_api, url_prefix="/api")
     app.register_blueprint(payment_api, url_prefix="/api/payment")
+    app.register_blueprint(orders_api, url_prefix="/api/orders")
+    app.register_blueprint(orderCustomer_api, url_prefix="/api/orders_customer")
+

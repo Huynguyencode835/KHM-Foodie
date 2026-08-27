@@ -9,6 +9,8 @@ from flask_login import UserMixin
 from enum import Enum as RoleEnum
 from app.extensions import db
 
+DEFAULT_MAX_CART_ITEMS = 20
+
 
 class Base(db.Model):
     __abstract__ = True
@@ -241,6 +243,11 @@ class Order(Base):
     total_amount = Column(Numeric(12, 0), nullable=False, default=0)
     payment_deadline = Column(DateTime, nullable=True)
 
+    # MoMo payment tracking (thay cho bảng PaymentTransaction riêng)
+    momo_order_id = Column(String(100), unique=True, nullable=True)
+    momo_request_id = Column(String(100), nullable=True)
+    paid_by = Column(String(150), nullable=True, default="")
+
     user = relationship('User', backref=backref('orders', lazy=True))
     restaurant = relationship('Restaurant', backref=backref('orders', lazy=True))
     voucher = relationship('Voucher', backref=backref('orders', lazy=True))
@@ -249,12 +256,6 @@ class Order(Base):
         backref='order',
         lazy=True,
         cascade='all, delete-orphan'
-    )
-    payment_transactions = relationship(
-        'PaymentTransaction',
-        backref='order',
-        lazy=True,
-        order_by=lambda: PaymentTransaction.created_at.desc()
     )
 
     def __str__(self):
@@ -275,33 +276,19 @@ class OrderItem(Base):
         return f"OrderItem({self.order_id}, {self.dish_id})"
 
 
-class PaymentTransaction(Base):
-    __tablename__ = 'payment_transaction'
-    __table_args__ = (
-        UniqueConstraint('vnp_txn_ref', name='uq_payment_transaction_vnp_txn_ref'),
-    )
 
-    order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
+class SystemConfig(Base):
+    __tablename__ = 'system_config'
+    max_cart_items = Column(Integer, default=DEFAULT_MAX_CART_ITEMS, nullable=False)
 
-    gateway = Column(String(50), nullable=False, default='VNPAY')
-    vnp_txn_ref = Column(String(100), nullable=False)
-    amount = Column(Numeric(12, 0), nullable=False)
-    status = Column(String(50), nullable=False, default='CREATED')
 
-    ip_addr = Column(String(50), nullable=True)
-    payment_url = Column(Text, nullable=True)
-    vnp_transaction_no = Column(String(100), nullable=True)
-    vnp_response_code = Column(String(20), nullable=True)
-    vnp_transaction_status = Column(String(20), nullable=True)
-    bank_code = Column(String(50), nullable=True)
-    bank_tran_no = Column(String(100), nullable=True)
-    card_type = Column(String(50), nullable=True)
-    pay_date = Column(String(20), nullable=True)
-    raw_response = Column(Text, nullable=True)
-    completed_at = Column(DateTime, nullable=True)
-
-    def __str__(self):
-        return f"PaymentTransaction({self.vnp_txn_ref}, {self.status})"
+class RestaurantConfig(Base):
+    """Cấu hình riêng của từng nhà hàng; tồn tại row = override, không có row = dùng giá trị admin."""
+    __tablename__ = 'restaurant_config'
+    name = Column(String(150), nullable=False, default=lambda: "restaurant-config")
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), primary_key=True)
+    max_cart_items = Column(Integer, nullable=False)
+    restaurant = relationship('Restaurant')
 
 
 def hash_password(raw_password: str) -> str:

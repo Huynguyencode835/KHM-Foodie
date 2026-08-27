@@ -6,8 +6,8 @@ from app.extensions import db
 from app.models.model import (
     User, Restaurant, Dish, Voucher, Order, OrderItem,
     UserRole, CuisineType, DishCategory, DiscountType, Status,
-    RestaurantApprovalStatus,
-    hash_password, parse_time
+    RestaurantApprovalStatus, SystemConfig,
+    hash_password, parse_time, DEFAULT_MAX_CART_ITEMS
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -44,6 +44,7 @@ def seed(app=None):
             role=UserRole.CUSTOMER
         )
 
+        db.session.add(SystemConfig(name='system', max_cart_items=DEFAULT_MAX_CART_ITEMS))
         db.session.add_all([new_admin, new_customer])
         db.session.commit()
 
@@ -142,12 +143,13 @@ def seed(app=None):
         print(f"✅ Thêm {len(pending_restaurants)} nhà hàng chờ duyệt.")
 
         _seed_orders(restaurant_map)
+        _seed_orders_full_status(restaurant_map)
 
         print(f"✅ Đã tạo {len(restaurant_map)} nhà hàng và {len(dishes_data)} món ăn.")
 
 
 def _seed_orders(restaurant_map):
-    """Tạo đơn hàng test cho nhà hàng đã duyệt, trải đủ trạng thái."""
+    """Tạo đơn hàng test cho nhà hàng đã duyệt, trải đủ trạng thái, nhiều khách hàng khác nhau."""
     customer_specs = [
         ("Nguyen Van A", "khach_a", "0911000111", "khacha@example.com", "12 Le Loi, Q1, TP.HCM"),
         ("Tran Thi B", "khach_b", "0911000222", "khachb@example.com", "34 Nguyen Hue, Q3, TP.HCM"),
@@ -280,6 +282,105 @@ def _seed_orders(restaurant_map):
 
     db.session.commit()
     print(f"✅ Đã tạo {orders_created} đơn hàng test.")
+
+
+def _seed_orders_full_status(restaurant_map):
+    """Tạo một khách test riêng và đủ 8 trạng thái Order."""
+
+    test_customer = User(
+        name="Nguyen Van Test",
+        username="khach_test",
+        password=hash_password("123456"),
+        phonenumber="0900000000",
+        email="khachtest@example.com",
+        address="99 Vo Van Tan, Q3, TP.HCM",
+        role=UserRole.CUSTOMER,
+    )
+    db.session.add(test_customer)
+    db.session.flush()
+
+    rest_test = restaurant_map["quan_trua_ngon"]
+
+    voucher = Voucher(
+        name="Giam 10% toi da 50k",
+        code="TESTVOUCHER10",
+        description="Giam 10% don hang, toi da 50k",
+        discount_type=DiscountType.PERCENTAGE,
+        discount_value=10,
+        minimum_order=100,
+        max_discount=50,
+        start_date=datetime.utcnow() - timedelta(days=30),
+        end_date=datetime.utcnow() + timedelta(days=30),
+        usage_limit=1000,
+        used_count=1,
+        restaurant_id=rest_test.id,
+    )
+    db.session.add(voucher)
+    db.session.flush()
+
+    dishes = Dish.query.filter_by(restaurant_id=rest_test.id).order_by(Dish.id).all()
+    if not dishes:
+        print("⚠ Không có món ăn cho nhà hàng test, bỏ qua seed order đủ trạng thái.")
+        return
+
+    # spec: (status, ship_fee, dùng voucher?, note, rejection_reason, days_ago)
+    order_specs = [
+        (Status.PENDING_PAYMENT, 20, False, None, None, 0),
+        (Status.PAYMENT_FAILED, 20, False, None, "Thanh toan that bai tu cong VNPAY", 0),
+        (Status.PAID, 20, True, "Giao gio hanh chinh", None, 1),
+        (Status.CONFIRMED, 15, False, "Giao truoc 12h", None, 2),
+        (Status.PREPARING, 20, True, None, None, 1),
+        (Status.DELIVERING, 25, False, None, None, 0),
+        (Status.COMPLETED, 20, True, None, None, 5),
+        (Status.CANCELLED, 0, False, "Khach doi y", "Khach huy don truoc khi xac nhan", 3),
+    ]
+
+    orders_created = 0
+    for status, ship_fee, use_voucher, note, rejection_reason, days_ago in order_specs:
+        chosen = dishes[:3]
+        items = []
+        subtotal = 0
+        for i, dish in enumerate(chosen):
+            qty = (i % 3) + 1
+            unit_price = float(dish.price)
+            subtotal += unit_price * qty
+            items.append(OrderItem(name=dish.name, dish_id=dish.id, unit_price=unit_price, quantity=qty))
+
+        discount = 0
+        applied_voucher = voucher if use_voucher else None
+        if applied_voucher:
+            if applied_voucher.discount_type == DiscountType.PERCENTAGE:
+                discount = subtotal * applied_voucher.discount_value / 100
+                if applied_voucher.max_discount is not None:
+                    discount = min(discount, applied_voucher.max_discount)
+            else:
+                discount = min(applied_voucher.discount_value, subtotal)
+
+        total = subtotal - discount + ship_fee
+
+        order = Order(
+            name=f"DH-TEST-{orders_created + 1:03d}",
+            user_id=test_customer.id,
+            restaurant_id=rest_test.id,
+            voucher_id=applied_voucher.id if applied_voucher else None,
+            status=status,
+            note=note,
+            customer_name=test_customer.name,
+            customer_phone=test_customer.phonenumber,
+            customer_email=test_customer.email,
+            delivery_address=test_customer.address,
+            shipping_fee=ship_fee,
+            total_amount=total,
+            rejection_reason=rejection_reason,
+            created_at=datetime.utcnow() - timedelta(days=days_ago),
+        )
+        order.items = items
+        db.session.add(order)
+
+        orders_created += 1
+
+    db.session.commit()
+    print(f"✅ Đã tạo user '{test_customer.username}' và {orders_created} đơn hàng đủ 8 trạng thái.")
 
 
 if __name__ == "__main__":

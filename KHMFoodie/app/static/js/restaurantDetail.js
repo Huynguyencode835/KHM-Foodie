@@ -61,7 +61,8 @@ async function addToCart(dishId) {
     });
 
     if (!res.ok) {
-        alert('Không thể thêm món vào giỏ hàng');
+        const err = await res.json().catch(() => ({}));
+        window.showToast(err.message || 'Không thể thêm món vào giỏ hàng', 'error');
         return;
     }
     await refreshCart();
@@ -77,7 +78,8 @@ async function changeCartItemQuantity(cartItemId, newQuantity) {
         });
 
     if (!res.ok) {
-        alert('Không thể cập nhật giỏ hàng');
+        const err = await res.json().catch(() => ({}));
+        window.showToast(err.message || 'Không thể cập nhật giỏ hàng', 'error');
         return;
     }
     await refreshCart();
@@ -257,6 +259,15 @@ async function goToPage(page) {
 
 document.addEventListener('DOMContentLoaded', async function () {
     if (!restaurantId) return;
+
+    const checkoutButton = document.getElementById('checkout-btn');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', () => {
+            if (!checkoutButton.disabled) {
+                window.location.href = `/payment/${restaurantId}`;
+            }
+        });
+    }
 
     const [data] = await Promise.all([
         document.querySelector('[data-restaurant-name]') ? fetchRestaurantData(restaurantId) : Promise.resolve(null),

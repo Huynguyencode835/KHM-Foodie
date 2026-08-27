@@ -2,13 +2,17 @@ from sqlalchemy import or_
 from datetime import datetime, timedelta, timezone
 
 from app.extensions import db
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 from app.models.model import Order, OrderItem, Status
 =======
 from app.models.model import Order, OrderItem, Status, Restaurant, Cart, CartItems
 >>>>>>> Stashed changes
+=======
+from app.models.model import Order, OrderItem, Status,Restaurant
+>>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
 from app.service.notificationByFCM import send_push_notification
-
+from flask_login import current_user
 
 class OrdersDao:
 
@@ -17,6 +21,63 @@ class OrdersDao:
         Status.PREPARING,
         Status.COMPLETED,
     ]
+
+    from sqlalchemy.orm import joinedload
+
+    @staticmethod
+    def get_orders_customer(status=None, keyword=None):
+        query = Order.query.options(
+            db.joinedload(Order.restaurant).joinedload(Restaurant.user),
+            db.joinedload(Order.items).joinedload(OrderItem.dish)
+        ).filter(Order.user_id == current_user.id)
+
+        if status is not None:
+            try:
+                status_enum = status if isinstance(status, Status) else Status[status.upper()]
+                query = query.filter(Order.status == status_enum)
+            except (KeyError, AttributeError):
+                pass
+
+        if keyword:
+            like = f"%{keyword.strip()}%"
+            query = query.filter(
+                or_(
+                    Order.id.ilike(like),
+                    Order.note.ilike(like),
+                )
+            )
+
+        query = query.order_by(Order.created_at.desc())
+
+        data = []
+
+        for r in query:
+            data.append({
+                "id": r.id,
+                "status": r.status.value if r.status else None,
+                "note": r.note,
+                "rejection_reason": r.rejection_reason,
+                "shipping_fee": float(r.shipping_fee) if r.shipping_fee is not None else None,
+                "total_amount": float(r.total_amount) if r.total_amount is not None else None,
+                "restaurant": {
+                    "id": r.restaurant.id,
+                    "name": r.restaurant.name,
+                    "cover_image": r.restaurant.cover_image,
+                } if r.restaurant else None,
+
+                "items": [
+                    {
+                        "id": item.id,
+                        "dish_id": item.dish_id,
+                        "dish_name": item.dish.name if item.dish else None,
+                        "dish_image": item.dish.image if item.dish else None,
+                        "quantity": item.quantity,
+                    }
+                    for item in r.items
+                ],
+            })
+
+        return data
 
     @staticmethod
     def get_orders(restaurant_id, status=None, keyword=None,
@@ -63,8 +124,11 @@ class OrdersDao:
         ).filter_by(id=order_id, restaurant_id=restaurant_id).first()
 
     @staticmethod
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 =======
+=======
+>>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
     def get_order_by_id_and_customer(order_id):
         order = Order.query.options(
             db.joinedload(Order.items).joinedload(OrderItem.dish),
@@ -86,8 +150,12 @@ class OrdersDao:
             "delivery_address": order.delivery_address,
             "shipping_fee": float(order.shipping_fee) if order.shipping_fee is not None else None,
             "total_amount": float(order.total_amount) if order.total_amount is not None else None,
+<<<<<<< HEAD
             "created_at": order.created_at.isoformat() if order.created_at else None,
             "payment_deadline": order.payment_deadline.isoformat() if order.payment_deadline else None,
+=======
+            "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S") if order.created_at else None,
+>>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
 
             "restaurant": {
                 "id": order.restaurant.id,
@@ -119,7 +187,10 @@ class OrdersDao:
         }
 
     @staticmethod
+<<<<<<< HEAD
 >>>>>>> Stashed changes
+=======
+>>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
     def approve_order(order_id, restaurant_id):
         order = OrdersDao.get_order_by_id_and_restaurant(order_id, restaurant_id)
         if not order:
