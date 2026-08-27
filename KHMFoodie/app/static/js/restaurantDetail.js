@@ -260,6 +260,15 @@ async function goToPage(page) {
 document.addEventListener('DOMContentLoaded', async function () {
     if (!restaurantId) return;
 
+    const checkoutButton = document.getElementById('checkout-btn');
+    if (checkoutButton) {
+        checkoutButton.addEventListener('click', () => {
+            if (!checkoutButton.disabled) {
+                window.location.href = `/payment/${restaurantId}`;
+            }
+        });
+    }
+
     const [data] = await Promise.all([
         document.querySelector('[data-restaurant-name]') ? fetchRestaurantData(restaurantId) : Promise.resolve(null),
         document.getElementById('cart-items') ? refreshCart() : Promise.resolve()

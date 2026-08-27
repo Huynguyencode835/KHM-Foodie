@@ -1,0 +1,97 @@
+{% extends "layout/baseCustomer.html" %}
+
+{% block content %}
+<section class="min-h-[60vh] flex items-center justify-center py-xl">
+    <div class="w-full max-w-2xl bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-lg">
+        <div class="flex items-start gap-md">
+            <div class="w-14 h-14 rounded-full flex items-center justify-center
+                {% if success %}
+                    bg-green-100 text-green-700
+                {% else %}
+                    bg-error-container text-error
+                {% endif %}
+            ">
+                <span class="material-symbols-outlined text-3xl">
+                    {% if success %}check_circle{% else %}error{% endif %}
+                </span>
+            </div>
+
+            <div class="flex-1 space-y-sm">
+                <div>
+                    <h1 class="text-headline-lg font-headline-lg text-on-surface">
+                        {% if success %}
+                            Thanh toán thành công
+                        {% else %}
+                            Thanh toán chưa thành công
+                        {% endif %}
+                    </h1>
+
+                    <p class="text-body-md text-secondary mt-2">
+                        {{ message }}
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-sm pt-md">
+                    <div class="bg-surface-container-low rounded-lg p-sm">
+                        <p class="text-caption text-secondary">Mã giao dịch</p>
+                        <p class="text-body-md font-bold text-on-surface break-all">
+                            {{ txn_ref or "Không có" }}
+                        </p>
+                    </div>
+
+                    <div class="bg-surface-container-low rounded-lg p-sm">
+                        <p class="text-caption text-secondary">Mã đơn hàng</p>
+                        <p class="text-body-md font-bold text-on-surface">
+                            {% if transaction %}
+                                #{{ transaction.order_id }}
+                            {% else %}
+                                Không xác định
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="bg-surface-container-low rounded-lg p-sm">
+                        <p class="text-caption text-secondary">Số tiền</p>
+                        <p class="text-body-md font-bold text-on-surface">
+                            {% if transaction %}
+                                {{ "{:,.0f}".format(transaction.amount|float).replace(",", ".") }} đ
+                            {% elif amount %}
+                                {{ "{:,.0f}".format((amount|int / 100)).replace(",", ".") }} đ
+                            {% else %}
+                                Không xác định
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div class="bg-surface-container-low rounded-lg p-sm">
+                        <p class="text-caption text-secondary">Trạng thái</p>
+                        <p class="text-body-md font-bold
+                            {% if success %}text-green-700{% else %}text-error{% endif %}
+                        ">
+                            {% if is_valid_signature %}
+                                {{ response_code }}
+                            {% else %}
+                                Sai chữ ký
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row gap-sm pt-md">
+                    <a href="/"
+                       class="inline-flex items-center justify-center px-md py-sm rounded-lg bg-primary text-on-primary font-bold hover:opacity-90 transition-opacity">
+                        Về trang chủ
+                    </a>
+
+                    {% if transaction %}
+                    <a href="/orders/{{ transaction.order_id }}"
+                       class="inline-flex items-center justify-center px-md py-sm rounded-lg border border-outline-variant text-on-surface font-bold hover:bg-surface-container transition-colors">
+                        Xem đơn hàng
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
