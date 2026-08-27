@@ -114,6 +114,27 @@ class OrderDao:
         return order, True
 
     @staticmethod
+    def mark_order_paid_vnpay(order_id):
+        """Đánh dấu order đã thanh toán qua VNPay.
+
+        Cùng cấu trúc/guard idempotent như mark_order_paid_momo, nhưng không
+        có cột riêng nào để lưu (VNPay không cần lưu thêm gì lên Order, vì
+        order_id đã được nhúng thẳng vào vnp_TxnRef, không cần tra cứu qua
+        cột phụ như momo_order_id).
+        """
+        order = Order.query.get(order_id)
+        if not order:
+            return None, False
+
+        if order.status != Status.PENDING_PAYMENT:
+            return order, False
+
+        order.paid_by = "CUSTOMER_VNPAY"
+        order.status = Status.PAID
+        db.session.commit()
+        return order, True
+
+    @staticmethod
     def mark_order_payment_failed(order_id):
         order = Order.query.get(order_id)
         if not order:

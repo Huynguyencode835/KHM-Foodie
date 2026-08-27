@@ -74,10 +74,22 @@ def create_momo_payment(amount, order_info, redirect_url, ipn_url):
             headers={"Content-Type": "application/json"}
         )
 
+        # Log đầy đủ request/response ra console để debug khi MoMo trả lỗi
+        # (không có log này thì chỉ biết mã HTTP, không biết MoMo phàn nàn gì).
+        print("[momoService] MoMo request payload:", {**payload, "signature": "***"})
+        print("[momoService] MoMo response status:", response.status_code)
+        print("[momoService] MoMo response body:", response.text)
+
         if response.status_code != 200:
+            # Cố lấy message chi tiết MoMo trả về (nếu có body JSON) thay vì chỉ mã HTTP
+            detail = response.text
+            try:
+                detail = response.json().get("message", response.text)
+            except ValueError:
+                pass
             return {
                 "resultCode": -1,
-                "message": f"MoMo API: HTTP {response.status_code}"
+                "message": f"MoMo API: HTTP {response.status_code} - {detail}"
             }, None, None
 
         response_data = response.json()

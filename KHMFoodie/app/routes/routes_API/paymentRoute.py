@@ -16,3 +16,9 @@ payment_api.add_url_rule(
     view_func=PaymentController.payment_ipn,
     methods=["POST"]  # MoMo gọi IPN bằng POST kèm JSON body
 )
+
+payment_api.add_url_rule(
+    "/vnpay/ipn",
+    view_func=PaymentController.vnpay_ipn,
+    methods=["GET"]  # VNPay gọi IPN bằng GET kèm query string
+)
