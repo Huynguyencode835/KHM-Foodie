@@ -131,6 +131,12 @@
 </head>
 
 <body class="bg-surface">
+    <div id="global-loading" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-surface/80 backdrop-blur-sm" role="status" aria-live="polite" aria-label="Đang tải dữ liệu">
+        <div class="flex flex-col items-center gap-sm text-primary">
+            <span class="material-symbols-outlined animate-spin text-5xl" aria-hidden="true">progress_activity</span>
+            <span class="text-label-md">Đang tải dữ liệu...</span>
+        </div>
+    </div>
     <div id="toast-container"
         class="fixed top-5 right-4 md:right-8 z-[100] w-[calc(100vw-32px)] max-w-md flex flex-col gap-3 pointer-events-none"
         aria-live="polite" aria-atomic="true">
@@ -196,7 +202,7 @@
                 <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
                     href="#">Ưu đãi</a>
                 <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
-                    href="#">Đơn hàng</a>
+                    href="/order_customer">Đơn hàng</a>
             </nav>
 
             <!-- Right-side Actions -->
@@ -211,12 +217,6 @@
                     </button>
                     <span id="notif-badge"
                         class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center hidden">0</span>
-                </div>
-                <div class="relative">
-                    <button
-                        class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">shopping_cart</button>
-                    <span
-                        class="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
                 </div>
                 {% if current_user.is_authenticated %}
 

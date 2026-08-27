@@ -90,6 +90,9 @@ const suggestions = [
 
 async function loadRestaurants(){
     const res = await fetch('/api/restaurants/');
+    if (!res.ok) {
+        throw new Error(`Không thể tải danh sách nhà hàng: ${res.status}`);
+    }
     const data = await res.json();
     return data.data;
 }

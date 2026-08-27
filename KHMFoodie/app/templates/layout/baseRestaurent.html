@@ -198,6 +198,12 @@
 </head>
 
 <body class="bg-background text-on-surface min-h-screen flex">
+    <div id="global-loading" class="hidden fixed inset-0 z-[200] flex items-center justify-center bg-surface/80 backdrop-blur-sm" role="status" aria-live="polite" aria-label="Đang tải dữ liệu">
+        <div class="flex flex-col items-center gap-sm text-primary">
+            <span class="material-symbols-outlined animate-spin text-5xl" aria-hidden="true">progress_activity</span>
+            <span class="text-label-md">Đang tải dữ liệu...</span>
+        </div>
+    </div>
     <!-- SideNavBar (Consistent with SCREEN_2) -->
     <aside
         class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col p-sm space-y-base z-50">
@@ -223,11 +229,12 @@
             ('restaurants', 'Nhà hàng', 'storefront', '/admin/restaurant/'),
             ('dishes', 'Món ăn', 'restaurant_menu', '/admin/dish/'),
             ('pending-approval', 'Duyệt nhà hàng', 'approval', '/admin/restaurants/pending'),
+            ('settings', 'Cấu hình hệ thống', 'settings', '/admin/systemconfig/'),
             ] %}
             {% else %}
             {% set sidebar_menu_items = [
             ('dashboard', 'Tổng quan', 'dashboard', '#'),
-            ('orders', 'Đơn hàng', 'receipt_long', '/customer-requirements'),
+            ('orders', 'Đơn hàng', 'receipt_long', '/restaurants/orders'),
             ('menu', 'Thực đơn', 'restaurant_menu', '/restaurant_menu'),
             ('reviews', 'Đánh giá', 'star', '#'),
             ('promotions', 'Khuyến mãi', 'local_offer', '/promotions'),
@@ -421,6 +428,7 @@
     </main>
 
     {% block scripts %}{% endblock %}
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script>
             // --- Active sidebar bằng JavaScript ---
             (function () {

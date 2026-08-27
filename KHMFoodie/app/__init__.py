@@ -4,9 +4,10 @@ from app.config import config_map
 from flask_login import LoginManager
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
+from app.extensions import db, migrate
 from flask_admin import Admin
-from app.models.model import User, Restaurant, Dish
-from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView
+from app.models.model import User, Restaurant, Dish, SystemConfig
+from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, SystemConfigAdmin, AdminSecureIndexView
 from flask_admin.theme import Bootstrap4Theme
 from app.extensions import db, mail, init_firebase
 
@@ -20,6 +21,8 @@ load_dotenv()
 oauth = OAuth()
 login_manager = LoginManager()
 login_manager.login_view = 'login_bp.login_page'
+login_manager.login_message = 'Vui lòng đăng nhập để truy cập trang này.'
+login_manager.login_message_category = 'warning'
 
 
 @login_manager.user_loader
@@ -53,18 +56,20 @@ def create_app(config_name='dev'):
     # Init extensions
     login_manager.init_app(app)
     db.init_app(app)
+    migrate.init_app(app, db)
     mail.init_app(app)
     init_firebase(app)  
 
     # Admin
-    from app.models.model import User, Restaurant, Dish
-    from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, AdminSecureIndexView
+    from app.models.model import User, Restaurant, Dish, SystemConfig
+    from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, SystemConfigAdmin, AdminSecureIndexView
     from flask_admin.theme import Bootstrap4Theme
 
     admin = Admin(app, name='KHM Foodie Admin', theme=Bootstrap4Theme(), index_view=AdminSecureIndexView())
     admin.add_view(UserAdmin(User, db.session))
     admin.add_view(RestaurantAdmin(Restaurant, db.session))
     admin.add_view(DishAdmin(Dish, db.session))
+    admin.add_view(SystemConfigAdmin(SystemConfig, db.session))
 
     # OAuth
     oauth.init_app(app)

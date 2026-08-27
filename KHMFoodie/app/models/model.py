@@ -9,6 +9,8 @@ from flask_login import UserMixin
 from enum import Enum as RoleEnum
 from app.extensions import db
 
+DEFAULT_MAX_CART_ITEMS = 20
+
 
 class Base(db.Model):
     __abstract__ = True
@@ -113,6 +115,18 @@ class Dish(Base):
     category = Column(Enum(DishCategory), nullable=False)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
     restaurant = relationship('Restaurant', backref=backref('dishes', lazy=True))
+    voucher_links = relationship(
+        'VoucherDish',
+        back_populates='dish',
+        cascade='all, delete-orphan',
+        lazy=True
+    )
+
+    def get_active_voucher(self):
+        for link in self.voucher_links:
+            if link.voucher and link.voucher.is_valid_now():
+                return link.voucher
+        return None
 
 class Cart(Base):
     __tablename__ = 'cart'
@@ -136,6 +150,51 @@ class Voucher(Base):
     usage_limit = Column(Integer, default=1)
     used_count = Column(Integer, default=0)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=True)
+    dish_links = relationship(
+        'VoucherDish',
+        back_populates='voucher',
+        cascade='all, delete-orphan',
+        lazy=True
+    )
+
+    def is_valid_now(self, now=None):
+        now = now or datetime.utcnow()
+        if not self.active:
+            return False
+        if self.start_date and now < self.start_date:
+            return False
+        if self.end_date and now > self.end_date:
+            return False
+        if self.usage_limit is not None and self.used_count >= self.usage_limit:
+            return False
+        return True
+
+    def apply_discount(self, price):
+        if self.discount_type == DiscountType.PERCENTAGE:
+            discount = price * (self.discount_value / 100)
+            if self.max_discount:
+                discount = min(discount, self.max_discount)
+        else:
+            discount = self.discount_value
+
+        discount = max(0, min(discount, price))
+        return round(price - discount, 2)
+
+class VoucherDish(db.Model):
+    __tablename__ = 'voucher_dish'
+
+    voucher_id = Column(
+        Integer,
+        ForeignKey('voucher.id', ondelete='CASCADE'),
+        primary_key=True
+    )
+    dish_id = Column(
+        Integer,
+        ForeignKey('dish.id', ondelete='CASCADE'),
+        primary_key=True
+    )
+    voucher = relationship('Voucher', back_populates='dish_links')
+    dish = relationship('Dish', back_populates='voucher_links')
 
 class CartItems(Base):
     __tablename__ = 'cart_items'
@@ -234,6 +293,19 @@ class PaymentTransaction(Base):
     def __str__(self):
         return f"PaymentTransaction({self.vnp_txn_ref}, {self.status})"
 
+
+class SystemConfig(Base):
+    __tablename__ = 'system_config'
+    max_cart_items = Column(Integer, default=DEFAULT_MAX_CART_ITEMS, nullable=False)
+
+
+class RestaurantConfig(Base):
+    """Cấu hình riêng của từng nhà hàng; tồn tại row = override, không có row = dùng giá trị admin."""
+    __tablename__ = 'restaurant_config'
+    name = Column(String(150), nullable=False, default=lambda: "restaurant-config")
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), primary_key=True)
+    max_cart_items = Column(Integer, nullable=False)
+    restaurant = relationship('Restaurant')
 
 
 def hash_password(raw_password: str) -> str:

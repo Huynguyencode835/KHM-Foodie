@@ -53,18 +53,40 @@ async function refreshCart() {
     renderCart(cart);
 }
 
-async function addToCart(dishId) {
-    const res = await fetch(`/api/cart/${restaurantId}/items`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dish_id: dishId, quantity: 1 })
-    });
+async function addToCart(dishId, button) {
+    if (button.disabled) return;
 
-    if (!res.ok) {
-        alert('Không thể thêm món vào giỏ hàng');
-        return;
+    const originalHtml = button.innerHTML;
+    const startedAt = Date.now();
+
+    button.disabled = true;
+    button.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span>';
+
+    try {
+        const res = await fetch(`/api/cart/${restaurantId}/items`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dish_id: dishId, quantity: 1 })
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            window.showToast(err.message, 'error');
+            return;
+        }
+
+        await refreshCart();
+    } catch (error) {
+        window.showToast(error.message, 'error');
+    } finally {
+        const remaining = Math.max(0, 300 - (Date.now() - startedAt));
+        if (remaining > 0) {
+            await new Promise(resolve => setTimeout(resolve, remaining));
+        }
+
+        button.innerHTML = originalHtml;
+        button.disabled = false;
     }
-    await refreshCart();
 }
 
 async function changeCartItemQuantity(cartItemId, newQuantity) {
@@ -77,7 +99,8 @@ async function changeCartItemQuantity(cartItemId, newQuantity) {
         });
 
     if (!res.ok) {
-        alert('Không thể cập nhật giỏ hàng');
+        const err = await res.json().catch(() => ({}));
+        window.showToast(err.message || 'Không thể cập nhật giỏ hàng', 'error');
         return;
     }
     await refreshCart();
@@ -190,7 +213,7 @@ function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào', showActi
                 <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
                     <span class="font-headline-md text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>
                     <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
-                        onclick="addToCart(${d.id})">
+                        onclick="addToCart(${d.id}, this)">
                         <span class="material-symbols-outlined text-sm">add</span> Thêm
                     </button>
                 </div>
@@ -258,15 +281,18 @@ async function goToPage(page) {
 document.addEventListener('DOMContentLoaded', async function () {
     if (!restaurantId) return;
 
-    const [data] = await Promise.all([
-        document.querySelector('[data-restaurant-name]') ? fetchRestaurantData(restaurantId) : Promise.resolve(null),
-        document.getElementById('cart-items') ? refreshCart() : Promise.resolve()
-    ]);
+    await loadingState.run(async () => {
+        const [data] = await Promise.all([
+            document.querySelector('[data-restaurant-name]') ? fetchRestaurantData(restaurantId) : Promise.resolve(null),
+            document.getElementById('cart-items') ? refreshCart() : Promise.resolve()
+        ]);
 
-    renderRestaurantDetail(data);
+        renderRestaurantDetail(data);
 
-    currentPage = 1;
-    await applyDishFilters();
+        currentPage = 1;
+        await applyDishFilters();
+    });
+
     bindPaginationButtons();
 
     let searchTimeout;

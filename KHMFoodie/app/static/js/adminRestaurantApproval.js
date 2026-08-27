@@ -333,11 +333,11 @@
                 if (data.success) {
                     loadPage(currentPage);
                 } else {
-                    alert(data.message || "Thao tác thất bại.");
+                    showToast(data.message || "Thao tác thất bại.", "error");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Lỗi mạng.");
+                showToast("Lỗi mạng.", "error");
             }
             return;
         }
@@ -376,20 +376,27 @@
         if (cancelBtn) cancelBtn.addEventListener("click", closeApprovalModal, { once: true });
         if (confirmBtn) {
             confirmBtn.addEventListener("click", async () => {
+                if (confirmBtn.disabled) return;
                 confirmBtn.disabled = true;
+                confirmBtn.classList.add("opacity-50", "cursor-not-allowed");
+                confirmBtn.textContent = "Đang xử lý...";
                 try {
                     const data = await patchAction(r.id, "approve");
                     if (data.success) {
                         closeApprovalModal();
                         loadPage(currentPage);
                     } else {
-                        alert(data.message || "Thao tác thất bại.");
+                        showToast(data.message || "Thao tác thất bại.", "error");
                         confirmBtn.disabled = false;
+                        confirmBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                        confirmBtn.textContent = "Duyệt nhà hàng";
                     }
                 } catch (err) {
                     console.error(err);
-                    alert("Lỗi mạng.");
+                    showToast("Lỗi mạng.", "error");
                     confirmBtn.disabled = false;
+                    confirmBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                    confirmBtn.textContent = "Duyệt nhà hàng";
                 }
             }, { once: true });
         }
@@ -406,11 +413,11 @@
                 if (data.success) {
                     loadPage(currentPage);
                 } else {
-                    alert(data.message || "Thao tác thất bại.");
+                    showToast(data.message || "Thao tác thất bại.", "error");
                 }
             } catch (err) {
                 console.error(err);
-                alert("Lỗi mạng.");
+                showToast("Lỗi mạng.", "error");
             }
             return;
         }
@@ -476,22 +483,29 @@
                     return;
                 }
 
+                if (confirmBtn.disabled) return;
                 confirmBtn.disabled = true;
+                confirmBtn.classList.add("opacity-50", "cursor-not-allowed");
+                confirmBtn.textContent = "Đang xử lý...";
                 try {
                     const data = await patchAction(r.id, "reject", { reason });
                     if (data.success) {
                         closeApprovalModal();
                         loadPage(currentPage);
                     } else {
-                        alert(data.message || "Thao tác thất bại.");
+                        showToast(data.message || "Thao tác thất bại.", "error");
                         confirmBtn.disabled = false;
+                        confirmBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                        confirmBtn.textContent = "Từ chối nhà hàng";
                     }
                 } catch (err) {
                     console.error(err);
-                    alert("Lỗi mạng.");
+                    showToast("Lỗi mạng.", "error");
                     confirmBtn.disabled = false;
+                    confirmBtn.classList.remove("opacity-50", "cursor-not-allowed");
+                    confirmBtn.textContent = "Từ chối nhà hàng";
                 }
-            }, { once: true });
+            });
         }
     }
 

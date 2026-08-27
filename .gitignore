@@ -6,6 +6,7 @@ dist/
 build/
 *.egg
 *.db
+*.pyc
 
 # Virtual env
 venv/
@@ -29,3 +30,7 @@ Thumbs.db
 # Claude
 .claude/
 stitch-assets/
+
+# Scratch & agent docs
+.scratch/
+RULES.md

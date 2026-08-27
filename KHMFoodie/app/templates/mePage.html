@@ -18,18 +18,7 @@
     <span
         class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">help</span>
 </div>
-<div class="h-8 w-px bg-outline-variant mx-2"></div> -->
-<div class="flex items-center space-x-3 cursor-pointer">
-    <div class="text-right hidden sm:block">
-        <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
-        <p class="text-caption text-secondary">Quản lý</p>
-    </div>
-    <a href="/me">
-        <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
-            <img class="w-full h-full object-cover" alt="{{ current_user.name }}" src="{{ current_user.avatar }}">
-        </div>
-    </a>
-</div>
+
 {% endif %}
 {% endblock %}
 
@@ -187,10 +176,23 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                     <div class="flex items-center space-x-3">
                         <div class="p-2 bg-secondary-fixed rounded-lg">
-                            <span class="material-symbols-outlined text-secondary">power_settings_new</span>
+                            <span class="material-symbols-outlined text-secondary">shopping_cart</span>
                         </div>
-                        <span class="text-body-md font-bold">Trạng thái hiện tại</span>
+                        <span class="text-body-md font-bold">Giới hạn giỏ hàng</span>
                     </div>
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-4">
+                            <input
+                                class="w-40 px-4 py-2.5 rounded-lg border border-outline-variant bg-surface-bright text-body-md"
+                                id="restaurant-max-cart-items" type="number" min="1" max="{{ system_max_cart_items }}"
+                                value="{{ restaurant_max_cart_items }}">
+                            <span class="text-body-md text-secondary">món / 1 giỏ</span>
+                        </div>
+                        <p class="text-caption text-secondary mt-1">Giới hạn tối đa theo cấu hình hệ thống:
+                            {{ system_max_cart_items }} món. Nhà hàng chỉ đặt được thấp hơn hoặc bằng con số này.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
                     <div class="md:col-span-2">
                         <div class="flex items-center gap-4">
                             <label class="relative inline-flex items-center cursor-pointer">

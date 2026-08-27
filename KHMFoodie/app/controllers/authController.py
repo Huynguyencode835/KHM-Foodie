@@ -2,6 +2,7 @@ from flask import request, jsonify, redirect, current_app, flash
 from app.models.model import hash_password, CuisineType, UserRole
 from app.dao.userDao import add_user, check_userEmail
 from app.dao.userDao import UserDao
+from app.dao.systemConfigDao import SystemConfigDao
 from flask_login import login_user, logout_user, login_required, current_user
 from app.service.notificationByFCM import send_push_notification
 import cloudinary.uploader
@@ -20,18 +21,18 @@ class LoginController:
         remember = data.get("remember", False)
 
         if not username or not password:
-            return jsonify({"message": "Username and password required"}), 400
+            return jsonify({"message": "Vui lòng nhập tên đăng nhập và mật khẩu"}), 400
 
         user = UserDao.get_by_username(username)
         if not user:
-            return jsonify({"message": "Invalid username or password"}), 401
+            return jsonify({"message": "Tên đăng nhập hoặc mật khẩu không đúng"}), 401
 
         check_active = UserDao.check_userActive(user)
         if check_active is False:
-            return jsonify({"message": "User account is inactive"}), 403
+            return jsonify({"message": "Tài khoản đã bị vô hiệu hóa"}), 403
 
         if user.password != hash_password(password):
-            return jsonify({"message": "Invalid username or password"}), 401
+            return jsonify({"message": "Tên đăng nhập hoặc mật khẩu không đúng"}), 401
 
         login_user(user, remember=remember)
 
@@ -61,6 +62,19 @@ class LoginController:
 
         allowed_fields = ['name', 'phonenumber', 'email', 'address', 'avatar', 'description', 'cover_image', 'cuisine_type', 'opening_time', 'closing_time', 'tax_code', 'status']
         update_data = {k: v for k, v in data.items() if k in allowed_fields and v is not None}
+
+        if 'max_cart_items' in data and current_user.role == UserRole.RESTAURANT:
+            value = data['max_cart_items']
+            if value is None:
+                update_data['max_cart_items'] = value
+            else:
+                result = SystemConfigDao.set_restaurant_max_cart_items(current_user.id, int(value))
+                if result is None:
+                    admin_max = SystemConfigDao.get_max_cart_items(None)
+                    return jsonify({
+                        "message": f"Giới hạn giỏ hàng tối đa phải từ 1 đến {admin_max} (theo cấu hình hệ thống)."
+                    }), 400
+                update_data['max_cart_items'] = result
 
         if not update_data:
             return jsonify({"message": "No valid fields to update"}), 400
