@@ -97,7 +97,7 @@ class RestaurantsController:
     @staticmethod
     def open_restaurant(restaurant_id):
         if current_user.role != UserRole.ADMIN and current_user.id != restaurant_id:
-            return jsonify({"success": False, "message": "Forbidden"}), 403
+            return jsonify({"success": False, "message": "Bạn không có quyền truy cập trang này."}), 403
 
         restaurant = RestaurantsDao.open_restaurant(restaurant_id)
         if not restaurant:
@@ -113,7 +113,7 @@ class RestaurantsController:
     @staticmethod
     def close_restaurant(restaurant_id):
         if current_user.role != UserRole.ADMIN and current_user.id != restaurant_id:
-            return jsonify({"success": False, "message": "Forbidden"}), 403
+            return jsonify({"success": False, "message": "Bạn không có quyền truy cập trang này."}), 403
 
         restaurant = RestaurantsDao.close_restaurant(restaurant_id)
         if not restaurant:

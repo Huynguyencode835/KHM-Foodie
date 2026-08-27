@@ -23,7 +23,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
     const remember = document.querySelector('input[type="checkbox"]')?.checked || false;
 
     if (!username || !password) {
-        alert('Vui lòng nhập username và mật khẩu');
+        window.showToast('Vui lòng nhập tên đăng nhập và mật khẩu', 'warning');
         return;
     }
 
@@ -44,10 +44,10 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             }
             window.location.href = data.redirect || '/';
         } else {
-            alert(data.message || 'Đăng nhập thất bại');
+            window.showToast(data.message || 'Đăng nhập thất bại', 'error');
         }
     } catch (err) {
-        alert('Lỗi kết nối đến máy chủ');
+        window.showToast('Lỗi kết nối đến máy chủ', 'error');
     } finally {
         btn.innerText = originalText;
         btn.disabled = false;
