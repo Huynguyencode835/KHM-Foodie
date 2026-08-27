@@ -239,6 +239,7 @@ class Order(Base):
 
     shipping_fee = Column(Numeric(12, 0), nullable=False, default=0)
     total_amount = Column(Numeric(12, 0), nullable=False, default=0)
+    payment_deadline = Column(DateTime, nullable=True)
 
     user = relationship('User', backref=backref('orders', lazy=True))
     restaurant = relationship('Restaurant', backref=backref('orders', lazy=True))
