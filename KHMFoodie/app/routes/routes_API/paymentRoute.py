@@ -14,5 +14,5 @@ payment_api.add_url_rule(
 payment_api.add_url_rule(
     "/ipn",
     view_func=PaymentController.payment_ipn,
-    methods=["GET"]
+    methods=["POST"]  # MoMo gọi IPN bằng POST kèm JSON body
 )
