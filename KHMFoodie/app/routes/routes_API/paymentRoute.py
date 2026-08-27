@@ -1,0 +1,18 @@
+from flask import Blueprint
+from flask_login import login_required
+
+from app.controllers.paymentController import PaymentController
+
+payment_api = Blueprint("payment_api", __name__)
+
+payment_api.add_url_rule(
+    "/<int:restaurant_id>",
+    view_func=login_required(PaymentController.create_payment),
+    methods=["POST"]
+)
+
+payment_api.add_url_rule(
+    "/ipn",
+    view_func=PaymentController.payment_ipn,
+    methods=["GET"]
+)
