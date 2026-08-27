@@ -33,8 +33,12 @@ class RestaurantsDao:
             r.user.active = True
             r.active = True
         db.session.commit()
-        send_push_notification(r.user.id, "Nhà hàng của bạn đã được phê duyệt!",
-                                                       f"Nhà hàng {r.name} vừa được admin phê duyệt.")
+        try:
+            send_push_notification(r.user.id, "Nhà hàng của bạn đã được phê duyệt!",
+                                                           f"Nhà hàng {r.name} vừa được admin phê duyệt.")
+        except Exception as e:
+            from flask import current_app
+            current_app.logger.error(f"Gửi push notification thất bại: {e}")
         send_restaurant_approved_email(
             recipient=r.user.email,
             restaurant_name=r.user.name
@@ -52,11 +56,15 @@ class RestaurantsDao:
         if r.user:
             r.user.active = False
         db.session.commit()
-        send_push_notification(
-            r.user.id,
-            "Nhà hàng bị từ chối",
-            f"Nhà hàng {r.name} bị admin từ chối: {reason}"
-        )
+        try:
+            send_push_notification(
+                r.user.id,
+                "Nhà hàng bị từ chối",
+                f"Nhà hàng {r.name} bị admin từ chối: {reason}"
+            )
+        except Exception as e:
+            from flask import current_app
+            current_app.logger.error(f"Gửi push notification thất bại: {e}")
         send_restaurant_rejected_email(
             recipient=r.user.email,
             restaurant_name=r.user.name,
