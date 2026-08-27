@@ -2,6 +2,7 @@ from flask import redirect, url_for
 from flask_admin import AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
+from wtforms.validators import NumberRange
 from app.models.model import UserRole
 
 
@@ -70,4 +71,16 @@ class DishAdmin(AdminSecureView):
         'price': 'Giá',
         'category': 'Danh mục',
         'restaurant': 'Nhà hàng',
+    }
+
+
+class SystemConfigAdmin(AdminSecureView):
+    can_create = False
+    can_delete = False
+    column_labels = {
+        'name': 'Tên',
+        'max_cart_items': 'Số món tối đa mỗi giỏ',
+    }
+    form_args = {
+        'max_cart_items': {'validators': [NumberRange(min=1, max=99)]},
     }

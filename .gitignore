@@ -30,3 +30,7 @@ Thumbs.db
 # Claude
 .claude/
 stitch-assets/
+
+# Scratch & agent docs
+.scratch/
+RULES.md

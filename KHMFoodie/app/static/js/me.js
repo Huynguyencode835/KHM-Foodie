@@ -78,6 +78,15 @@ requiredFields.forEach(f => {
         });
     }
 });
+// Clear error on input — restaurant max cart items
+const maxCartInput = document.getElementById('restaurant-max-cart-items');
+if (maxCartInput) {
+    maxCartInput.addEventListener('input', () => {
+        const error = maxCartInput.parentElement.querySelector('.field-error');
+        if (error) error.remove();
+        maxCartInput.classList.remove('input-error');
+    });
+}
 
 // Clear error on input — customer
 ['customer-name', 'customer-email', 'customer-phone', 'customer-address'].forEach(id => {
@@ -146,6 +155,19 @@ if (saveBtn) {
         };
         const coverImg = document.querySelector('.h-48 img');
         if (coverImg) data.cover_image = coverImg.src;
+
+        // Giới hạn giỏ hàng riêng của nhà hàng (number input)
+        const maxCartInput = document.getElementById('restaurant-max-cart-items');
+        if (maxCartInput) {
+            const val = Number(maxCartInput.value);
+            const cap = Number(maxCartInput.max) || 0;
+            if (!Number.isInteger(val) || val < 1 || val > cap) {
+                maxCartInput.classList.add('input-error');
+                showError('restaurant-max-cart-items', `Giới hạn phải là số nguyên từ 1 đến ${cap}`);
+                return;
+            }
+            data.max_cart_items = val;
+        }
 
         const originalContent = saveBtn.innerHTML;
         saveBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang lưu...';
