@@ -107,6 +107,17 @@ class Status(RoleEnum):
     COMPLETED = "Completed"
     CANCELLED = "Cancelled"
 
+class OrderStatus(RoleEnum):
+    PENDING_PAYMENT = "Pending Payment"
+    PAYMENT_FAILED = "Payment Failed"
+    PAID = "Paid"
+    CONFIRMED = "Confirmed"
+    PREPARING = "Preparing"
+    DELIVERING = "Delivering"
+    COMPLETED = "Completed"
+    CANCELLED = "Cancelled"
+
+
 class Dish(Base):
     __tablename__ = 'dish'
     description = Column(String(500), nullable=True)

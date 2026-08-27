@@ -1,8 +1,17 @@
-from flask import Blueprint, render_template
+from flask import Blueprint
+
+from app.controllers.paymentController import PaymentController
 
 payment_bp = Blueprint("payment_bp", __name__)
 
+payment_bp.add_url_rule(
+    "/<int:restaurant_id>",
+    view_func=PaymentController.checkout,
+    methods=["GET"]
+)
 
-@payment_bp.route("/payment")
-def payment():
-    return render_template("payment.html")
+payment_bp.add_url_rule(
+    "/return",
+    view_func=PaymentController.payment_return,
+    methods=["GET"]
+)
