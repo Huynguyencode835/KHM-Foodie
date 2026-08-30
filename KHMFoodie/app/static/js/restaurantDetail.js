@@ -320,4 +320,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     });
 
+    document.getElementById('checkout-btn')?.addEventListener('click', () => {
+        if (restaurantId) {
+            window.location.href = `/order-detail/${restaurantId}`;
+        }
+    });
+
 });

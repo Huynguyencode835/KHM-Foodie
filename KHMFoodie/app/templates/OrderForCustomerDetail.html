@@ -196,7 +196,7 @@
                     Chat với nhà hàng
                 </button>
             </div>
-            <a href="/"
+            <a id="action-explore-btn" href="/"
                 class="w-full md:flex-1 bg-surface-container-lowest text-primary border-2 border-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-fixed transition-all active:scale-95 duration-150 text-center">
                 Tiếp tục khám phá
             </a>
@@ -417,8 +417,13 @@
                 document.getElementById('action-positive').classList.add('md:flex');
             }
 
-                showState('content');
-            });
+            if (order.status === 'Pending Payment') {
+                const exploreBtn = document.getElementById('action-explore-btn');
+                exploreBtn.textContent = 'Tiếp tục thanh toán';
+                exploreBtn.href = '/payment-countdown/' + order.id;
+            }
+
+            showState('content');
         } catch (e) {
             showState('error');
         }

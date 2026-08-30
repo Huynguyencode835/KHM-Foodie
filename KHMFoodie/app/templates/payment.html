@@ -12,7 +12,7 @@
         Quay lại nhà hàng
     </a>
     <h1 class="font-headline-lg text-headline-lg mt-sm">Thông tin giao hàng và thanh toán</h1>
-    <p class="text-secondary text-body-md mt-xs">Nhập thông tin nhận hàng trước khi chuyển sang thanh toán bằng mã QR.</p>
+    <p class="text-secondary text-body-md mt-xs">Nhập thông tin nhận hàng, sau đó chọn cổng thanh toán bạn muốn sử dụng.</p>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-md items-start">
@@ -64,17 +64,31 @@
 
         <section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
             <div class="flex items-center gap-xs mb-sm">
-                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">qr_code_2</span>
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
                 <h2 class="font-headline-md text-headline-md">Phương thức thanh toán</h2>
             </div>
-            <input checked class="hidden payment-radio" id="qr" name="payment" type="radio">
-            <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all" for="qr">
-                <span class="material-symbols-outlined text-3xl text-primary">qr_code_2</span>
-                <span>
-                    <span class="block font-label-md text-label-md">Thanh toán online bằng QR</span>
-                    <span class="block text-caption text-secondary mt-1">Bạn sẽ được chuyển tới VNPAY để quét mã QR và hoàn tất thanh toán.</span>
-                </span>
-            </label>
+            <div class="grid grid-cols-1 gap-sm sm:grid-cols-2">
+                <div>
+                    <input checked class="hidden payment-radio" id="momo" name="payment" value="momo" type="radio" form="checkout-form">
+                    <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="momo">
+                        <span class="material-symbols-outlined text-3xl text-primary">account_balance_wallet</span>
+                        <span>
+                            <span class="block font-label-md text-label-md">Thanh toán qua MoMo</span>
+                            <span class="block text-caption text-secondary mt-1">Bạn sẽ được chuyển tới MoMo để hoàn tất thanh toán.</span>
+                        </span>
+                    </label>
+                </div>
+                <div>
+                    <input class="hidden payment-radio" id="vnpay" name="payment" value="vnpay" type="radio" form="checkout-form">
+                    <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="vnpay">
+                        <span class="material-symbols-outlined text-3xl text-primary">qr_code_2</span>
+                        <span>
+                            <span class="block font-label-md text-label-md">Thanh toán qua VNPAY</span>
+                            <span class="block text-caption text-secondary mt-1">Bạn sẽ được chuyển tới VNPAY để chọn hình thức thanh toán (QR/thẻ).</span>
+                        </span>
+                    </label>
+                </div>
+            </div>
         </section>
     </div>
 
@@ -105,7 +119,7 @@
             <p id="checkout-error" class="hidden rounded-lg bg-error-container text-on-error-container px-sm py-sm text-body-md mb-sm"></p>
             <button type="submit" form="checkout-form" id="placeOrder"
                 class="w-full py-md bg-[#FF4F00] text-white rounded-xl font-bold text-body-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-sm">
-                <span>Tiếp tục đến QR</span>
+                <span>Tiếp tục thanh toán</span>
                 <span class="material-symbols-outlined">arrow_forward</span>
             </button>
             <div class="mt-md flex items-center justify-center gap-xs text-secondary">
@@ -134,7 +148,6 @@
         placeOrderBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang tạo đơn...';
 
         const payload = Object.fromEntries(new FormData(checkoutForm).entries());
-        payload.bank_code = 'VNPAYQR';
 
         try {
             const response = await fetch('/api/payment/{{ restaurant.id }}', {
@@ -153,7 +166,7 @@
             checkoutError.classList.remove('hidden');
             placeOrderBtn.disabled = false;
             placeOrderBtn.classList.remove('opacity-80', 'pointer-events-none');
-            placeOrderBtn.innerHTML = '<span>Tiếp tục đến QR</span><span class="material-symbols-outlined">arrow_forward</span>';
+            placeOrderBtn.innerHTML = '<span>Tiếp tục thanh toán</span><span class="material-symbols-outlined">arrow_forward</span>';
         }
     });
 </script>
