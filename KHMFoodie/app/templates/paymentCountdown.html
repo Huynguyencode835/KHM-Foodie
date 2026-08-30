@@ -1,5 +1,8 @@
 {% extends "layout/baseCustomer.html" %}
 {% block content %}
+<style>
+    .countdown-payment-radio:checked + label { border-color: #a93100; background-color: #ffdbd0; }
+</style>
 <main class="pt-24 px-gutter max-w-container-max mx-auto pb-32 lg:pb-8">
     <!-- Loading State -->
     <div id="loading-state" class="text-center py-xl">
@@ -59,9 +62,31 @@
                 </div>
             </div>
 
+            <!-- Payment Method -->
+            <div class="space-y-sm mb-lg text-left">
+                <p class="font-label-md text-label-md text-secondary mb-xs">Chọn phương thức thanh toán</p>
+                <div class="grid grid-cols-1 gap-sm sm:grid-cols-2">
+                    <div>
+                        <input checked class="hidden countdown-payment-radio" id="countdown-momo" name="countdown-payment" value="momo" type="radio">
+                        <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="countdown-momo">
+                            <span class="material-symbols-outlined text-2xl text-primary">account_balance_wallet</span>
+                            <span class="font-label-md text-label-md">MoMo</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input class="hidden countdown-payment-radio" id="countdown-vnpay" name="countdown-payment" value="vnpay" type="radio">
+                        <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="countdown-vnpay">
+                            <span class="material-symbols-outlined text-2xl text-primary">qr_code_2</span>
+                            <span class="font-label-md text-label-md">VNPAY</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
             <!-- Action Buttons -->
             <div class="space-y-sm">
-                <button onclick="window.location.href='/payment'"
+                <p id="pay-error" class="hidden rounded-lg bg-error-container text-on-error-container px-sm py-sm text-body-md text-left"></p>
+                <button id="payBtn"
                     class="w-full py-md bg-[#FF4F00] text-white rounded-xl font-bold text-body-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-sm">
                     <span class="material-symbols-outlined">credit_card</span>
                     <span>Tiến hành thanh toán</span>
@@ -155,6 +180,43 @@
         expireOrder();
     }
 
+    async function proceedToPayment() {
+        const payBtn = document.getElementById('payBtn');
+        const payError = document.getElementById('pay-error');
+        payError.classList.add('hidden');
+
+        const selected = document.querySelector('input[name="countdown-payment"]:checked');
+        if (!selected) {
+            payError.textContent = 'Vui lòng chọn phương thức thanh toán';
+            payError.classList.remove('hidden');
+            return;
+        }
+
+        payBtn.disabled = true;
+        payBtn.classList.add('opacity-80', 'pointer-events-none');
+        payBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang xử lý...';
+
+        try {
+            const res = await fetch(`/api/payment/pay/${ORDER_ID}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payment: selected.value })
+            });
+            const json = await res.json();
+
+            if (!res.ok || !json.payment_url) {
+                throw new Error(json.message || 'Không thể tạo thanh toán. Vui lòng thử lại.');
+            }
+            window.location.href = json.payment_url;
+        } catch (e) {
+            payError.textContent = e.message;
+            payError.classList.remove('hidden');
+            payBtn.disabled = false;
+            payBtn.classList.remove('opacity-80', 'pointer-events-none');
+            payBtn.innerHTML = '<span class="material-symbols-outlined">credit_card</span><span>Tiến hành thanh toán</span>';
+        }
+    }
+
     async function loadOrder() {
         try {
             const res = await fetch(`/api/orders_customer/${ORDER_ID}`);
@@ -204,6 +266,8 @@
     document.getElementById('cancelBtn').addEventListener('click', () => {
         document.getElementById('cancelModal').classList.remove('hidden');
     });
+
+    document.getElementById('payBtn').addEventListener('click', proceedToPayment);
 
     document.addEventListener('DOMContentLoaded', loadOrder);
 </script>

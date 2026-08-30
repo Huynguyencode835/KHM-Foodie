@@ -2,15 +2,8 @@ from sqlalchemy import or_
 from datetime import datetime, timedelta, timezone
 
 from app.extensions import db
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-from app.models.model import Order, OrderItem, Status
-=======
 from app.models.model import Order, OrderItem, Status, Restaurant, Cart, CartItems
->>>>>>> Stashed changes
-=======
-from app.models.model import Order, OrderItem, Status,Restaurant
->>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
+
 from app.service.notificationByFCM import send_push_notification
 from flask_login import current_user
 
@@ -124,11 +117,6 @@ class OrdersDao:
         ).filter_by(id=order_id, restaurant_id=restaurant_id).first()
 
     @staticmethod
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
     def get_order_by_id_and_customer(order_id):
         order = Order.query.options(
             db.joinedload(Order.items).joinedload(OrderItem.dish),
@@ -150,12 +138,8 @@ class OrdersDao:
             "delivery_address": order.delivery_address,
             "shipping_fee": float(order.shipping_fee) if order.shipping_fee is not None else None,
             "total_amount": float(order.total_amount) if order.total_amount is not None else None,
-<<<<<<< HEAD
             "created_at": order.created_at.isoformat() if order.created_at else None,
             "payment_deadline": order.payment_deadline.isoformat() if order.payment_deadline else None,
-=======
-            "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S") if order.created_at else None,
->>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
 
             "restaurant": {
                 "id": order.restaurant.id,
@@ -187,10 +171,6 @@ class OrdersDao:
         }
 
     @staticmethod
-<<<<<<< HEAD
->>>>>>> Stashed changes
-=======
->>>>>>> 4491e34afa32b99180663bf9d268ee92bb68488d
     def approve_order(order_id, restaurant_id):
         order = OrdersDao.get_order_by_id_and_restaurant(order_id, restaurant_id)
         if not order:

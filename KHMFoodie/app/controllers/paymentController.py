@@ -129,6 +129,87 @@ class PaymentController:
             }), 500
 
     @staticmethod
+    @login_required
+    def pay_existing_order(order_id):
+        """Tạo payment_url cho một đơn ĐÃ TỒN TẠI (không tạo đơn mới).
+
+        Dùng bởi paymentCountdown.html: đơn đã được tạo trước đó (qua
+        /api/orders_customer/create), người dùng chọn MoMo/VNPay ngay tại
+        trang chờ thanh toán rồi mới gọi API này để lấy link cổng thanh toán.
+        """
+        order = Order.query.get(order_id)
+        if not order or order.user_id != current_user.id:
+            return jsonify({
+                "success": False,
+                "message": "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập"
+            }), 404
+
+        if order.status != Status.PENDING_PAYMENT:
+            return jsonify({
+                "success": False,
+                "message": "Đơn hàng này không ở trạng thái chờ thanh toán"
+            }), 400
+
+        data = request.get_json(silent=True) or {}
+        payment_method = data.get("payment")
+
+        if payment_method not in ("momo", "vnpay"):
+            return jsonify({
+                "success": False,
+                "message": "Phương thức thanh toán không hợp lệ"
+            }), 400
+
+        try:
+            if payment_method == "momo":
+                redirect_url = os.getenv("MOMO_REDIRECT_URL", "http://127.0.0.1:5000/payment/return")
+                ipn_url = os.getenv("MOMO_IPN_URL", "http://127.0.0.1:5000/api/payment/ipn")
+
+                momo_res, momo_order_id, request_id = create_momo_payment(
+                    amount=int(order.total_amount),
+                    order_info=f"Thanh toan don hang #{order.id}",
+                    redirect_url=redirect_url,
+                    ipn_url=ipn_url,
+                )
+
+                if momo_res.get("resultCode") != 0:
+                    return jsonify({
+                        "success": False,
+                        "message": momo_res.get("message", "Không thể tạo thanh toán MoMo")
+                    }), 400
+
+                order.momo_order_id = momo_order_id
+                order.momo_request_id = request_id
+                db.session.commit()
+
+                return jsonify({
+                    "success": True,
+                    "payment_url": momo_res["payUrl"],
+                    "order_id": order.id,
+                }), 200
+
+            # payment_method == "vnpay"
+            payment_url, txn_ref = build_vnpay_url(
+                order_id=order.id,
+                amount=order.total_amount,
+                order_info=f"Thanh toan don hang #{order.id}",
+                ip_addr=_get_client_ip(),
+            )
+
+            return jsonify({
+                "success": True,
+                "payment_url": payment_url,
+                "order_id": order.id,
+            }), 200
+
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(e)
+            return jsonify({
+                "success": False,
+                "message": "Không thể tạo thanh toán"
+            }), 500
+
+    @staticmethod
     def payment_return():
         params = request.args.to_dict()
 
@@ -158,7 +239,9 @@ class PaymentController:
                 OrderDao.mark_order_payment_failed(order.id)
             flash("Thanh toán chưa thành công, vui lòng thử lại.", "danger")
 
-        return redirect(url_for("me_bp.me_page"))
+        if order:
+            return redirect(url_for("orderCustomer_bp.order_detail_page", order_id=order.id))
+        return redirect(url_for("orderCustomer_bp.index"))
 
     @staticmethod
     def payment_ipn():
@@ -234,7 +317,9 @@ class PaymentController:
                 OrderDao.mark_order_payment_failed(order_id)
             flash("Thanh toán chưa thành công, vui lòng thử lại.", "danger")
 
-        return redirect(url_for("me_bp.me_page"))
+        if order_id:
+            return redirect(url_for("orderCustomer_bp.order_detail_page", order_id=order_id))
+        return redirect(url_for("orderCustomer_bp.index"))
 
     @staticmethod
     def vnpay_ipn():
