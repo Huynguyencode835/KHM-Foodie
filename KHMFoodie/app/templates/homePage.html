@@ -60,14 +60,23 @@
 </section>
 <script src="{{ url_for('static', filename='js/homepage.js') }}"></script>
 <script>
-    renderHeroSection(getTimePeriod());
-    
-    Promise.all([
-        loadRestaurants(),
-        loadRestaurantCardTemplate()
-    ]).then(([restaurants]) => renderRestaurantList('restaurant-scroll', restaurants, 'carousel'));
+    document.addEventListener('DOMContentLoaded', async function () {
+        renderHeroSection(getTimePeriod());
 
-    document.addEventListener('DOMContentLoaded', function () {
+        try {
+            await loadingState.run(async () => {
+                const [restaurants] = await Promise.all([
+                    loadRestaurants(),
+                    loadRestaurantCardTemplate()
+                ]);
+
+                await renderRestaurantList('restaurant-scroll', restaurants, 'carousel');
+            });
+        } catch (error) {
+            console.error('Không thể tải dữ liệu trang chủ:', error);
+            window.showToast?.('Không thể tải danh sách nhà hàng', 'error');
+        }
+
         const btnLeft = document.getElementById('scroll-left');
         const btnRight = document.getElementById('scroll-right');
         const container = document.getElementById('restaurant-scroll');

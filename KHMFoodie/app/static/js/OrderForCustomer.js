@@ -139,11 +139,17 @@
 
     async function loadOrders() {
         try {
-            var res = await fetch(buildUrl());
-            var json = await res.json();
-            if (json.success && json.data) {
+            await loadingState.run(async function () {
+                var res = await fetch(buildUrl());
+                if (!res.ok) throw new Error("Failed to load orders: " + res.status);
+
+                var json = await res.json();
+                if (!json.success || !json.data) {
+                    throw new Error(json.message || "Failed to load orders");
+                }
+
                 renderOrders(json.data);
-            }
+            });
         } catch (e) {
             console.error("Failed to load orders:", e);
         }

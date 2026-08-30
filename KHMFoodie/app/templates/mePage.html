@@ -18,18 +18,7 @@
     <span
         class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full cursor-pointer transition-all">help</span>
 </div>
-<div class="h-8 w-px bg-outline-variant mx-2"></div> -->
-<div class="flex items-center space-x-3 cursor-pointer">
-    <div class="text-right hidden sm:block">
-        <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
-        <p class="text-caption text-secondary">Quản lý</p>
-    </div>
-    <a href="/me">
-        <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
-            <img class="w-full h-full object-cover" alt="{{ current_user.name }}" src="{{ current_user.avatar }}">
-        </div>
-    </a>
-</div>
+
 {% endif %}
 {% endblock %}
 
