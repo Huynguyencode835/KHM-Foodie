@@ -319,6 +319,27 @@ class RestaurantConfig(Base):
     restaurant = relationship('Restaurant')
 
 
+class AssociationRule(db.Model):
+    __tablename__ = 'association_rules'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=True)
+    antecedent_dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
+    consequent_dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
+
+    support = Column(Float, nullable=False)
+    confidence = Column(Float, nullable=False)
+    lift = Column(Float, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    restaurant = relationship('Restaurant', backref=backref('association_rules', lazy=True))
+    antecedent_dish = relationship('Dish', foreign_keys=[antecedent_dish_id], backref=backref('antecedent_rules', lazy=True))
+    consequent_dish = relationship('Dish', foreign_keys=[consequent_dish_id], backref=backref('consequent_rules', lazy=True))
+
+    def __str__(self):
+        return f"AssociationRule({self.antecedent_dish_id} -> {self.consequent_dish_id}, lift={self.lift:.2f})"
+
+
 def hash_password(raw_password: str) -> str:
     return str(hashlib.md5(raw_password.encode('utf-8')).hexdigest())
 

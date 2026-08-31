@@ -1,4 +1,4 @@
-﻿alembic==1.19.1
+alembic==1.19.1
 annotated-doc==0.0.4
 annotated-types==0.7.0
 anyio==4.14.2
@@ -58,6 +58,7 @@ markdown-it-py==4.2.0
 MarkupSafe==3.0.3
 mcp==1.28.1
 mdurl==0.1.2
+mlxtend>=0.23.0
 msgpack==1.2.1
 numpy==2.5.1
 packaging==26.2
