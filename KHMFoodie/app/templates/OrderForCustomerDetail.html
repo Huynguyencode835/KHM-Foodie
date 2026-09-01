@@ -184,6 +184,15 @@
 
         <!-- Action Buttons -->
         <div class="mt-lg flex flex-col md:flex-row items-center gap-md">
+            <!-- Review Button (shown only if order is COMPLETED) -->
+            <div id="review-button-section" class="hidden w-full md:flex-1">
+                <a id="review-link" href="#" 
+                    class="w-full bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all hover:shadow-lg active:scale-95 duration-150 flex items-center justify-center gap-sm">
+                    <span class="material-symbols-outlined">rate_review</span>
+                    Đánh giá nhà hàng
+                </a>
+            </div>
+            
             <div id="action-positive" class="hidden w-full md:flex-1 md:flex items-center gap-md">
                 <button
                     class="w-full md:flex-1 bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all hover:shadow-lg active:scale-95 duration-150 flex items-center justify-center gap-sm">
@@ -417,11 +426,20 @@
                 document.getElementById('action-positive').classList.add('md:flex');
             }
 
+            // Review button (show only if order is COMPLETED)
+            if (order.status === 'Completed') {
+                const reviewSection = document.getElementById('review-button-section');
+                const reviewLink = document.getElementById('review-link');
+                reviewSection.classList.remove('hidden');
+                reviewLink.href = `/restaurants/${order.restaurant.id}?tab=reviews&order_id=${order.id}`;
+            }
+
             if (order.status === 'Pending Payment') {
                 const exploreBtn = document.getElementById('action-explore-btn');
                 exploreBtn.textContent = 'Tiếp tục thanh toán';
                 exploreBtn.href = '/payment-countdown/' + order.id;
             }
+            });
 
             showState('content');
         } catch (e) {

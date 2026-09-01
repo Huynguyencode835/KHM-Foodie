@@ -60,11 +60,11 @@
                     data-tab="info">
                     Thông tin nhà hàng
                 </button>
-                <!-- <button
+                <button
                     class="tab-btn pb-sm border-b-2 border-transparent text-secondary hover:text-on-surface font-label-md transition-colors"
                     data-tab="reviews">
                     Đánh giá
-                </button> -->
+                </button>
             </div>
             <div class="relative mb-4 flex-grow max-w-md">
                 <span
@@ -284,8 +284,7 @@
             </div>
         </div>
 
-        <div id="tab-reviews" class="tab-panel hidden">
-        </div>
+        {% include 'partials/tabReviews.html' %}
 
     </div>
     </main>

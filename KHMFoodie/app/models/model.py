@@ -291,6 +291,46 @@ class RestaurantConfig(Base):
     restaurant = relationship('Restaurant')
 
 
+class Review(Base):
+    __tablename__ = 'review'
+    __table_args__ = (
+        UniqueConstraint('user_id', 'restaurant_id', name='uq_review_user_restaurant'),
+    )
+    
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
+    order_id = Column(Integer, ForeignKey('orders.id'), nullable=True)
+
+    # Override Base.name: a review has no name of its own
+    name = Column(String(150), nullable=True)
+
+    rating = Column(Integer, nullable=False)  # 1-5 stars
+    comment = Column(String(1000), nullable=True)
+    
+    # Timestamps inherited from Base: created_at, created_updated_at, active
+    user = relationship('User', backref='reviews', lazy=True)
+    restaurant = relationship('Restaurant', backref='reviews', lazy=True)
+    order = relationship('Order', backref='review', uselist=False, lazy=True)
+    images = relationship('ReviewImage', backref='review', lazy=True, cascade='all, delete-orphan')
+
+    def __str__(self):
+        return f"Review({self.id}, rating={self.rating}, user_id={self.user_id})"
+
+
+class ReviewImage(db.Model):
+    __tablename__ = 'review_image'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    review_id = Column(Integer, ForeignKey('review.id', ondelete='CASCADE'), nullable=False)
+    image_url = Column(String(300), nullable=False)
+    uploaded_at = Column(DateTime, default=datetime.utcnow)
+
+    def __str__(self):
+        return f"ReviewImage({self.id}, review_id={self.review_id})"
+
+
+
+
 def hash_password(raw_password: str) -> str:
     return str(hashlib.md5(raw_password.encode('utf-8')).hexdigest())
 
