@@ -109,8 +109,22 @@ class RestaurantMenuController:
     @staticmethod
     def get_top_recommended_dishes():
         limit = request.args.get("limit", 10, type=int)
-        data = DishesDao.get_top_recommended_dishes(limit=limit)
-        return jsonify({"data": data}), 200
+        dishes = DishesDao.get_top_recommended_dishes(limit=limit)
+
+        data = []
+        for d in dishes:
+            data.append({
+                "id": d.id,
+                "name": d.name,
+                "price": d.price,
+                "image": d.image,
+                "restaurant_id": d.restaurant_id
+            })
+
+        return jsonify({
+            "data": data
+        }), 200
+
 
     @staticmethod
     def index():
