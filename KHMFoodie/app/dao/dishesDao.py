@@ -125,7 +125,7 @@ class DishesDao:
 
     @staticmethod
     def get_top_recommended_dishes(limit=10):
-        dishes = (
+        return (
             Dish.query
             .join(AssociationRule, AssociationRule.consequent_dish_id == Dish.id)
             .filter(Dish.active == True)
@@ -133,16 +133,7 @@ class DishesDao:
             .limit(limit)
             .all()
         )
-        return [
-            {
-                "id": dish.id,
-                "name": dish.name,
-                "price": dish.price,
-                "image": dish.image,
-                "restaurant_id": dish.restaurant_id
-            }
-            for dish in dishes
-        ]
+
 
 
 
