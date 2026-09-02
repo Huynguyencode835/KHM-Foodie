@@ -1,6 +1,5 @@
 from app.dao.restaurantsDao import RestaurantsDao
 from flask import jsonify, render_template, request, current_app
-from flask import jsonify, render_template, request
 from flask_login import current_user
 from app.models.model import UserRole, DiscountType
 from app.dao.dishesDao import DishesDao
@@ -174,6 +173,14 @@ class RestaurantsController:
             "is_open": restaurant.status
         }), 200
 
+    @staticmethod
+    def get_recommended_dishes(restaurant_id):
+        dish_id = request.args.get("dish_id", type=int)
+        recommendations = RestaurantsDao.get_recommended_dishes(restaurant_id, dish_id)
+
+        return jsonify({
+            "data": recommendations
+        }), 200
 
     @staticmethod
     def index(restaurant_id):
