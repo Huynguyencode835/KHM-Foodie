@@ -116,11 +116,82 @@ async function refreshCart() {
     renderCart(cart);
 }
 
-async function addToCart(dishId, button) {
+async function fetchRecommendations(dishId) {
+    const res = await fetch(`/api/restaurants/${restaurantId}/recommendations?dish_id=${dishId}`);
+    if (!res.ok) return null;
+    return res.json();
+}
+
+
+
+
+function showRecommendationModal(recommendations) {
+    const modal = document.getElementById('recommendation-modal');
+    const backdrop = document.getElementById('recommendation-backdrop');
+    const box = document.getElementById('recommendation-box');
+    const container = document.getElementById('recommendation-items');
+    if (!modal || !container || !recommendations || recommendations.length === 0) return;
+
+    container.innerHTML = recommendations.map(dish => `
+        <div class="group flex items-center justify-between gap-3 p-3 rounded-2xl bg-surface-container-low hover:bg-surface-container-high/70 border border-outline-variant/30 hover:border-primary/40 transition-all duration-200 hover:shadow-sm">
+            <div class="flex items-center gap-3 min-w-0 flex-1">
+                <div class="relative w-14 h-14 sm:w-16 sm:h-16 rounded-xl overflow-hidden shrink-0 shadow-xs bg-surface-container-highest">
+                    <img src="${dish.image || ''}" onerror="this.src='https://png.pngtree.com/png-vector/20210623/ourmid/pngtree-pho-noodle-vietnamese-food-png-png-image_3508276.jpg'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                </div>
+                <div class="min-w-0 flex-1">
+                    <h4 class="font-label-md font-bold text-on-surface truncate group-hover:text-primary transition-colors text-[14px] sm:text-[15px]">${dish.name}</h4>
+                    <p class="font-headline-md text-primary font-bold text-sm mt-0.5">${formatPrice(dish.price)}</p>
+                </div>
+            </div>
+            <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
+                onclick="addToCart(${dish.id}, this, false)">
+                <span class="material-symbols-outlined text-sm">add</span> Thêm
+            </button>
+        </div>
+    `).join('');
+
+    modal.classList.remove('hidden');
+    modal.classList.add('flex');
+
+    setTimeout(() => {
+        if (backdrop) {
+            backdrop.classList.remove('opacity-0');
+            backdrop.classList.add('opacity-100');
+        }
+        if (box) {
+            box.classList.remove('translate-y-8', 'sm:scale-95', 'opacity-0');
+            box.classList.add('translate-y-0', 'sm:scale-100', 'opacity-100');
+        }
+    }, 10);
+}
+
+function hideRecommendationModal() {
+    const modal = document.getElementById('recommendation-modal');
+    const backdrop = document.getElementById('recommendation-backdrop');
+    const box = document.getElementById('recommendation-box');
+    if (!modal) return;
+
+    if (backdrop) {
+        backdrop.classList.remove('opacity-100');
+        backdrop.classList.add('opacity-0');
+    }
+    if (box) {
+        box.classList.remove('translate-y-0', 'sm:scale-100', 'opacity-100');
+        box.classList.add('translate-y-8', 'sm:scale-95', 'opacity-0');
+    }
+
+    setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+    }, 300);
+}
+
+
+async function addToCart(dishId, button, triggerRecommendation = true) {
     if (button.disabled) return;
 
     const originalHtml = button.innerHTML;
-    const startedAt = Date.now();
+    const originalClass = button.className;
 
     button.disabled = true;
     button.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">progress_activity</span>';
@@ -135,22 +206,42 @@ async function addToCart(dishId, button) {
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
             window.showToast(err.message, 'error');
+            button.innerHTML = originalHtml;
+            button.className = originalClass;
+            button.disabled = false;
             return;
         }
 
         await refreshCart();
-    } catch (error) {
-        window.showToast(error.message, 'error');
-    } finally {
-        const remaining = Math.max(0, 300 - (Date.now() - startedAt));
-        if (remaining > 0) {
-            await new Promise(resolve => setTimeout(resolve, remaining));
+
+        // Trạng thái đã thêm thành công (V xanh)
+        button.className = 'shrink-0 py-xs px-md bg-green-500/20 text-green-600 rounded-lg font-label-md flex items-center gap-xs transition-all';
+        button.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Đã thêm';
+
+        // Gợi ý món ăn kèm nếu có (chỉ trigger khi thêm từ thực đơn chính)
+        if (triggerRecommendation) {
+            const recs = await fetchRecommendations(dishId);
+            if (recs && recs.data && recs.data.length > 0) {
+                showRecommendationModal(recs.data);
+            }
         }
 
+        // Giữ trạng thái "Đã thêm" trong 1s rồi trả lại nút ban đầu
+        setTimeout(() => {
+            button.innerHTML = originalHtml;
+            button.className = originalClass;
+            button.disabled = false;
+        }, 1000);
+
+    } catch (error) {
+        window.showToast(error.message, 'error');
         button.innerHTML = originalHtml;
+        button.className = originalClass;
         button.disabled = false;
     }
 }
+
+
 
 async function changeCartItemQuantity(cartItemId, newQuantity) {
     const res = newQuantity <= 0
@@ -401,4 +492,20 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     loadVoucherOffers();
 
+    // Event listeners cho Recommendation Modal
+    const modal = document.getElementById('recommendation-modal');
+    const closeBtn = document.getElementById('close-recommendation-modal');
+    const dismissBtn = document.getElementById('dismiss-recommendation-btn');
+
+    if (closeBtn) closeBtn.addEventListener('click', hideRecommendationModal);
+    if (dismissBtn) dismissBtn.addEventListener('click', hideRecommendationModal);
+    if (modal) {
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) hideRecommendationModal();
+        });
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') hideRecommendationModal();
+    });
 });
+
