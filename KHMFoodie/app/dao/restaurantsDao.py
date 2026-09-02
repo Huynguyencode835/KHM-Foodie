@@ -1,4 +1,4 @@
-from app.models.model import Restaurant, User, Dish, RestaurantApprovalStatus
+from app.models.model import Restaurant, User, Dish, RestaurantApprovalStatus, AssociationRule
 from app.extensions import db
 from sqlalchemy import func
 from app.service.notificationByEmail import send_restaurant_approved_email,send_restaurant_rejected_email
@@ -126,3 +126,27 @@ class RestaurantsDao:
         r.status = False
         db.session.commit()
         return r
+
+    @staticmethod
+    def get_recommended_dishes(restaurant_id, dish_id):
+        rules = AssociationRule.query.filter_by(
+            restaurant_id=restaurant_id,
+            antecedent_dish_id=dish_id
+        ).all()
+
+
+        recommended_dishes = []
+        for rule in rules:
+            dish = rule.consequent_dish
+            if dish and dish.active:
+                recommended_dishes.append({
+                    "id": dish.id,
+                    "name": dish.name,
+                    "price": dish.price,
+                    "image": dish.image
+                })
+
+
+        return recommended_dishes
+
+
