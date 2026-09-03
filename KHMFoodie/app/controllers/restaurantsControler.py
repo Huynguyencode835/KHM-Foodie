@@ -128,20 +128,8 @@ class RestaurantsController:
 
 
     @staticmethod
-    def get_recommended_dishes(restaurant_id):
-        dish_id = request.args.get("dish_id", type=int)
-        recommendations = RestaurantsDao.get_recommended_dishes(restaurant_id, dish_id)
-
-        return jsonify({
-            "data": recommendations
-        }), 200
-
-
-
-
-    @staticmethod
     def index(restaurant_id):
         return render_template(
             "restaurantDetail.html",
             title="Chi tiết nhà hàng"
-        )
+        )
