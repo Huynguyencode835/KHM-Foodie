@@ -3,6 +3,7 @@ from datetime import datetime, timedelta, timezone
 
 from app.extensions import db
 from app.models.model import Order, OrderItem, Status, Restaurant, Cart, CartItems
+from app.dao.vouchersDao import VouchersDao
 
 from app.service.notificationByFCM import send_push_notification
 from flask_login import current_user
@@ -137,6 +138,7 @@ class OrdersDao:
             "customer_email": order.customer_email,
             "delivery_address": order.delivery_address,
             "shipping_fee": float(order.shipping_fee) if order.shipping_fee is not None else None,
+            "discount_amount": float(order.discount_amount) if order.discount_amount is not None else None,
             "total_amount": float(order.total_amount) if order.total_amount is not None else None,
             "created_at": order.created_at.isoformat() if order.created_at else None,
             "payment_deadline": order.payment_deadline.isoformat() if order.payment_deadline else None,
@@ -217,13 +219,25 @@ class OrdersDao:
     @staticmethod
     def create_order_from_cart(user_id, restaurant_id, note=None, shipping_fee=20000,
                                customer_name="", customer_phone="",
-                               customer_email="", delivery_address=""):
+                               customer_email="", delivery_address="",
+                               voucher_code=None):
         cart = Cart.query.filter_by(user_id=user_id, restaurant_id=restaurant_id).first()
         if not cart or not cart.items:
             return None, "Giỏ hàng trống"
 
         subtotal = sum(float(item.price) * item.quantity for item in cart.items)
-        total_amount = subtotal + shipping_fee
+
+        voucher = None
+        discount_amount = 0
+        if voucher_code:
+            voucher = VouchersDao.get_order_voucher_by_code(voucher_code.strip().upper(), restaurant_id)
+            if not voucher or not voucher.is_valid_now():
+                return None, "Mã giảm giá không hợp lệ hoặc đã hết hạn"
+            if subtotal < (voucher.minimum_order or 0):
+                return None, f"Đơn hàng tối thiểu {voucher.minimum_order:,.0f}đ để dùng mã này"
+            discount_amount = subtotal - voucher.apply_discount(subtotal)
+
+        total_amount = subtotal - discount_amount + shipping_fee
         now = datetime.now(timezone.utc)
         payment_deadline = now + timedelta(minutes=15)
 
@@ -232,6 +246,7 @@ class OrdersDao:
             name=f"DH-{order_count + 1:05d}",
             user_id=user_id,
             restaurant_id=restaurant_id,
+            voucher_id=voucher.id if voucher else None,
             status=Status.PENDING_PAYMENT,
             note=note,
             customer_name=customer_name,
@@ -239,6 +254,7 @@ class OrdersDao:
             customer_email=customer_email,
             delivery_address=delivery_address,
             shipping_fee=shipping_fee,
+            discount_amount=discount_amount,
             total_amount=total_amount,
             payment_deadline=payment_deadline,
         )
