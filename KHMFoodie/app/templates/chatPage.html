@@ -2,7 +2,7 @@
 {% block content %}
 <div class="flex h-[calc(80vh-80px)] min-h-0 overflow-hidden">
     <!-- Left Sidebar: Chat List -->
-    <aside class="w-80 flex flex-col min-h-0 border-r border-outline-variant bg-surface-container-lowest shrink-0">
+    <aside class="w-80 flex flex-col min-h-0 border-r border-outline-variant bg-surface-container-lowest shrink-0 rounded-xl">
         <div class="p-md">
             <h2 class="font-headline-md text-headline-md mb-sm">Trò chuyện</h2>
             <div class="relative">
@@ -22,7 +22,7 @@
     </aside>
 
     <!-- Center: Chat View -->
-    <section class="flex-1 flex flex-col min-h-0 bg-surface relative min-w-0">
+    <section class="px-md flex-1 flex flex-col min-h-0 bg-surface relative min-w-0">
         <!-- Trạng thái mặc định: chưa chọn chat -->
         <div id="chat-placeholder" class="flex-1 flex flex-col items-center justify-center text-center">
             <div class="w-20 h-20 bg-surface-container rounded-full flex items-center justify-center mb-4">
@@ -92,8 +92,8 @@
 
     <!-- Right Sidebar: Order Summary (ẩn mặc định) -->
     <aside id="order-sidebar"
-        class="hidden w-80 border-l border-outline-variant bg-surface-container-low flex-col shrink-0">
-        <div class="p-md border-b border-outline-variant bg-surface-container-lowest">
+        class="hidden w-80 border-l border-outline-variant bg-surface-container-lowest flex-col shrsink-0 rounded-xl">
+        <div class="p-md border-b border-outline-variant bg-surface-container-lowest rounded-xl">
             <h3 class="font-headline-md text-headline-md text-on-surface">Đơn hàng hiện tại</h3>
         </div>
 
