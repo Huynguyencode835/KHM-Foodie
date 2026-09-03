@@ -9,6 +9,7 @@ from app.models.model import (
     RestaurantApprovalStatus, SystemConfig,
     hash_password, parse_time, DEFAULT_MAX_CART_ITEMS
 )
+from sqlalchemy import text
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESTAURANTS_JSON = os.path.join(BASE_DIR, "app", "data", "restaurants.json")
@@ -19,6 +20,8 @@ def seed(app=None):
     if app is None:
         app = create_app()
     with app.app_context():
+        db.session.execute(text("SET FOREIGN_KEY_CHECKS=0"))
+        db.session.commit()
         db.drop_all()
         db.create_all()
 
@@ -285,8 +288,7 @@ def _seed_orders(restaurant_map):
 
 
 def _seed_orders_full_status(restaurant_map):
-    """Tạo 1 customer test riêng và đủ 8 trạng thái Order cho customer đó,
-    kèm PaymentTransaction liên kết đúng theo từng trạng thái."""
+    """Tạo một khách test riêng và đủ 8 trạng thái Order."""
 
     test_customer = User(
         name="Nguyen Van Test",
@@ -377,54 +379,6 @@ def _seed_orders_full_status(restaurant_map):
         )
         order.items = items
         db.session.add(order)
-        db.session.flush()  # cần order.id trước khi tạo payment_transaction
-
-        txn_name = f"Giao dich {order.name}"
-
-        if status == Status.PENDING_PAYMENT:
-            db.session.add(PaymentTransaction(
-                name=txn_name,
-                order_id=order.id,
-                gateway="VNPAY",
-                vnp_txn_ref=f"TXNREF-TEST-{orders_created + 1:03d}-1",
-                amount=total,
-                status="CREATED",
-                ip_addr="127.0.0.1",
-                payment_url="https://sandbox.vnpayment.vn/paymentv2/vpcpay.html?...",
-            ))
-        elif status == Status.PAYMENT_FAILED:
-            db.session.add(PaymentTransaction(
-                name=txn_name,
-                order_id=order.id,
-                gateway="VNPAY",
-                vnp_txn_ref=f"TXNREF-TEST-{orders_created + 1:03d}-1",
-                amount=total,
-                status="FAILED",
-                ip_addr="127.0.0.1",
-                vnp_response_code="24",
-                vnp_transaction_status="02",
-                completed_at=datetime.utcnow() - timedelta(days=days_ago),
-            ))
-        elif status in (
-            Status.PAID, Status.CONFIRMED, Status.PREPARING,
-            Status.DELIVERING, Status.COMPLETED,
-        ):
-            db.session.add(PaymentTransaction(
-                name=txn_name,
-                order_id=order.id,
-                gateway="VNPAY",
-                vnp_txn_ref=f"TXNREF-TEST-{orders_created + 1:03d}-1",
-                amount=total,
-                status="SUCCESS",
-                ip_addr="127.0.0.1",
-                vnp_transaction_no=f"14{orders_created + 1:06d}",
-                vnp_response_code="00",
-                vnp_transaction_status="00",
-                bank_code="NCB",
-                pay_date=(datetime.utcnow() - timedelta(days=days_ago)).strftime("%Y%m%d%H%M%S"),
-                completed_at=datetime.utcnow() - timedelta(days=days_ago),
-            ))
-        # CANCELLED (huỷ trước khi xác nhận): không tạo payment_transaction
 
         orders_created += 1
 

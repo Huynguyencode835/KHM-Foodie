@@ -70,3 +70,13 @@ def promotions_page():
         'promotionsPage.html',
         title='Khuyến mãi'
     )
+
+
+@login_required
+def order_detail_page(restaurant_id):
+    return render_template('orderDetail.html', restaurant_id=restaurant_id)
+
+
+@login_required
+def payment_countdown_page(order_id):
+    return render_template('paymentCountdown.html', order_id=order_id)
