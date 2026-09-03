@@ -203,8 +203,6 @@
                     href="#">Ưu đãi</a>
                 <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
                     href="/order_customer">Đơn hàng</a>
-                <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
-                    href="/chat">Nhắn tin</a>
             </nav>
 
             <!-- Right-side Actions -->
@@ -338,8 +336,6 @@
     {% block scripts %}{% endblock %}
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
     <script>
         window.FIREBASE_VAPID_KEY = "{{ config.FIREBASE_VAPID_KEY }}";
         {% if current_user.is_authenticated %}
@@ -348,17 +344,6 @@
         }
         {% endif %}
     </script>
-    {% if current_user.is_authenticated %}
-    <meta name="user-authenticated" content="true">
-    <meta name="user-id" content="{{ current_user.id }}">
-    {% endif %}
-    {% if firebase_token %}
-    <script>
-        window.__FIREBASE_TOKEN__ = "{{ firebase_token }}";
-    </script>
-    {% endif %}
-    <script src="{{ url_for('static', filename='firebase-config.js') }}"></script>
-    <script src="{{ url_for('static', filename='firebase-chat-core.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
     <script src="{{ url_for('static', filename='js/flashToast.js') }}"></script>
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>

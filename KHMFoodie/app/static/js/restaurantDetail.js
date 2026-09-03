@@ -62,8 +62,7 @@ async function fetchRecommendations(dishId) {
 
 
 
-
-function showRecommendationModal(recommendations) {
+function showRecommendationModal(recommendations) {
     const modal = document.getElementById('recommendation-modal');
     const backdrop = document.getElementById('recommendation-backdrop');
     const box = document.getElementById('recommendation-box');
