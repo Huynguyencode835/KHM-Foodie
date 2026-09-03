@@ -1,6 +1,14 @@
-{% extends "layout/baseCustomer.html" %}
+{% if current_user.role.value == 'Restaurant' %}
+  {% extends "layout/baseRestaurent.html" %}
+{% else %}
+  {% extends "layout/baseCustomer.html" %}
+{% endif %}
 {% block content %}
-<div class="flex h-[calc(80vh-80px)] min-h-0 overflow-hidden">
+<div class="flex {% 
+        if current_user.role.value == 'Restaurant' 
+    %}flex-1 min-h-0 m-lg
+    {% else %}
+    h-[calc(100vh-80px)]{% endif %} overflow-hidden">
     <!-- Left Sidebar: Chat List -->
     <aside class="w-80 flex flex-col min-h-0 border-r border-outline-variant bg-surface-container-lowest shrink-0 rounded-xl">
         <div class="p-md">
