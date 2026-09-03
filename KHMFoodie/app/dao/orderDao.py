@@ -8,12 +8,6 @@ class OrderDao:
     """Data access for creating and updating customer payment orders."""
 
     @staticmethod
-    def _consume_voucher_usage(order):
-        voucher = order.voucher
-        if voucher and voucher.used_count < voucher.usage_limit:
-            voucher.used_count += 1
-
-    @staticmethod
     def create_order_from_cart(cart, data):
         customer_name = str(data.get("customer_name") or "").strip()
         customer_phone = str(data.get("customer_phone") or "").strip()
@@ -116,7 +110,6 @@ class OrderDao:
         order.paid_by = "CUSTOMER_MOMO"
         order.momo_order_id = momo_order_id
         order.status = Status.PAID
-        OrderDao._consume_voucher_usage(order)
         db.session.commit()
         return order, True
 
@@ -138,7 +131,6 @@ class OrderDao:
 
         order.paid_by = "CUSTOMER_VNPAY"
         order.status = Status.PAID
-        OrderDao._consume_voucher_usage(order)
         db.session.commit()
         return order, True
 

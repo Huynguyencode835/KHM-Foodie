@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime
 from flask import request, jsonify, abort
 from flask_login import current_user, login_required
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
@@ -43,14 +43,13 @@ class VoucherController:
             "discount_value": voucher.discount_value,
             "minimum_order": voucher.minimum_order,
             "max_discount": voucher.max_discount,
-            "start_date": voucher.start_date.isoformat() + "Z" if voucher.start_date else None,
-            "end_date": voucher.end_date.isoformat() + "Z" if voucher.end_date else None,
+            "start_date": voucher.start_date.isoformat() if voucher.start_date else None,
+            "end_date": voucher.end_date.isoformat() if voucher.end_date else None,
             "usage_limit": voucher.usage_limit,
             "used_count": voucher.used_count,
             "restaurant_id": voucher.restaurant_id,
             "dish_ids": [dish["id"] for dish in dishes],
             "dishes": dishes,
-            "scope": "DISH" if dishes else "ORDER",
             "active": voucher.active,
             "is_valid": voucher.is_valid_now(),
             "created_at": voucher.created_at.isoformat() if voucher.created_at else None,
@@ -63,7 +62,7 @@ class VoucherController:
             return None, {"dish_ids": "dish_ids phải là một danh sách"}
 
         if not dish_ids:
-            return [], None
+            return None, {"dish_ids": "Voucher phải áp dụng ít nhất một món"}
 
         if any(isinstance(dish_id, bool) or not isinstance(dish_id, int) for dish_id in dish_ids):
             return None, {"dish_ids": "Mỗi dish_id phải là số nguyên"}
@@ -103,14 +102,9 @@ class VoucherController:
             raise ValueError(f"{field_name} là bắt buộc")
 
         try:
-            dt = datetime.fromisoformat(value.replace("Z", "+00:00"))
+            return datetime.fromisoformat(value.replace("Z", "+00:00"))
         except ValueError:
             raise ValueError(f"{field_name} không đúng định dạng datetime")
-
-        # Chuẩn hoá về naive-UTC để nhất quán với datetime.utcnow() dùng trong is_valid_now().
-        if dt.tzinfo is not None:
-            dt = dt.astimezone(timezone.utc).replace(tzinfo=None)
-        return dt
 
     @staticmethod
     def _validate_payload(data, is_update=False):
@@ -121,7 +115,7 @@ class VoucherController:
         errors = {}
 
         allowed_fields = {
-            "name", "code", "discount_type", "discount_value",
+            "name", "code", "discount_value",
             "max_discount", "start_date", "end_date", "usage_limit",
             "dish_ids"
         }
@@ -137,19 +131,13 @@ class VoucherController:
                 if cleaned.get(field) in [None, ""]:
                     errors[field] = f"{field} là bắt buộc"
             if "dish_ids" not in cleaned:
-                cleaned["dish_ids"] = []
+                errors["dish_ids"] = "dish_ids là bắt buộc"
 
-        if "dish_ids" in cleaned and not isinstance(cleaned["dish_ids"], list):
-            errors["dish_ids"] = "dish_ids phải là một danh sách"
-
-        if "discount_type" in cleaned:
-            if cleaned["discount_type"] in [None, ""]:
-                cleaned["discount_type"] = DiscountType.PERCENTAGE
-            else:
-                try:
-                    cleaned["discount_type"] = DiscountType[str(cleaned["discount_type"]).upper()]
-                except KeyError:
-                    errors["discount_type"] = "discount_type phải là PERCENTAGE hoặc FIXED_AMOUNT"
+        if "dish_ids" in cleaned:
+            if not isinstance(cleaned["dish_ids"], list):
+                errors["dish_ids"] = "dish_ids phải là một danh sách"
+            elif not cleaned["dish_ids"]:
+                errors["dish_ids"] = "Voucher phải áp dụng ít nhất một món"
 
         if "name" in cleaned and cleaned["name"] is not None:
             cleaned["name"] = str(cleaned["name"]).strip()
@@ -201,8 +189,7 @@ class VoucherController:
                 errors["end_date"] = "end_date phải lớn hơn start_date"
 
         discount_value = cleaned.get("discount_value")
-        discount_type = cleaned.get("discount_type", DiscountType.PERCENTAGE if not is_update else None)
-        if discount_type == DiscountType.PERCENTAGE and isinstance(discount_value, (int, float)) and discount_value > 100:
+        if isinstance(discount_value, (int, float)) and discount_value > 100:
             errors["discount_value"] = "Phần trăm giảm không được vượt quá 100"
 
         if errors:
@@ -261,42 +248,20 @@ class VoucherController:
             }), 400
 
         try:
-            existing = VouchersDao.get_by_code_any_status(payload["code"])
-            if existing and existing.active:
-                return jsonify({
-                    "message": "Mã voucher đã tồn tại"
-                }), 409
+            voucher = Voucher(
+                name=payload["name"],
+                code=payload["code"],
+                discount_type=DiscountType.PERCENTAGE,
+                discount_value=payload["discount_value"],
+                minimum_order=0,
+                max_discount=payload.get("max_discount"),
+                start_date=payload["start_date"],
+                end_date=payload["end_date"],
+                usage_limit=payload["usage_limit"],
+                restaurant_id=restaurant_id
+            )
 
-            if existing and not existing.active:
-                # Mã này thuộc một voucher đã bị xoá (soft-delete) - tái sử dụng lại hàng đó
-                # thay vì insert mới, vì cột code là unique ở cấp DB.
-                existing.name = payload["name"]
-                existing.discount_type = payload.get("discount_type", DiscountType.PERCENTAGE)
-                existing.discount_value = payload["discount_value"]
-                existing.minimum_order = 0
-                existing.max_discount = payload.get("max_discount")
-                existing.start_date = payload["start_date"]
-                existing.end_date = payload["end_date"]
-                existing.usage_limit = payload["usage_limit"]
-                existing.used_count = 0
-                existing.restaurant_id = restaurant_id
-                existing.active = True
-                VouchersDao.replace_dishes(existing, dishes)
-                voucher = VouchersDao.save(existing)
-            else:
-                voucher = Voucher(
-                    name=payload["name"],
-                    code=payload["code"],
-                    discount_type=payload.get("discount_type", DiscountType.PERCENTAGE),
-                    discount_value=payload["discount_value"],
-                    minimum_order=0,
-                    max_discount=payload.get("max_discount"),
-                    start_date=payload["start_date"],
-                    end_date=payload["end_date"],
-                    usage_limit=payload["usage_limit"],
-                    restaurant_id=restaurant_id
-                )
-                voucher = VouchersDao.create_voucher(voucher, dishes)
+            voucher = VouchersDao.create_voucher(voucher, dishes)
 
             return jsonify({
                 "message": "Tạo voucher thành công",
@@ -340,6 +305,13 @@ class VoucherController:
                     "message": "Danh sách món không hợp lệ",
                     "errors": dish_error,
                 }), 400
+        elif not voucher.dish_links:
+            return jsonify({
+                "message": "Voucher phải áp dụng ít nhất một món",
+                "errors": {
+                    "dish_ids": "Hãy gửi danh sách món để hoàn thiện voucher này"
+                }
+            }), 400
 
         try:
             for key, value in payload.items():

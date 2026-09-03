@@ -1,21 +1,12 @@
 from app.extensions import db
-from app.models.model import Dish, DishCategory, CartItems, VoucherDish, AssociationRule
+from app.models.model import Dish, VoucherDish
+from app.models.model import Dish, DishCategory, CartItems
 from sqlalchemy import or_, func
+from app.extensions import db
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 
-
 class DishesDao:
-    @staticmethod
-    def get_active_by_ids_and_restaurant(dish_ids, restaurant_id):
-        if not dish_ids:
-            return []
-        return Dish.query.filter(
-            Dish.id.in_(dish_ids),
-            Dish.restaurant_id == restaurant_id,
-            Dish.active == True
-        ).all()
-
     @staticmethod
     def get_list_dishes_by_restaurant(restaurant_id, page=1, per_page=12, category=None, keyword=None):
         query = Dish.query.with_entities(
@@ -132,19 +123,3 @@ class DishesDao:
         except SQLAlchemyError as e:
             db.session.rollback()
             raise e
-
-    @staticmethod
-    def get_top_recommended_dishes(limit=10):
-        return (
-            Dish.query
-            .join(AssociationRule, AssociationRule.consequent_dish_id == Dish.id)
-            .filter(Dish.active == True)
-            .order_by(AssociationRule.lift.desc())
-            .limit(limit)
-            .all()
-        )
-
-
-
-
-
