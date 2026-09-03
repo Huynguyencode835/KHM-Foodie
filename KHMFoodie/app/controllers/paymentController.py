@@ -1,44 +1,27 @@
-import uuid
-from decimal import Decimal
+import os
 
-from flask import request, jsonify, render_template, current_app, redirect, url_for
+from flask import request, jsonify, render_template, current_app, redirect, url_for, flash
 from flask_login import current_user, login_required
 
 from app.extensions import db
 from app.dao.cartDao import CartDao
 from app.dao.orderDao import OrderDao
-from app.dao.paymentsDao import PaymentDao
 from app.dao.restaurantsDao import RestaurantsDao
-from app.models.model import Status
-from app.service.vnpayService import (
-    build_payment_url,
-    verify_signature,
-    VNP_RESPONSE_MESSAGES
-)
+from app.models.model import Order, Status
+from app.service.momoService import create_momo_payment, verify_momo_signature
+from app.service.vnpayService import build_vnpay_url, verify_vnpay_signature, get_order_id_from_txn_ref
 from app.service.notificationByEmail import send_order_payment_success_email
 
 
+def _ipn_response(message, status_code=200):
+    return jsonify({"message": message}), status_code
+
 
 def _get_client_ip():
-    forwarded_for = request.headers.get("X-Forwarded-For")
+    forwarded_for = request.headers.get("X-Forwarded-For", "")
     if forwarded_for:
         return forwarded_for.split(",")[0].strip()
     return request.remote_addr or "127.0.0.1"
-
-
-def _generate_txn_ref(order_id):
-    return f"{order_id}-{uuid.uuid4().hex[:12]}"
-
-
-def _to_vnp_amount(amount):
-    return int(Decimal(str(amount)) * 100)
-
-
-def _ipn_response(code, message):
-    return jsonify({
-        "RspCode": code,
-        "Message": message
-    })
 
 
 class PaymentController:
@@ -65,6 +48,7 @@ class PaymentController:
     @login_required
     def create_payment(restaurant_id):
         data = request.get_json(silent=True) or {}
+        payment_method = data.get("payment")
 
         cart = CartDao.get_cart_by_user_and_restaurant(
             current_user.id,
@@ -77,28 +61,50 @@ class PaymentController:
                 "message": "Cart không tồn tại"
             }), 404
 
+        if payment_method not in ("momo", "vnpay"):
+            return jsonify({
+                "success": False,
+                "message": "Phương thức thanh toán không hợp lệ"
+            }), 400
+
         try:
             order = OrderDao.create_order_from_cart(cart, data)
 
-            txn_ref = _generate_txn_ref(order.id)
-            ip_addr = _get_client_ip()
+            if payment_method == "momo":
+                redirect_url = os.getenv("MOMO_REDIRECT_URL", "http://127.0.0.1:5000/payment/return")
+                ipn_url = os.getenv("MOMO_IPN_URL", "http://127.0.0.1:5000/api/payment/ipn")
 
-            transaction = PaymentDao.create_transaction(
+                momo_res, momo_order_id, request_id = create_momo_payment(
+                    amount=int(order.total_amount),
+                    order_info=f"Thanh toan don hang #{order.id}",
+                    redirect_url=redirect_url,
+                    ipn_url=ipn_url,
+                )
+
+                if momo_res.get("resultCode") != 0:
+                    db.session.rollback()
+                    return jsonify({
+                        "success": False,
+                        "message": momo_res.get("message", "Không thể tạo thanh toán MoMo")
+                    }), 400
+
+                order.momo_order_id = momo_order_id
+                order.momo_request_id = request_id
+                db.session.commit()
+
+                return jsonify({
+                    "success": True,
+                    "payment_url": momo_res["payUrl"],
+                    "order_id": order.id,
+                }), 200
+
+            # payment_method == "vnpay"
+            payment_url, txn_ref = build_vnpay_url(
                 order_id=order.id,
-                txn_ref=txn_ref,
-                amount=order.total_amount
-            )
-
-            payment_url = build_payment_url(
-                txn_ref=transaction.vnp_txn_ref,
-                amount=transaction.amount,
+                amount=order.total_amount,
                 order_info=f"Thanh toan don hang #{order.id}",
-                ip_addr=ip_addr,
-                bank_code=data.get("bank_code")
+                ip_addr=_get_client_ip(),
             )
-
-            transaction.ip_addr = ip_addr
-            transaction.payment_url = payment_url
             db.session.commit()
 
             return jsonify({
@@ -122,81 +128,145 @@ class PaymentController:
                 "message": "Không thể tạo thanh toán"
             }), 500
 
+    @staticmethod
+    @login_required
+    def pay_existing_order(order_id):
+        """Tạo payment_url cho một đơn ĐÃ TỒN TẠI (không tạo đơn mới).
+
+        Dùng bởi paymentCountdown.html: đơn đã được tạo trước đó (qua
+        /api/orders_customer/create), người dùng chọn MoMo/VNPay ngay tại
+        trang chờ thanh toán rồi mới gọi API này để lấy link cổng thanh toán.
+        """
+        order = Order.query.get(order_id)
+        if not order or order.user_id != current_user.id:
+            return jsonify({
+                "success": False,
+                "message": "Không tìm thấy đơn hàng hoặc bạn không có quyền truy cập"
+            }), 404
+
+        if order.status != Status.PENDING_PAYMENT:
+            return jsonify({
+                "success": False,
+                "message": "Đơn hàng này không ở trạng thái chờ thanh toán"
+            }), 400
+
+        data = request.get_json(silent=True) or {}
+        payment_method = data.get("payment")
+
+        if payment_method not in ("momo", "vnpay"):
+            return jsonify({
+                "success": False,
+                "message": "Phương thức thanh toán không hợp lệ"
+            }), 400
+
+        try:
+            if payment_method == "momo":
+                redirect_url = os.getenv("MOMO_REDIRECT_URL", "http://127.0.0.1:5000/payment/return")
+                ipn_url = os.getenv("MOMO_IPN_URL", "http://127.0.0.1:5000/api/payment/ipn")
+
+                momo_res, momo_order_id, request_id = create_momo_payment(
+                    amount=int(order.total_amount),
+                    order_info=f"Thanh toan don hang #{order.id}",
+                    redirect_url=redirect_url,
+                    ipn_url=ipn_url,
+                )
+
+                if momo_res.get("resultCode") != 0:
+                    return jsonify({
+                        "success": False,
+                        "message": momo_res.get("message", "Không thể tạo thanh toán MoMo")
+                    }), 400
+
+                order.momo_order_id = momo_order_id
+                order.momo_request_id = request_id
+                db.session.commit()
+
+                return jsonify({
+                    "success": True,
+                    "payment_url": momo_res["payUrl"],
+                    "order_id": order.id,
+                }), 200
+
+            # payment_method == "vnpay"
+            payment_url, txn_ref = build_vnpay_url(
+                order_id=order.id,
+                amount=order.total_amount,
+                order_info=f"Thanh toan don hang #{order.id}",
+                ip_addr=_get_client_ip(),
+            )
+
+            return jsonify({
+                "success": True,
+                "payment_url": payment_url,
+                "order_id": order.id,
+            }), 200
+
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(e)
+            return jsonify({
+                "success": False,
+                "message": "Không thể tạo thanh toán"
+            }), 500
 
     @staticmethod
     def payment_return():
         params = request.args.to_dict()
 
-        is_valid_signature = verify_signature(params)
+        result_code = params.get("resultCode")
+        momo_order_id = params.get("orderId")
 
-        txn_ref = params.get("vnp_TxnRef")
-        response_code = params.get("vnp_ResponseCode")
-        amount = params.get("vnp_Amount")
-        message = VNP_RESPONSE_MESSAGES.get(
-            response_code,
-            "Không xác định được trạng thái giao dịch"
-        )
+        is_valid_signature = verify_momo_signature(params)
+        order = OrderDao.get_order_by_momo_order_id(momo_order_id)
 
-        transaction = None
-        if txn_ref:
-            transaction = PaymentDao.get_transaction_by_txn_ref(txn_ref)
+        if is_valid_signature and result_code == "0" and order:
+            order, updated = OrderDao.mark_order_paid_momo(order.id, momo_order_id)
 
-        success = is_valid_signature and response_code == "00"
+            if updated and order.customer_email:
+                try:
+                    send_order_payment_success_email(
+                        recipient=order.customer_email,
+                        order_id=order.id,
+                        total_amount=order.total_amount,
+                        restaurant_name=order.restaurant.name if order.restaurant else "Nhà hàng"
+                    )
+                except Exception as email_error:
+                    current_app.logger.exception(email_error)
 
-        return render_template(
-            "paymentResult.html",
-            success=success,
-            is_valid_signature=is_valid_signature,
-            txn_ref=txn_ref,
-            amount=amount,
-            response_code=response_code,
-            message=message,
-            transaction=transaction
-        )
+            flash("Thanh toán thành công!", "success")
+        else:
+            if order:
+                OrderDao.mark_order_payment_failed(order.id)
+            flash("Thanh toán chưa thành công, vui lòng thử lại.", "danger")
+
+        if order:
+            return redirect(url_for("orderCustomer_bp.order_detail_page", order_id=order.id))
+        return redirect(url_for("orderCustomer_bp.index"))
 
     @staticmethod
     def payment_ipn():
-        params = request.args.to_dict()
+        # MoMo gọi IPN bằng POST kèm JSON body (khác GET query string của VNPay)
+        params = request.get_json(silent=True) or {}
 
         try:
-            if not verify_signature(params):
-                return _ipn_response("97", "Invalid checksum")
+            if not verify_momo_signature(params):
+                return _ipn_response("Invalid signature", 400)
 
-            txn_ref = params.get("vnp_TxnRef")
-            response_code = params.get("vnp_ResponseCode")
-            transaction_no = params.get("vnp_TransactionNo")
-            bank_code = params.get("vnp_BankCode")
-            pay_date = params.get("vnp_PayDate")
-            vnp_amount = params.get("vnp_Amount")
+            momo_order_id = params.get("orderId")
+            result_code = params.get("resultCode")
 
-            transaction = PaymentDao.get_transaction_by_txn_ref(txn_ref)
+            order = OrderDao.get_order_by_momo_order_id(momo_order_id)
+            if not order:
+                return _ipn_response("Order not found", 404)
 
-            if not transaction:
-                return _ipn_response("01", "Order not found")
+            expected_amount = int(order.total_amount)
+            if int(params.get("amount", 0)) != expected_amount:
+                return _ipn_response("Invalid amount", 400)
 
-            expected_amount = _to_vnp_amount(transaction.amount)
+            if result_code == "0":
+                order, updated = OrderDao.mark_order_paid_momo(order.id, momo_order_id)
 
-            if int(vnp_amount) != expected_amount:
-                return _ipn_response("04", "Invalid amount")
-
-            transaction, updated = PaymentDao.mark_transaction_result(
-                txn_ref=txn_ref,
-                response_code=response_code,
-                transaction_no=transaction_no,
-                bank_code=bank_code,
-                pay_date=pay_date
-            )
-
-            if not updated:
-                return _ipn_response("02", "Order already confirmed")
-
-            if transaction.status == PaymentDao.STATUS_SUCCESS:
-                order = OrderDao.update_order_status(
-                    transaction.order_id,
-                    Status.PAID
-                )
-
-                if order and order.customer_email:
+                if updated and order.customer_email:
                     try:
                         send_order_payment_success_email(
                             recipient=order.customer_email,
@@ -206,16 +276,104 @@ class PaymentController:
                         )
                     except Exception as email_error:
                         current_app.logger.exception(email_error)
+            else:
+                OrderDao.mark_order_payment_failed(order.id)
 
-            elif transaction.status == PaymentDao.STATUS_FAILED:
-                OrderDao.update_order_status(
-                    transaction.order_id,
-                    Status.PAYMENT_FAILED
-                )
-
-            return _ipn_response("00", "Confirm Success")
+            return _ipn_response("Confirm Success", 200)
 
         except Exception as e:
             db.session.rollback()
             current_app.logger.exception(e)
-            return _ipn_response("99", "Unknown error")
+            return _ipn_response("Unknown error", 500)
+
+    @staticmethod
+    def vnpay_return():
+        params = request.args.to_dict()
+
+        is_valid_signature = verify_vnpay_signature(params)
+        response_code = params.get("vnp_ResponseCode")
+        order_id = get_order_id_from_txn_ref(params.get("vnp_TxnRef"))
+
+        if is_valid_signature and response_code == "00" and order_id:
+            order, updated = OrderDao.mark_order_paid_vnpay(order_id)
+
+            if order and updated and order.customer_email:
+                try:
+                    send_order_payment_success_email(
+                        recipient=order.customer_email,
+                        order_id=order.id,
+                        total_amount=order.total_amount,
+                        restaurant_name=order.restaurant.name if order.restaurant else "Nhà hàng"
+                    )
+                except Exception as email_error:
+                    current_app.logger.exception(email_error)
+
+            if order:
+                flash("Thanh toán thành công!", "success")
+            else:
+                flash("Không tìm thấy đơn hàng tương ứng.", "danger")
+        else:
+            if order_id:
+                OrderDao.mark_order_payment_failed(order_id)
+            flash("Thanh toán chưa thành công, vui lòng thử lại.", "danger")
+
+        if order_id:
+            return redirect(url_for("orderCustomer_bp.order_detail_page", order_id=order_id))
+        return redirect(url_for("orderCustomer_bp.index"))
+
+    @staticmethod
+    def vnpay_ipn():
+        # VNPay gọi IPN bằng GET kèm query string, response format khác MoMo:
+        # {"RspCode": ..., "Message": ...} thay vì {"message": ...}.
+        params = request.args.to_dict()
+
+        def _vnpay_response(rsp_code, message):
+            return jsonify({"RspCode": rsp_code, "Message": message}), 200
+
+        try:
+            if not verify_vnpay_signature(params):
+                return _vnpay_response("97", "Invalid signature")
+
+            order_id = get_order_id_from_txn_ref(params.get("vnp_TxnRef"))
+            if not order_id:
+                return _vnpay_response("01", "Order not found")
+
+            order = Order.query.get(order_id)
+            if not order:
+                return _vnpay_response("01", "Order not found")
+
+            vnp_amount = params.get("vnp_Amount")
+            try:
+                paid_amount = int(vnp_amount) // 100 if vnp_amount is not None else None
+            except ValueError:
+                paid_amount = None
+
+            if paid_amount is None or paid_amount != int(order.total_amount):
+                return _vnpay_response("04", "Invalid amount")
+
+            if order.status != Status.PENDING_PAYMENT:
+                return _vnpay_response("02", "Order already confirmed")
+
+            response_code = params.get("vnp_ResponseCode")
+            if response_code == "00":
+                order, updated = OrderDao.mark_order_paid_vnpay(order.id)
+
+                if updated and order.customer_email:
+                    try:
+                        send_order_payment_success_email(
+                            recipient=order.customer_email,
+                            order_id=order.id,
+                            total_amount=order.total_amount,
+                            restaurant_name=order.restaurant.name if order.restaurant else "Nhà hàng"
+                        )
+                    except Exception as email_error:
+                        current_app.logger.exception(email_error)
+            else:
+                OrderDao.mark_order_payment_failed(order.id)
+
+            return _vnpay_response("00", "Confirm Success")
+
+        except Exception as e:
+            db.session.rollback()
+            current_app.logger.exception(e)
+            return _vnpay_response("99", "Unknown error")

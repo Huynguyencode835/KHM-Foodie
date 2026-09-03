@@ -13,7 +13,6 @@ const VAPID_KEY = window.FIREBASE_VAPID_KEY;
 const SAVE_TOKEN_ENDPOINT = "/api/fcm/save-token";
 
 // ============ 2. Khởi tạo ============
-firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
 
 // ============ 3. Đăng ký Service Worker ============
