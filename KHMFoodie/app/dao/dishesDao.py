@@ -1,5 +1,5 @@
 from app.extensions import db
-from app.models.model import Dish, DishCategory, CartItems, VoucherDish
+from app.models.model import Dish, DishCategory, CartItems, VoucherDish ,AssociationRule
 from sqlalchemy import or_, func
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
@@ -131,3 +131,19 @@ class DishesDao:
         except SQLAlchemyError as e:
             db.session.rollback()
             raise e
+
+    @staticmethod
+    def get_top_recommended_dishes(limit=10):
+        return (
+            Dish.query
+            .join(AssociationRule, AssociationRule.consequent_dish_id == Dish.id)
+            .filter(Dish.active == True)
+            .order_by(AssociationRule.lift.desc())
+            .limit(limit)
+            .all()
+        )
+
+
+
+
+

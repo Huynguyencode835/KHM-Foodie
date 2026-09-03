@@ -118,12 +118,20 @@ class OrdersDao:
         ).filter_by(id=order_id, restaurant_id=restaurant_id).first()
 
     @staticmethod
-    def get_order_by_id_and_customer(order_id):
-        order = Order.query.options(
-            db.joinedload(Order.items).joinedload(OrderItem.dish),
-            db.joinedload(Order.voucher),
-            db.joinedload(Order.restaurant)
-        ).filter_by(id=order_id, user_id=current_user.id).first()
+    def get_order_by_id_and_customer(order_id, isRestaurant = False):
+        if isRestaurant==False :
+            order = Order.query.options(
+                db.joinedload(Order.items).joinedload(OrderItem.dish),
+                db.joinedload(Order.voucher),
+                db.joinedload(Order.restaurant)
+            ).filter_by(id=order_id, user_id=current_user.id).first()
+        else:
+            order = Order.query.options(
+                db.joinedload(Order.items).joinedload(OrderItem.dish),
+                db.joinedload(Order.voucher),
+                db.joinedload(Order.restaurant)
+            ).filter_by(id=order_id, restaurant_id=current_user.id).first()
+        
 
         if not order:
             return None

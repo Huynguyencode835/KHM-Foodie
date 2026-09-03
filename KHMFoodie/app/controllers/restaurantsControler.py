@@ -173,6 +173,16 @@ class RestaurantsController:
             "id": restaurant.id,
             "is_open": restaurant.status
         }), 200
+      
+    
+    @staticmethod
+    def get_recommended_dishes(restaurant_id):
+        dish_id = request.args.get("dish_id", type=int)
+        recommendations = RestaurantsDao.get_recommended_dishes(restaurant_id, dish_id)
+
+        return jsonify({
+            "data": recommendations
+        }), 200
 
 
     @staticmethod
