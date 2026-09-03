@@ -107,8 +107,29 @@ class RestaurantMenuController:
         return jsonify(DishesDao.get_dishes_stats(current_user.id)), 200
 
     @staticmethod
+    def get_top_recommended_dishes():
+        limit = request.args.get("limit", 10, type=int)
+        dishes = DishesDao.get_top_recommended_dishes(limit=limit)
+
+        data = []
+        for d in dishes:
+            data.append({
+                "id": d.id,
+                "name": d.name,
+                "price": d.price,
+                "image": d.image,
+                "restaurant_id": d.restaurant_id
+            })
+
+        return jsonify({
+            "data": data
+        }), 200
+
+
+    @staticmethod
     def index():
+
         return render_template(
             "retaurantMenuPage.html",
             title="Quản lý thực đơn"
-        )
+        )
