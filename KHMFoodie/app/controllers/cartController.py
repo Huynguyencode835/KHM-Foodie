@@ -2,7 +2,6 @@ from flask import jsonify, request,flash
 from flask_login import current_user
 from app.dao.cartDao import CartDao
 from app.dao.restaurantsDao import RestaurantsDao
-from app.dao.vouchersDao import VouchersDao
 
 
 class CartController:
@@ -101,41 +100,6 @@ class CartController:
             return jsonify({"success": False, "message": "Cart item not found"}), 404
         CartDao.remove_item(cart_item_id)
         return jsonify({"success": True}), 200
-
-    @staticmethod
-    def validate_voucher(restaurant_id):
-        cart = CartDao.get_cart_by_user_and_restaurant(current_user.id, restaurant_id)
-        if not cart or not cart.items:
-            return jsonify({"valid": False, "message": "Giỏ hàng đang trống"}), 400
-
-        data = request.get_json() or {}
-        code = str(data.get("code") or "").strip().upper()
-        if not code:
-            return jsonify({"valid": False, "message": "Vui lòng nhập mã giảm giá"}), 400
-
-        voucher = VouchersDao.get_order_voucher_by_code(code, restaurant_id)
-        if not voucher or not voucher.is_valid_now():
-            return jsonify({"valid": False, "message": "Mã giảm giá không hợp lệ hoặc đã hết hạn"}), 404
-
-        subtotal = sum(item.price * item.quantity for item in cart.items)
-        if subtotal < (voucher.minimum_order or 0):
-            return jsonify({
-                "valid": False,
-                "message": f"Đơn hàng tối thiểu {voucher.minimum_order:,.0f}đ để dùng mã này"
-            }), 400
-
-        discount_amount = subtotal - voucher.apply_discount(subtotal)
-
-        return jsonify({
-            "valid": True,
-            "discount_amount": discount_amount,
-            "final_subtotal": subtotal - discount_amount,
-            "voucher": {
-                "id": voucher.id,
-                "code": voucher.code,
-                "name": voucher.name,
-            }
-        }), 200
 
     @staticmethod
     def clear_cart(restaurant_id):

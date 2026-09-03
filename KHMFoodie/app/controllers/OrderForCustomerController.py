@@ -53,7 +53,6 @@ class OrderForCustomerController:
         customer_phone = (data.get("customer_phone") or "").strip()
         customer_email = (data.get("customer_email") or "").strip()
         delivery_address = (data.get("delivery_address") or "").strip()
-        voucher_code = (data.get("voucher_code") or "").strip() or None
 
         if not restaurant_id:
             return jsonify({"success": False, "message": "restaurant_id là bắt buộc"}), 400
@@ -69,7 +68,6 @@ class OrderForCustomerController:
             customer_phone=customer_phone,
             customer_email=customer_email,
             delivery_address=delivery_address,
-            voucher_code=voucher_code,
         )
 
         if error:

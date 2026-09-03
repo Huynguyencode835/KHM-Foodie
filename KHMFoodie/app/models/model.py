@@ -240,7 +240,6 @@ class Order(Base):
     delivery_address = Column(String(300), nullable=True)
 
     shipping_fee = Column(Numeric(12, 0), nullable=False, default=0)
-    discount_amount = Column(Numeric(12, 0), nullable=False, default=0)
     total_amount = Column(Numeric(12, 0), nullable=False, default=0)
     payment_deadline = Column(DateTime, nullable=True)
 
