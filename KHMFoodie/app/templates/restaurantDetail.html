@@ -217,9 +217,17 @@
                                 Thanh toán ngay
                             </button>
                         </div>
-                        <div id="voucher-offers" class="hidden space-y-sm">
-                            <h4 class="font-label-md text-label-md text-secondary px-xs">Mã giảm giá đang có</h4>
-                            <div id="voucher-offers-list" class="space-y-sm"></div>
+                        <div
+                            class="bg-gradient-to-br from-tertiary-container to-tertiary rounded-2xl p-md text-white relative overflow-hidden group">
+                            <div class="relative z-10">
+                                <h4 class="font-headline-md mb-xs">Giảm 20.000đ</h4>
+                                <p class="text-caption opacity-80 mb-md">Dành riêng cho đơn hàng trên 300k tại Pizza
+                                    Lab.</p>
+                                <button class="bg-white text-tertiary px-sm py-xs rounded-lg text-caption font-bold">LẤY
+                                    MÃ NGAY</button>
+                            </div>
+                            <span
+                                class="material-symbols-outlined absolute -right-4 -bottom-4 text-7xl opacity-20 transform -rotate-12 group-hover:scale-125 transition-transform">local_activity</span>
                         </div>
                     </div>
                 </aside>
@@ -318,51 +326,6 @@
     </button>
 </div>
 
-<!-- Recommendation Modal (Món ăn kèm gợi ý) -->
-<div id="recommendation-modal"
-    class="fixed inset-0 z-[100] hidden items-end sm:items-center justify-center p-0 sm:p-4">
-    <!-- Backdrop with blur -->
-    <div id="recommendation-backdrop"
-        class="fixed inset-0 bg-black/60 backdrop-blur-sm opacity-0 transition-opacity duration-300 ease-out"></div>
-
-    <!-- Modal Box -->
-    <div id="recommendation-box"
-        class="relative z-10 w-full max-w-lg max-h-[85vh] bg-surface-container-lowest rounded-t-[28px] sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-outline-variant/30 flex flex-col overflow-hidden transform translate-y-8 sm:translate-y-0 sm:scale-95 opacity-0 transition-all duration-300 ease-out">
-        
-        <!-- Top decorative bar on mobile -->
-        <div class="sm:hidden w-full flex justify-center pt-2.5 pb-1">
-            <div class="w-10 h-1 rounded-full bg-outline-variant/60"></div>
-        </div>
-
-        <!-- Header -->
-        <div class="p-4 sm:p-5 border-b border-outline-variant/15 flex items-center justify-between bg-gradient-to-r from-primary/8 via-primary/3 to-transparent">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/25 text-primary flex items-center justify-center shrink-0 shadow-xs">
-                    <span class="material-symbols-outlined text-[24px]">auto_awesome</span>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h3 class="font-headline-md text-headline-md font-extrabold text-on-surface">Món ngon dùng kèm</h3>
-                        <span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary/10 text-primary">Gợi ý AI</span>
-                    </div>
-                    <p class="text-caption text-secondary mt-0.5">Khách hàng thường chọn cùng món bạn vừa thêm</p>
-                </div>
-            </div>
-            <button id="close-recommendation-modal"
-                class="w-9 h-9 rounded-full bg-surface-container-high/80 hover:bg-surface-container-highest flex items-center justify-center text-secondary hover:text-on-surface transition-colors">
-                <span class="material-symbols-outlined text-lg">close</span>
-            </button>
-
-        </div>
-
-        <!-- Body / Items list -->
-        <div id="recommendation-items" class="p-4 sm:p-5 space-y-3 overflow-y-auto max-h-[50vh]">
-            <!-- Dynamic items rendered by JS -->
-        </div>
-    </div>
-</div>
-
 <script src="{{ url_for('static', filename='js/pagination.js') }}"></script>
 <script src="{{ url_for('static', filename='js/restaurantDetail.js') }}"></script>
 {% endblock %}
-

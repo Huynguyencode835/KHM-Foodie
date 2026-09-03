@@ -50,14 +50,12 @@ class CartDao:
         if item:
             item.quantity += quantity
         else:
-            voucher = dish.get_active_voucher()
-            price = voucher.apply_discount(dish.price) if voucher else dish.price
             item = CartItems(
                 name=dish.name,
                 cart_id=cart.id,
                 dish_id=dish_id,
                 quantity=quantity,
-                price=price,
+                price=dish.price,
             )
             db.session.add(item)
 

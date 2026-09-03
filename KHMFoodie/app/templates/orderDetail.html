@@ -89,29 +89,11 @@
             <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-md">
                 <section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_10px_30px_rgba(0,0,0,0.12)] border-2 border-primary-container/10">
                     <h2 class="font-headline-md text-headline-md mb-md">Tóm tắt đơn hàng</h2>
-                    <!-- Promo Code -->
-                    <div class="mb-md">
-                        <label class="block font-label-md text-label-md text-on-surface mb-xs">Mã giảm giá</label>
-                        <div class="flex gap-xs">
-                            <input id="promo-code-input" type="text"
-                                class="flex-1 rounded-lg border border-outline-variant focus:border-primary focus:ring-primary bg-surface text-body-md py-sm px-sm uppercase"
-                                placeholder="Nhập mã giảm giá">
-                            <button type="button" id="apply-promo-btn"
-                                class="px-md py-sm rounded-lg bg-surface-container-high text-on-surface font-bold hover:bg-surface-container transition-colors">
-                                Áp dụng
-                            </button>
-                        </div>
-                        <p id="promo-message" class="hidden text-caption mt-xs"></p>
-                    </div>
                     <!-- Price Breakdown -->
                     <div class="space-y-xs border-b border-outline-variant pb-md mb-md">
                         <div class="flex justify-between items-center text-body-md">
                             <span class="text-secondary">Tạm tính món (<span id="summary-items-count">0</span> món)</span>
                             <span class="text-on-surface" id="summary-subtotal">0đ</span>
-                        </div>
-                        <div id="summary-discount-row" class="hidden justify-between items-center text-body-md">
-                            <span class="text-secondary">Giảm giá</span>
-                            <span class="text-primary" id="summary-discount">-0đ</span>
                         </div>
                         <div class="flex justify-between items-center text-body-md">
                             <span class="text-secondary">Phí giao hàng</span>
@@ -157,10 +139,6 @@
     const RESTAURANT_ID = {{ restaurant_id }};
     const SHIPPING_FEE = 20000;
 
-    let currentSubtotal = 0;
-    let appliedVoucher = null;
-    let discountAmount = 0;
-
     function formatPrice(value) {
         return Math.round(value || 0).toLocaleString('vi-VN') + 'đ';
     }
@@ -203,76 +181,13 @@
         `).join('');
 
         const totalQty = items.reduce((sum, i) => sum + i.quantity, 0);
-        currentSubtotal = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        const subtotal = items.reduce((sum, i) => sum + (i.price * i.quantity), 0);
+        const total = subtotal + SHIPPING_FEE;
 
         document.getElementById('items-count').textContent = totalQty + ' món';
         document.getElementById('summary-items-count').textContent = totalQty;
-        updateSummary();
-    }
-
-    function updateSummary() {
-        const total = Math.max(0, currentSubtotal - discountAmount) + SHIPPING_FEE;
-        document.getElementById('summary-subtotal').textContent = formatPrice(currentSubtotal);
+        document.getElementById('summary-subtotal').textContent = formatPrice(subtotal);
         document.getElementById('summary-total').textContent = formatPrice(total);
-
-        const discountRow = document.getElementById('summary-discount-row');
-        if (discountAmount > 0) {
-            document.getElementById('summary-discount').textContent = '-' + formatPrice(discountAmount);
-            discountRow.classList.remove('hidden');
-            discountRow.classList.add('flex');
-        } else {
-            discountRow.classList.add('hidden');
-            discountRow.classList.remove('flex');
-        }
-    }
-
-    function setPromoMessage(message, isError) {
-        const el = document.getElementById('promo-message');
-        el.textContent = message || '';
-        el.classList.toggle('hidden', !message);
-        el.classList.toggle('text-error', Boolean(isError));
-        el.classList.toggle('text-primary', !isError && Boolean(message));
-    }
-
-    async function applyPromoCode() {
-        const input = document.getElementById('promo-code-input');
-        const code = input.value.trim();
-        if (!code) {
-            setPromoMessage('Vui lòng nhập mã giảm giá', true);
-            return;
-        }
-
-        const btn = document.getElementById('apply-promo-btn');
-        btn.disabled = true;
-
-        try {
-            const res = await fetch(`/api/cart/${RESTAURANT_ID}/voucher/validate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ code })
-            });
-            const data = await res.json();
-
-            if (!res.ok || !data.valid) {
-                appliedVoucher = null;
-                discountAmount = 0;
-                setPromoMessage(data.message || 'Mã giảm giá không hợp lệ', true);
-                updateSummary();
-                return;
-            }
-
-            appliedVoucher = data.voucher;
-            discountAmount = data.discount_amount;
-            setPromoMessage(`Đã áp dụng mã ${data.voucher.code}`, false);
-            updateSummary();
-        } catch (e) {
-            appliedVoucher = null;
-            discountAmount = 0;
-            setPromoMessage('Có lỗi xảy ra, vui lòng thử lại', true);
-            updateSummary();
-        } finally {
-            btn.disabled = false;
-        }
     }
 
     async function changeQuantity(cartItemId, newQty) {
@@ -334,7 +249,6 @@
                     customer_phone: customerPhone,
                     customer_email: customerEmail,
                     delivery_address: deliveryAddress,
-                    voucher_code: appliedVoucher ? appliedVoucher.code : null,
                 })
             });
 
@@ -357,7 +271,6 @@
     }
 
     document.getElementById('placeOrder').addEventListener('click', placeOrder);
-    document.getElementById('apply-promo-btn').addEventListener('click', applyPromoCode);
 
     document.addEventListener('DOMContentLoaded', loadCart);
 </script>

@@ -14,23 +14,24 @@
 {% block content %}
 <div id="hero-section"></div>
 
+<!-- Khám phá theo danh mục -->
+<section class="space-y-sm">
+    <div class="flex justify-between items-end">
+        <h2 class="font-headline-lg text-headline-lg text-on-surface">Bạn thèm gì hôm nay?</h2>
+        <a class="text-primary font-label-md text-label-md hover:underline" href="#">Xem tất cả</a>
+    </div>
+    <div id="category-chips" class="flex gap-4 overflow-x-auto pt-4 pb-4 no-scrollbar">
+    </div>
+</section>
 <!-- Section 'Gợi ý cho bạn' -->
 <section class="space-y-sm">
-
-    <div class="flex justify-between items-end">
+    <div class="flex items-center gap-3">
         <h2 class="font-headline-lg text-headline-lg text-on-surface">Gợi ý AI cho bạn</h2>
-        <div class="flex gap-2">
-
-            <button id="suggestion-scroll-left"
-                class="scroll-btn p-2 rounded-full border border-outline-variant hover:bg-primary-container hover:text-on-primary-container hover:border-primary hover:scale-110 active:scale-90 transition-all duration-200"><span
-                    class="material-symbols-outlined">chevron_left</span></button>
-            <button id="suggestion-scroll-right"
-                class="scroll-btn p-2 rounded-full border border-outline-variant hover:bg-primary-container hover:text-on-primary-container hover:border-primary hover:scale-110 active:scale-90 transition-all duration-200"><span
-                    class="material-symbols-outlined">chevron_right</span></button>
-        </div>
+        <span
+            class="bg-tertiary-fixed text-on-tertiary-fixed text-[10px] uppercase font-bold px-2 py-0.5 rounded tracking-widest">Personalized</span>
     </div>
-    <div id="suggestions"
-        class="flex overflow-x-auto gap-gutter pb-4 no-scrollbar snap-x snap-mandatory scroll-smooth">
+    <div id="suggestions" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+
     </div>
 </section>
 <!-- Section 'Nhà hàng nổi bật' -->
@@ -64,31 +65,16 @@
 
         try {
             await loadingState.run(async () => {
-                const [restaurants, topRecommendations] = await Promise.all([
+                const [restaurants] = await Promise.all([
                     loadRestaurants(),
-                    loadTopRecommendations(),
                     loadRestaurantCardTemplate()
                 ]);
 
-                renderSuggestions('suggestions', topRecommendations);
                 await renderRestaurantList('restaurant-scroll', restaurants, 'carousel');
             });
         } catch (error) {
             console.error('Không thể tải dữ liệu trang chủ:', error);
             window.showToast?.('Không thể tải danh sách nhà hàng', 'error');
-        }
-
-        const btnSuggLeft = document.getElementById('suggestion-scroll-left');
-        const btnSuggRight = document.getElementById('suggestion-scroll-right');
-        const suggContainer = document.getElementById('suggestions');
-
-        if (suggContainer && btnSuggLeft && btnSuggRight) {
-            btnSuggLeft.addEventListener('click', function () {
-                suggContainer.scrollBy({ left: -320, behavior: 'smooth' });
-            });
-            btnSuggRight.addEventListener('click', function () {
-                suggContainer.scrollBy({ left: 320, behavior: 'smooth' });
-            });
         }
 
         const btnLeft = document.getElementById('scroll-left');
@@ -105,5 +91,4 @@
         }
     });
 </script>
-
 {% endblock %}
