@@ -4,7 +4,7 @@ import base64
 from flask_sqlalchemy import SQLAlchemy
 import firebase_admin
 from flask_mail import Mail
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, auth as fb_auth
 
 db = SQLAlchemy()
 migrate = Migrate()
@@ -20,3 +20,9 @@ def init_firebase(app):
         firebase_admin.initialize_app(cred)
 
     firestore_db = firestore.client()
+
+def mint_firebase_custom_token(user_id):
+    """user_id là int từ SQLAlchemy (User.id) -> ép về string vì Firebase
+    uid luôn là string."""
+    uid = str(user_id)
+    return fb_auth.create_custom_token(uid).decode('utf-8')
