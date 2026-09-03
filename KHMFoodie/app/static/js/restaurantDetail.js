@@ -62,7 +62,8 @@ async function fetchRecommendations(dishId) {
 
 
 
-function showRecommendationModal(recommendations) {
+
+function showRecommendationModal(recommendations) {
     const modal = document.getElementById('recommendation-modal');
     const backdrop = document.getElementById('recommendation-backdrop');
     const box = document.getElementById('recommendation-box');
@@ -426,5 +427,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') hideRecommendationModal();
     });
+    document.getElementById('checkout-btn')?.addEventListener('click', () => {
+        if (restaurantId) {
+            window.location.href = `/order-detail/${restaurantId}`;
+        }
+    });
+
 });
 

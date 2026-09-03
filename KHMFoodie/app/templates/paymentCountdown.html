@@ -1,0 +1,274 @@
+{% extends "layout/baseCustomer.html" %}
+{% block content %}
+<style>
+    .countdown-payment-radio:checked + label { border-color: #a93100; background-color: #ffdbd0; }
+</style>
+<main class="pt-24 px-gutter max-w-container-max mx-auto pb-32 lg:pb-8">
+    <!-- Loading State -->
+    <div id="loading-state" class="text-center py-xl">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-container-high mb-md animate-pulse">
+            <span class="material-symbols-outlined text-secondary">hourglass_empty</span>
+        </div>
+        <p class="font-body-md text-body-md text-secondary">Đang tải thông tin đơn hàng...</p>
+    </div>
+
+    <!-- Expired State -->
+    <div id="expired-state" class="hidden text-center py-xl">
+        <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-error-fixed/30 mb-md">
+            <span class="material-symbols-outlined text-error text-[40px]" style="font-variation-settings: 'FILL' 1;">cancel</span>
+        </div>
+        <h2 class="font-headline-md text-headline-md text-on-background mb-xs">Đơn hàng đã hết hạn thanh toán</h2>
+        <p class="font-body-md text-body-md text-secondary mb-md">Thời gian thanh toán đã hết. Đơn hàng của bạn đã bị huỷ.</p>
+        <a href="/"
+            class="inline-block bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all active:scale-95 duration-150">
+            Quay lại khám phá
+        </a>
+    </div>
+
+    <!-- Countdown Content -->
+    <div id="countdown-content" class="hidden max-w-lg mx-auto">
+        <div class="bg-surface-container-lowest rounded-2xl p-lg shadow-[0px_10px_30px_rgba(0,0,0,0.12)] text-center">
+            <!-- Status Icon -->
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-fixed mb-md">
+                <span class="material-symbols-outlined text-primary text-[32px]" style="font-variation-settings: 'FILL' 1;">schedule</span>
+            </div>
+
+            <h1 class="font-headline-lg text-headline-lg text-on-background mb-xs">Đang chờ thanh toán</h1>
+            <p class="font-body-md text-body-md text-secondary mb-lg">Vui lòng hoàn tất thanh toán trong thời gian quy định</p>
+
+            <!-- Countdown Timer -->
+            <div class="relative inline-flex items-center justify-center mb-lg">
+                <svg class="w-48 h-48 -rotate-90">
+                    <circle cx="96" cy="96" r="88" fill="none" stroke="#e6beb2" stroke-width="8" />
+                    <circle id="countdown-ring" cx="96" cy="96" r="88" fill="none" stroke="#a93100" stroke-width="8"
+                        stroke-linecap="round" stroke-dasharray="553" stroke-dashoffset="0"
+                        class="transition-all duration-1000 ease-linear" />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                    <span id="countdown-time" class="font-display-lg text-display-lg text-primary leading-none">15:00</span>
+                    <span class="font-caption text-caption text-secondary mt-1">thời gian còn lại</span>
+                </div>
+            </div>
+
+            <!-- Order Info -->
+            <div class="space-y-sm mb-lg text-left bg-surface-container-low rounded-xl p-md">
+                <div class="flex justify-between items-center">
+                    <span class="font-label-md text-label-md text-secondary">Mã đơn hàng</span>
+                    <span class="font-headline-md text-headline-md text-on-background" id="order-code">#00000</span>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-label-md text-label-md text-secondary">Tổng thanh toán</span>
+                    <span class="font-headline-md text-headline-md text-primary" id="order-total">0đ</span>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="space-y-sm mb-lg text-left">
+                <p class="font-label-md text-label-md text-secondary mb-xs">Chọn phương thức thanh toán</p>
+                <div class="grid grid-cols-1 gap-sm sm:grid-cols-2">
+                    <div>
+                        <input checked class="hidden countdown-payment-radio" id="countdown-momo" name="countdown-payment" value="momo" type="radio">
+                        <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="countdown-momo">
+                            <span class="material-symbols-outlined text-2xl text-primary">account_balance_wallet</span>
+                            <span class="font-label-md text-label-md">MoMo</span>
+                        </label>
+                    </div>
+                    <div>
+                        <input class="hidden countdown-payment-radio" id="countdown-vnpay" name="countdown-payment" value="vnpay" type="radio">
+                        <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="countdown-vnpay">
+                            <span class="material-symbols-outlined text-2xl text-primary">qr_code_2</span>
+                            <span class="font-label-md text-label-md">VNPAY</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-sm">
+                <p id="pay-error" class="hidden rounded-lg bg-error-container text-on-error-container px-sm py-sm text-body-md text-left"></p>
+                <button id="payBtn"
+                    class="w-full py-md bg-[#FF4F00] text-white rounded-xl font-bold text-body-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-sm">
+                    <span class="material-symbols-outlined">credit_card</span>
+                    <span>Tiến hành thanh toán</span>
+                </button>
+                <button id="cancelBtn"
+                    class="w-full py-md bg-surface-container-high text-on-surface-variant rounded-xl font-bold text-body-lg hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center gap-sm">
+                    <span class="material-symbols-outlined">close</span>
+                    <span>Hủy giao dịch</span>
+                </button>
+            </div>
+
+            <p class="mt-md font-caption text-caption text-secondary">
+                Đơn hàng sẽ tự huỷ sau khi hết thời gian
+            </p>
+        </div>
+    </div>
+</main>
+
+<!-- Cancel Confirm Modal -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center px-gutter" id="cancelModal">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+    <div class="relative bg-white p-lg rounded-2xl max-w-sm w-full text-center shadow-2xl">
+        <div class="w-16 h-16 bg-error-fixed/30 rounded-full flex items-center justify-center mx-auto mb-md">
+            <span class="material-symbols-outlined text-[32px] text-error" style="font-variation-settings: 'FILL' 1;">warning</span>
+        </div>
+        <h3 class="font-headline-md text-headline-md mb-xs">Huỷ giao dịch?</h3>
+        <p class="text-secondary text-body-md mb-lg">Bạn có chắc chắn muốn huỷ đơn hàng này? Hành động này không thể hoàn tác.</p>
+        <div class="flex gap-sm">
+            <button onclick="document.getElementById('cancelModal').classList.add('hidden')"
+                class="flex-1 py-sm bg-surface-container-high text-on-surface-variant rounded-lg font-label-md hover:bg-surface-container-highest transition-all">
+                Giữ lại
+            </button>
+            <button onclick="confirmCancel()"
+                class="flex-1 py-sm bg-error text-on-error rounded-lg font-label-md hover:bg-error-container transition-all">
+                Huỷ đơn hàng
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const ORDER_ID = {{ order_id }};
+    const PAYMENT_DURATION = 15 * 60 * 1000; // 15 minutes in ms
+    let countdownInterval = null;
+
+    function formatPrice(value) {
+        return Math.round(value || 0).toLocaleString('vi-VN') + 'đ';
+    }
+
+    function showState(state) {
+        document.getElementById('loading-state').classList.toggle('hidden', state !== 'loading');
+        document.getElementById('expired-state').classList.toggle('hidden', state !== 'expired');
+        document.getElementById('countdown-content').classList.toggle('hidden', state !== 'countdown');
+    }
+
+    function updateCountdown(deadline) {
+        const now = new Date().getTime();
+        const remaining = deadline - now;
+
+        if (remaining <= 0) {
+            clearInterval(countdownInterval);
+            document.getElementById('countdown-time').textContent = '00:00';
+            document.getElementById('countdown-ring').style.strokeDashoffset = '553';
+            expireOrder();
+            return;
+        }
+
+        const minutes = Math.floor(remaining / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+        document.getElementById('countdown-time').textContent =
+            String(minutes).padStart(2, '0') + ':' + String(seconds).padStart(2, '0');
+
+        // Update ring progress
+        const progress = remaining / PAYMENT_DURATION;
+        const circumference = 553;
+        const offset = circumference * (1 - progress);
+        document.getElementById('countdown-ring').style.strokeDashoffset = offset;
+    }
+
+    async function expireOrder() {
+        try {
+            await fetch(`/api/orders_customer/${ORDER_ID}/expire`, { method: 'POST' });
+        } catch (e) { }
+        showState('expired');
+    }
+
+    function confirmCancel() {
+        document.getElementById('cancelModal').classList.add('hidden');
+        expireOrder();
+    }
+
+    async function proceedToPayment() {
+        const payBtn = document.getElementById('payBtn');
+        const payError = document.getElementById('pay-error');
+        payError.classList.add('hidden');
+
+        const selected = document.querySelector('input[name="countdown-payment"]:checked');
+        if (!selected) {
+            payError.textContent = 'Vui lòng chọn phương thức thanh toán';
+            payError.classList.remove('hidden');
+            return;
+        }
+
+        payBtn.disabled = true;
+        payBtn.classList.add('opacity-80', 'pointer-events-none');
+        payBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang xử lý...';
+
+        try {
+            const res = await fetch(`/api/payment/pay/${ORDER_ID}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payment: selected.value })
+            });
+            const json = await res.json();
+
+            if (!res.ok || !json.payment_url) {
+                throw new Error(json.message || 'Không thể tạo thanh toán. Vui lòng thử lại.');
+            }
+            window.location.href = json.payment_url;
+        } catch (e) {
+            payError.textContent = e.message;
+            payError.classList.remove('hidden');
+            payBtn.disabled = false;
+            payBtn.classList.remove('opacity-80', 'pointer-events-none');
+            payBtn.innerHTML = '<span class="material-symbols-outlined">credit_card</span><span>Tiến hành thanh toán</span>';
+        }
+    }
+
+    async function loadOrder() {
+        try {
+            const res = await fetch(`/api/orders_customer/${ORDER_ID}`);
+            if (!res.ok) throw new Error('Not found');
+            const json = await res.json();
+            if (!json.success || !json.data) throw new Error('No data');
+
+            const order = json.data;
+
+            // If order is not PENDING_PAYMENT, show expired
+            if (order.status !== 'Pending Payment') {
+                showState('expired');
+                return;
+            }
+
+            document.getElementById('order-code').textContent = '#' + String(order.id).padStart(5, '0');
+            document.getElementById('order-total').textContent = formatPrice(order.total_amount);
+
+            // Calculate deadline from server's payment_deadline if available, else created_at + 15min
+            let deadline;
+            if (order.payment_deadline) {
+                let dl = order.payment_deadline;
+                if (dl && !dl.endsWith('Z') && !dl.includes('+')) dl += 'Z';
+                deadline = new Date(dl).getTime();
+            } else if (order.created_at) {
+                deadline = new Date(order.created_at).getTime() + PAYMENT_DURATION;
+            } else {
+                deadline = new Date().getTime() + PAYMENT_DURATION;
+            }
+
+            const remaining = deadline - new Date().getTime();
+            if (remaining <= 0) {
+                showState('expired');
+                expireOrder();
+                return;
+            }
+
+            showState('countdown');
+            updateCountdown(deadline);
+            countdownInterval = setInterval(() => updateCountdown(deadline), 1000);
+
+        } catch (e) {
+            showState('expired');
+        }
+    }
+
+    document.getElementById('cancelBtn').addEventListener('click', () => {
+        document.getElementById('cancelModal').classList.remove('hidden');
+    });
+
+    document.getElementById('payBtn').addEventListener('click', proceedToPayment);
+
+    document.addEventListener('DOMContentLoaded', loadOrder);
+</script>
+{% endblock %}
