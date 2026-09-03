@@ -9,6 +9,7 @@ from app.models.model import (
     RestaurantApprovalStatus, SystemConfig,
     hash_password, parse_time, DEFAULT_MAX_CART_ITEMS
 )
+from sqlalchemy import text
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESTAURANTS_JSON = os.path.join(BASE_DIR, "app", "data", "restaurants.json")
@@ -19,6 +20,8 @@ def seed(app=None):
     if app is None:
         app = create_app()
     with app.app_context():
+        db.session.execute(text("SET FOREIGN_KEY_CHECKS=0"))
+        db.session.commit()
         db.drop_all()
         db.create_all()
 
