@@ -240,6 +240,7 @@ class Order(Base):
     delivery_address = Column(String(300), nullable=True)
 
     shipping_fee = Column(Numeric(12, 0), nullable=False, default=0)
+    discount_amount = Column(Numeric(12, 0), nullable=False, default=0)
     total_amount = Column(Numeric(12, 0), nullable=False, default=0)
     payment_deadline = Column(DateTime, nullable=True)
 
@@ -289,6 +290,27 @@ class RestaurantConfig(Base):
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), primary_key=True)
     max_cart_items = Column(Integer, nullable=False)
     restaurant = relationship('Restaurant')
+
+
+class AssociationRule(db.Model):
+    __tablename__ = 'association_rules'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=True)
+    antecedent_dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
+    consequent_dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
+
+    support = Column(Float, nullable=False)
+    confidence = Column(Float, nullable=False)
+    lift = Column(Float, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    restaurant = relationship('Restaurant', backref=backref('association_rules', lazy=True))
+    antecedent_dish = relationship('Dish', foreign_keys=[antecedent_dish_id], backref=backref('antecedent_rules', lazy=True))
+    consequent_dish = relationship('Dish', foreign_keys=[consequent_dish_id], backref=backref('consequent_rules', lazy=True))
+
+    def __str__(self):
+        return f"AssociationRule({self.antecedent_dish_id} -> {self.consequent_dish_id}, lift={self.lift:.2f})"
 
 
 def hash_password(raw_password: str) -> str:
