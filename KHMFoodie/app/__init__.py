@@ -9,7 +9,7 @@ from flask_admin import Admin
 from app.models.model import User, Restaurant, Dish, SystemConfig
 from app.admin import UserAdmin, RestaurantAdmin, DishAdmin, SystemConfigAdmin, AdminSecureIndexView
 from flask_admin.theme import Bootstrap4Theme
-from app.extensions import db, mail, init_firebase, mint_firebase_custom_token
+from app.extensions import db, mail, init_firebase
 
 from flask_mail import Mail, Message
 import cloudinary
@@ -87,12 +87,5 @@ def create_app(config_name='dev'):
 
     from app.routes.routes_API.index import route_api
     route_api(app)
-
-    @app.context_processor
-    def inject_firebase_token():
-        from flask_login import current_user
-        if current_user.is_authenticated:
-            return dict(firebase_token=mint_firebase_custom_token(current_user.id))
-        return dict(firebase_token=None)
 
     return app

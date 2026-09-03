@@ -42,10 +42,6 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             if (data.user && data.user.id) {
                 localStorage.setItem('user_id', data.user.id);
             }
-            if (data.firebase_token && typeof signInFirebaseFromToken === 'function') {
-                await signInFirebaseFromToken(data.firebase_token, data.user.id);
-            }
-            console.log(data.firebase_token)
             window.location.href = data.redirect || '/';
         } else {
             window.showToast(data.message || 'Đăng nhập thất bại', 'error');
