@@ -29,3 +29,8 @@ cart_api.add_url_rule(
     view_func=login_required(CartController.clear_cart),
     methods=["DELETE"]
 )
+cart_api.add_url_rule(
+    "/<int:restaurant_id>/voucher/validate",
+    view_func=login_required(CartController.validate_voucher),
+    methods=["POST"]
+)

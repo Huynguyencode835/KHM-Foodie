@@ -111,6 +111,20 @@
                 </div>
 
                 <div class="space-y-2">
+                    <label class="text-label-md font-bold text-on-surface-variant">Phạm vi áp dụng</label>
+                    <div class="flex flex-col gap-2 sm:flex-row">
+                        <label class="flex flex-1 cursor-pointer items-center gap-2 rounded-lg border border-outline-variant px-4 py-3">
+                            <input type="radio" name="voucher-scope" id="voucher-scope-dish" value="DISH" checked class="accent-primary">
+                            <span class="text-body-md text-on-surface">Áp dụng món cụ thể</span>
+                        </label>
+                        <label class="flex flex-1 cursor-pointer items-center gap-2 rounded-lg border border-outline-variant px-4 py-3">
+                            <input type="radio" name="voucher-scope" id="voucher-scope-order" value="ORDER" class="accent-primary">
+                            <span class="text-body-md text-on-surface">Áp dụng cả đơn hàng</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="voucher-dish-section" class="space-y-2">
                     <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <label class="text-label-md font-bold text-on-surface-variant">Món áp dụng</label>

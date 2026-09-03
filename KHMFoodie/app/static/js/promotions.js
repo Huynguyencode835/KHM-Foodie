@@ -38,8 +38,21 @@
         dishLoading: document.getElementById("voucher-dish-loading"),
         dishList: document.getElementById("voucher-dish-list"),
         dishEmpty: document.getElementById("voucher-dish-empty"),
+        dishSection: document.getElementById("voucher-dish-section"),
         selectedDishesCount: document.getElementById("voucher-selected-dishes-count"),
+        scopeDish: document.getElementById("voucher-scope-dish"),
+        scopeOrder: document.getElementById("voucher-scope-order"),
     };
+
+    function getSelectedScope() {
+        return els.scopeOrder.checked ? "ORDER" : "DISH";
+    }
+
+    function setScope(scope) {
+        els.scopeDish.checked = scope !== "ORDER";
+        els.scopeOrder.checked = scope === "ORDER";
+        els.dishSection.classList.toggle("hidden", scope === "ORDER");
+    }
 
     function escapeHtml(value) {
         if (value === null || value === undefined) return "";
@@ -278,6 +291,7 @@
                                     <div class="flex flex-wrap items-center gap-3">
                                         <h4 class="font-headline-md text-headline-md text-on-surface">${escapeHtml(voucher.name)}</h4>
                                         <span class="px-3 py-1 rounded-full text-caption font-bold ${getStatusBadgeClass(statusLabel)}">${escapeHtml(statusLabel)}</span>
+                                        <span class="px-3 py-1 rounded-full text-caption font-bold bg-secondary-container text-on-secondary-container">${voucher.scope === "ORDER" ? "Cả đơn hàng" : "Theo món"}</span>
                                     </div>
                                     <p class="text-label-md text-primary font-bold mt-1">${escapeHtml(voucher.code)}</p>
                                 </div>
@@ -365,6 +379,7 @@
         els.form.reset();
         els.id.value = "";
         clearFormErrors();
+        setScope("DISH");
         renderDishList();
     }
 
@@ -374,6 +389,7 @@
         els.id.value = "";
         els.modalTitle.textContent = "Tạo voucher";
         els.submitBtn.textContent = "Tạo voucher";
+        setScope("DISH");
         renderDishList();
         openModal();
     }
@@ -391,11 +407,13 @@
         els.usageLimit.value = voucher.usage_limit ?? 1;
         els.startDate.value = toDatetimeLocalValue(voucher.start_date);
         els.endDate.value = toDatetimeLocalValue(voucher.end_date);
+        setScope(voucher.scope || (voucher.dish_ids?.length ? "DISH" : "ORDER"));
         renderDishList(voucher.dish_ids || []);
         openModal();
     }
 
     function collectPayload() {
+        const scope = getSelectedScope();
         return {
             name: els.name.value.trim(),
             code: els.code.value.trim(),
@@ -404,9 +422,9 @@
             minimum_order: 0,
             max_discount: els.maxDiscount.value ? Number(els.maxDiscount.value) : null,
             usage_limit: Number(els.usageLimit.value || 0),
-            start_date: els.startDate.value,
-            end_date: els.endDate.value,
-            dish_ids: getSelectedDishIds(),
+            start_date: els.startDate.value ? new Date(els.startDate.value).toISOString() : "",
+            end_date: els.endDate.value ? new Date(els.endDate.value).toISOString() : "",
+            dish_ids: scope === "ORDER" ? [] : getSelectedDishIds(),
         };
     }
 
@@ -430,7 +448,7 @@
             setFieldError("voucher-usage-limit", "Giới hạn lượt dùng phải lớn hơn hoặc bằng 1");
             valid = false;
         }
-        if (!payload.dish_ids.length) {
+        if (getSelectedScope() === "DISH" && !payload.dish_ids.length) {
             setFieldError("voucher-dish-list", "Voucher phải áp dụng ít nhất một món");
             valid = false;
         }
@@ -530,6 +548,8 @@
         }
     });
 
+    els.scopeDish?.addEventListener("change", () => setScope(getSelectedScope()));
+    els.scopeOrder?.addEventListener("change", () => setScope(getSelectedScope()));
     els.openCreateBtn?.addEventListener("click", openCreateModal);
     els.refreshBtn?.addEventListener("click", loadVouchers);
     els.closeModalBtn?.addEventListener("click", closeModal);

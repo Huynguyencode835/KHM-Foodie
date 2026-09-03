@@ -173,6 +173,10 @@
                         <span class="font-body-md text-body-md text-secondary">Phí giao hàng</span>
                         <span id="detail-shipping-fee" class="font-body-md text-body-md text-on-background"></span>
                     </div>
+                    <div id="detail-discount-wrap" class="hidden justify-between items-center">
+                        <span class="font-body-md text-body-md text-secondary">Giảm giá</span>
+                        <span id="detail-discount" class="font-body-md text-body-md text-primary"></span>
+                    </div>
                     <div class="flex justify-between items-center pt-xs">
                         <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider">Tổng
                             thanh toán</h3>
@@ -327,105 +331,113 @@
         try {
             await loadingState.run(async () => {
                 const res = await fetch('/api/orders_customer/' + orderId);
-            if (!res.ok) throw new Error('Not found');
-            const json = await res.json();
-            if (!json.success || !json.data) throw new Error('No data');
+                if (!res.ok) throw new Error('Not found');
+                const json = await res.json();
+                if (!json.success || !json.data) throw new Error('No data');
 
-            const order = json.data;
-            orderRestaurantId = order.restaurant?.id || null;
-            const statusInfo = getStatusInfo(order.status);
+                const order = json.data;
+                const statusInfo = getStatusInfo(order.status);
 
-            // Status hero
-            const iconWrap = document.getElementById('status-icon-wrap');
-            iconWrap.classList.add(statusInfo.is_terminal_negative ? 'bg-error-fixed' : 'bg-primary-fixed');
-            const iconEl = document.getElementById('status-icon');
-            iconEl.textContent = statusInfo.icon;
-            iconEl.classList.add(statusInfo.is_terminal_negative ? 'text-error' : 'text-primary');
-            document.getElementById('status-title').textContent = statusInfo.title;
-            document.getElementById('status-subtitle').textContent = statusInfo.subtitle;
+                // Status hero
+                const iconWrap = document.getElementById('status-icon-wrap');
+                iconWrap.classList.add(statusInfo.is_terminal_negative ? 'bg-error-fixed' : 'bg-primary-fixed');
+                const iconEl = document.getElementById('status-icon');
+                iconEl.textContent = statusInfo.icon;
+                iconEl.classList.add(statusInfo.is_terminal_negative ? 'text-error' : 'text-primary');
+                document.getElementById('status-title').textContent = statusInfo.title;
+                document.getElementById('status-subtitle').textContent = statusInfo.subtitle;
 
-            // Timeline
-            const timelineSection = document.getElementById('timeline-section');
-            if (statusInfo.is_terminal_negative) {
-                timelineSection.classList.add('hidden');
-            } else {
-                timelineSection.classList.remove('hidden');
-                renderTimeline(statusInfo.step);
-            }
-
-            // Order code
-            document.getElementById('detail-order-code').textContent = '#' + String(order.id).padStart(5, '0');
-
-            // Restaurant
-            if (order.restaurant) {
-                const restEl = document.getElementById('detail-restaurant');
-                restEl.classList.remove('hidden');
-                document.getElementById('detail-restaurant-name').textContent = order.restaurant.name;
-                if (order.restaurant.cover_image) {
-                    const img = document.getElementById('detail-restaurant-img');
-                    img.src = order.restaurant.cover_image;
-                    img.alt = order.restaurant.name;
-                    img.classList.remove('hidden');
+                // Timeline
+                const timelineSection = document.getElementById('timeline-section');
+                if (statusInfo.is_terminal_negative) {
+                    timelineSection.classList.add('hidden');
+                } else {
+                    timelineSection.classList.remove('hidden');
+                    renderTimeline(statusInfo.step);
                 }
-            }
 
-            // Note
-            if (order.note) {
-                document.getElementById('detail-note-wrap').classList.remove('hidden');
-                document.getElementById('detail-note').textContent = order.note;
-            }
+                // Order code
+                document.getElementById('detail-order-code').textContent = '#' + String(order.id).padStart(5, '0');
 
-            // Rejection reason
-            if (order.rejection_reason) {
-                document.getElementById('detail-rejection-wrap').classList.remove('hidden');
-                document.getElementById('detail-rejection').textContent = order.rejection_reason;
-            }
+                // Restaurant
+                if (order.restaurant) {
+                    const restEl = document.getElementById('detail-restaurant');
+                    restEl.classList.remove('hidden');
+                    document.getElementById('detail-restaurant-name').textContent = order.restaurant.name;
+                    if (order.restaurant.cover_image) {
+                        const img = document.getElementById('detail-restaurant-img');
+                        img.src = order.restaurant.cover_image;
+                        img.alt = order.restaurant.name;
+                        img.classList.remove('hidden');
+                    }
+                }
 
-            // Address
-            document.getElementById('detail-customer-name').textContent = order.customer_name || '';
-            document.getElementById('detail-address').textContent = order.delivery_address || 'Chưa có địa chỉ';
-            if (order.customer_phone) {
-                document.getElementById('detail-phone').textContent = order.customer_phone;
-                document.getElementById('detail-phone').classList.remove('hidden');
-            }
+                // Note
+                if (order.note) {
+                    document.getElementById('detail-note-wrap').classList.remove('hidden');
+                    document.getElementById('detail-note').textContent = order.note;
+                }
 
-            // Totals
-            document.getElementById('detail-shipping-fee').textContent = money(order.shipping_fee);
-            document.getElementById('detail-total').textContent = money(order.total_amount);
+                // Rejection reason
+                if (order.rejection_reason) {
+                    document.getElementById('detail-rejection-wrap').classList.remove('hidden');
+                    document.getElementById('detail-rejection').textContent = order.rejection_reason;
+                }
 
-            // Items
-            if (order.items && order.items.length > 0) {
-                const itemsWrap = document.getElementById('detail-items-wrap');
-                itemsWrap.classList.remove('hidden');
-                document.getElementById('detail-items-count').textContent = order.items.length + ' món ăn';
+                // Address
+                document.getElementById('detail-customer-name').textContent = order.customer_name || '';
+                document.getElementById('detail-address').textContent = order.delivery_address || 'Chưa có địa chỉ';
+                if (order.customer_phone) {
+                    document.getElementById('detail-phone').textContent = order.customer_phone;
+                    document.getElementById('detail-phone').classList.remove('hidden');
+                }
 
-                const listEl = document.getElementById('detail-items-list');
-                listEl.innerHTML = order.items.map(item => `
-                    <div class="flex items-center justify-between py-xs px-xs">
-                        <div class="flex items-center gap-sm">
-                            ${item.dish_image ? `<img src="${item.dish_image}" alt="${item.dish_name}" class="w-10 h-10 rounded-md object-cover" />` : ''}
-                            <div>
-                                <p class="font-body-md text-body-md text-on-background">${item.dish_name || ''}</p>
-                                <p class="font-label-md text-label-md text-secondary">x${item.quantity}</p>
+                // Totals
+                document.getElementById('detail-shipping-fee').textContent = money(order.shipping_fee);
+                if (order.discount_amount) {
+                    document.getElementById('detail-discount').textContent = '-' + money(order.discount_amount);
+                    document.getElementById('detail-discount-wrap').classList.remove('hidden');
+                    document.getElementById('detail-discount-wrap').classList.add('flex');
+                }
+                document.getElementById('detail-total').textContent = money(order.total_amount);
+
+                // Items
+                if (order.items && order.items.length > 0) {
+                    const itemsWrap = document.getElementById('detail-items-wrap');
+                    itemsWrap.classList.remove('hidden');
+                    document.getElementById('detail-items-count').textContent = order.items.length + ' món ăn';
+
+                    const listEl = document.getElementById('detail-items-list');
+                    listEl.innerHTML = order.items.map(item => `
+                        <div class="flex items-center justify-between py-xs px-xs">
+                            <div class="flex items-center gap-sm">
+                                ${item.dish_image ? `<img src="${item.dish_image}" alt="${item.dish_name}" class="w-10 h-10 rounded-md object-cover" />` : ''}
+                                <div>
+                                    <p class="font-body-md text-body-md text-on-background">${item.dish_name || ''}</p>
+                                    <p class="font-label-md text-label-md text-secondary">x${item.quantity}</p>
+                                </div>
                             </div>
+                            <p class="font-body-md text-body-md text-on-background">${money(item.subtotal)}</p>
                         </div>
-                        <p class="font-body-md text-body-md text-on-background">${money(item.subtotal)}</p>
-                    </div>
-                `).join('');
-            }
+                    `).join('');
+                }
 
-            // Action buttons
-            if (!statusInfo.is_terminal_negative) {
-                document.getElementById('action-positive').classList.remove('hidden');
-                document.getElementById('action-positive').classList.add('md:flex');
-            }
+                // Action buttons
+                if (!statusInfo.is_terminal_negative) {
+                    document.getElementById('action-positive').classList.remove('hidden');
+                    document.getElementById('action-positive').classList.add('md:flex');
+                }
 
-            if (order.status === 'Pending Payment') {
-                const exploreBtn = document.getElementById('action-explore-btn');
-                exploreBtn.textContent = 'Tiếp tục thanh toán';
-                exploreBtn.href = '/payment-countdown/' + order.id;
-            }
+                if (order.status === 'Pending Payment') {
+                    const exploreBtn = document.getElementById('action-explore-btn');
+                    exploreBtn.textContent = 'Tiếp tục thanh toán';
+                    exploreBtn.href = '/payment-countdown/' + order.id;
+                }
 
+                showState('content');
+            });
+        } catch (e) {
+            showState('error');
             showState('content');
         });
     } catch (e) {
