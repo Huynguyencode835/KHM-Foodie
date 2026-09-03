@@ -1,20 +1,11 @@
 from app.extensions import db
-from app.models.model import Dish, DishCategory, CartItems, VoucherDish ,AssociationRule
+from app.models.model import Dish, DishCategory, CartItems, AssociationRule
 from sqlalchemy import or_, func
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
 
 
-class DishesDao:
-    @staticmethod
-    def get_active_by_ids_and_restaurant(dish_ids, restaurant_id):
-        if not dish_ids:
-            return []
-        return Dish.query.filter(
-            Dish.id.in_(dish_ids),
-            Dish.restaurant_id == restaurant_id,
-            Dish.active == True
-        ).all()
 
+class DishesDao:
     @staticmethod
     def get_list_dishes_by_restaurant(restaurant_id, page=1, per_page=12, category=None, keyword=None):
         query = Dish.query.with_entities(
