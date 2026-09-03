@@ -190,13 +190,13 @@
                     <span class="material-symbols-outlined">track_changes</span>
                     Theo dõi đơn hàng
                 </button>
-                <button id="btn-chat-restaurant" onclick="chatWithRestaurant()"
+                <button
                     class="w-full md:flex-1 bg-surface-container-high text-on-surface-variant py-2 px-md rounded-lg font-label-md text-label-md hover:bg-surface-container-highest transition-all active:scale-95 duration-150 flex items-center justify-center gap-sm">
                     <span class="material-symbols-outlined">chat_bubble</span>
                     Chat với nhà hàng
                 </button>
             </div>
-            <a id="action-explore-btn" href="/"
+            <a href="/"
                 class="w-full md:flex-1 bg-surface-container-lowest text-primary border-2 border-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-fixed transition-all active:scale-95 duration-150 text-center">
                 Tiếp tục khám phá
             </a>
@@ -318,8 +318,6 @@
         }
     }
 
-    let orderRestaurantId = null;
-
     async function loadOrder() {
         const pathParts = window.location.pathname.split('/');
         const orderId = pathParts[pathParts.length - 1];
@@ -332,7 +330,6 @@
             if (!json.success || !json.data) throw new Error('No data');
 
             const order = json.data;
-            orderRestaurantId = order.restaurant?.id || null;
             const statusInfo = getStatusInfo(order.status);
 
             // Status hero
@@ -420,35 +417,10 @@
                 document.getElementById('action-positive').classList.add('md:flex');
             }
 
-            if (order.status === 'Pending Payment') {
-                const exploreBtn = document.getElementById('action-explore-btn');
-                exploreBtn.textContent = 'Tiếp tục thanh toán';
-                exploreBtn.href = '/payment-countdown/' + order.id;
-            }
-
-            showState('content');
-        });
-    } catch (e) {
-        showState('error');
-    }
-}
-
-    async function chatWithRestaurant() {
-        if (!orderRestaurantId) return;
-        const pathParts = window.location.pathname.split('/');
-        const orderId = pathParts[pathParts.length - 1];
-        try {
-            const res = await fetch('/api/chats/direct', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ other_user_id: orderRestaurantId, order_id: orderId })
+                showState('content');
             });
-            const data = await res.json();
-            if (res.ok && data.chatId) {
-                window.location.href = '/chat?chatId=' + data.chatId;
-            }
-        } catch (err) {
-            console.error('Lỗi tạo chat:', err);
+        } catch (e) {
+            showState('error');
         }
     }
 

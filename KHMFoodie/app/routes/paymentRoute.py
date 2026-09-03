@@ -15,9 +15,3 @@ payment_bp.add_url_rule(
     view_func=PaymentController.payment_return,
     methods=["GET"]
 )
-
-payment_bp.add_url_rule(
-    "/vnpay/return",
-    view_func=PaymentController.vnpay_return,
-    methods=["GET"]
-)
