@@ -3,172 +3,171 @@
 {% block content %}
 <style>
     .payment-radio:checked + label { border-color: #a93100; background-color: #ffdbd0; }
+    .checkout-field:focus { outline: none; box-shadow: 0 0 0 2px rgba(169, 49, 0, 0.2); }
 </style>
 
+<div class="mb-md">
+    <a href="{{ url_for('restaurant_bp.index', restaurant_id=restaurant.id) }}" class="inline-flex items-center gap-xs text-primary font-label-md hover:underline">
+        <span class="material-symbols-outlined text-lg">arrow_back</span>
+        Quay lại nhà hàng
+    </a>
+    <h1 class="font-headline-lg text-headline-lg mt-sm">Thông tin giao hàng và thanh toán</h1>
+    <p class="text-secondary text-body-md mt-xs">Nhập thông tin nhận hàng, sau đó chọn cổng thanh toán bạn muốn sử dụng.</p>
+</div>
+
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-md items-start">
-    <!-- Left Column: Checkout Details -->
     <div class="lg:col-span-7 space-y-md">
-        <!-- Section: Delivery Address -->
         <section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
-            <div class="flex justify-between items-center mb-sm">
-                <div class="flex items-center gap-xs">
-                    <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
-                    <h2 class="font-headline-md text-headline-md">Thông tin giao hàng</h2>
-                </div>
-                <button class="text-primary font-label-md text-label-md hover:underline">Thay đổi</button>
-            </div>
-            <div class="space-y-sm">
-                <div class="p-sm border border-outline-variant rounded-lg bg-surface-bright">
-                    <p class="font-label-md text-label-md text-on-surface">Nguyễn Văn A • 090 123 4567</p>
-                    <p class="font-body-md text-body-md text-secondary mt-xs">256 Nguyễn Thị Minh Khai, Phường 6, Quận 3, TP. Hồ Chí Minh</p>
-                </div>
+            <div class="flex items-center gap-xs mb-md">
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">location_on</span>
                 <div>
-                    <label class="block font-label-md text-label-md text-on-surface mb-xs">Ghi chú cho tài xế</label>
-                    <textarea class="w-full rounded-lg border-outline-variant focus:border-primary focus:ring-primary bg-surface text-body-md py-sm px-sm" placeholder="Ví dụ: Gửi bảo vệ, gọi điện trước khi đến..." rows="2"></textarea>
+                    <h2 class="font-headline-md text-headline-md">Thông tin người nhận</h2>
+                    <p class="text-caption text-secondary">Các trường có dấu * là bắt buộc.</p>
                 </div>
             </div>
+
+            <form id="checkout-form" class="space-y-sm" novalidate>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-sm">
+                    <label class="block">
+                        <span class="block font-label-md text-label-md text-on-surface mb-xs">Họ và tên *</span>
+                        <input id="customer_name" name="customer_name" required maxlength="150" value="{{ customer.name or '' }}"
+                            class="checkout-field w-full rounded-lg border border-outline-variant bg-surface px-sm py-sm text-body-md"
+                            placeholder="Nguyễn Văn A" type="text">
+                    </label>
+                    <label class="block">
+                        <span class="block font-label-md text-label-md text-on-surface mb-xs">Số điện thoại *</span>
+                        <input id="customer_phone" name="customer_phone" required maxlength="50" value="{{ customer.phonenumber or '' }}"
+                            class="checkout-field w-full rounded-lg border border-outline-variant bg-surface px-sm py-sm text-body-md"
+                            placeholder="090 123 4567" type="tel">
+                    </label>
+                </div>
+                <label class="block">
+                    <span class="block font-label-md text-label-md text-on-surface mb-xs">Email nhận thông báo</span>
+                    <input id="customer_email" name="customer_email" maxlength="150" value="{{ customer.email or '' }}"
+                        class="checkout-field w-full rounded-lg border border-outline-variant bg-surface px-sm py-sm text-body-md"
+                        placeholder="you@example.com" type="email">
+                </label>
+                <label class="block">
+                    <span class="block font-label-md text-label-md text-on-surface mb-xs">Địa chỉ giao hàng *</span>
+                    <textarea id="delivery_address" name="delivery_address" required maxlength="300" rows="3"
+                        class="checkout-field w-full rounded-lg border border-outline-variant bg-surface px-sm py-sm text-body-md"
+                        placeholder="Số nhà, tên đường, phường/xã, quận/huyện, tỉnh/thành phố">{{ customer.address or '' }}</textarea>
+                </label>
+                <label class="block">
+                    <span class="block font-label-md text-label-md text-on-surface mb-xs">Ghi chú cho tài xế</span>
+                    <textarea id="note" name="note" maxlength="300" rows="2"
+                        class="checkout-field w-full rounded-lg border border-outline-variant bg-surface px-sm py-sm text-body-md"
+                        placeholder="Ví dụ: Gửi bảo vệ, gọi điện trước khi đến..."></textarea>
+                </label>
+            </form>
         </section>
 
-        <!-- Section: Payment Methods -->
         <section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
             <div class="flex items-center gap-xs mb-sm">
-                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">payments</span>
+                <span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
                 <h2 class="font-headline-md text-headline-md">Phương thức thanh toán</h2>
             </div>
             <div class="grid grid-cols-1 gap-sm sm:grid-cols-2">
                 <div>
-                    <input checked class="hidden payment-radio" id="momo" name="payment" type="radio">
-                    <label class="flex flex-col items-center justify-center p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all text-center h-full" for="momo">
-                        <span class="material-symbols-outlined text-3xl mb-xs text-primary">account_balance_wallet</span>
-                        <span class="font-label-md text-label-md">Ví điện tử</span>
-                        <span class="text-[10px] text-secondary mt-1">Khuyên dùng</span>
+                    <input checked class="hidden payment-radio" id="momo" name="payment" value="momo" type="radio" form="checkout-form">
+                    <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="momo">
+                        <span class="material-symbols-outlined text-3xl text-primary">account_balance_wallet</span>
+                        <span>
+                            <span class="block font-label-md text-label-md">Thanh toán qua MoMo</span>
+                            <span class="block text-caption text-secondary mt-1">Bạn sẽ được chuyển tới MoMo để hoàn tất thanh toán.</span>
+                        </span>
                     </label>
                 </div>
                 <div>
-                    <input class="hidden payment-radio" id="cash" name="payment" type="radio">
-                    <label class="flex flex-col items-center justify-center p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all text-center h-full" for="cash">
-                        <span class="material-symbols-outlined text-3xl mb-xs text-secondary">payments</span>
-                        <span class="font-label-md text-label-md">Tiền mặt</span>
+                    <input class="hidden payment-radio" id="vnpay" name="payment" value="vnpay" type="radio" form="checkout-form">
+                    <label class="flex items-center gap-sm p-sm border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-all h-full" for="vnpay">
+                        <span class="material-symbols-outlined text-3xl text-primary">qr_code_2</span>
+                        <span>
+                            <span class="block font-label-md text-label-md">Thanh toán qua VNPAY</span>
+                            <span class="block text-caption text-secondary mt-1">Bạn sẽ được chuyển tới VNPAY để chọn hình thức thanh toán (QR/thẻ).</span>
+                        </span>
                     </label>
-                </div>
-            </div>
-        </section>
-
-        <!-- Section: Order Items -->
-        <section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
-            <div class="flex items-center justify-between mb-sm">
-                <h2 class="font-headline-md text-headline-md">Danh sách món ăn</h2>
-                <span class="text-secondary font-label-md text-label-md">3 món</span>
-            </div>
-            <div class="space-y-sm">
-                <div class="flex gap-sm">
-                    <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" alt="Burger Bò Wagyu Đặc Biệt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUxC3Z-Uvml6pPU9yPes_6qX0Q6eVgb10dxHA_hXjE2IQiP-RHOlRrMDf024XH7ucYiRZ_BXCKo00El3-V6drcLbxwDP00Gih4rtmosEglOj_l_yELaph05ApuDCB7TW6jjTjKS01BMuG5CV8i4rldNq2tJQ2FagX31-S7ZjWR_cuRxBjepQB_juYnoGs5626_BC_1tInVblYXcmktsB9qgdxE1c4XlIRKaLUi7003Bk5eLuCDHFB3ma1l7cb_g33I1mpeukLOX1g">
-                    </div>
-                    <div class="flex-grow flex justify-between items-start">
-                        <div>
-                            <h3 class="font-label-md text-label-md text-on-surface">Burger Bò Wagyu Đặc Biệt</h3>
-                            <p class="text-caption text-secondary">Size L • Thêm phô mai</p>
-                            <p class="font-body-md text-body-md text-primary mt-1">1x 185.000đ</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flex gap-sm">
-                    <div class="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
-                        <img class="w-full h-full object-cover" alt="Khoai Tây Chiên Truffle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPpE0DEh2hHx4Mb3xe3DYCO37UqihdGtXdO21aJwnOF2jY7SOTGDN7BGhUyek1qmfLrsn1S8xFDf751ur5C4BdSkJR8C5OQLBaf-EL801wkcFEYve1lwiULQ_yOFRvGQEGXI-rnJ7QKYRuVpYnGHE_Y_27TYsgGDk4nqKG5K5kkNRHvpbJZRM6YKmd_1bIvoSnjF4SlSumxpeX5R4z9QycVdVwx_4flLmt8iUpfnw4svcIJAcoaUBYbPIi_pw7hbKf8wHXOsKNxrk">
-                    </div>
-                    <div class="flex-grow flex justify-between items-start">
-                        <div>
-                            <h3 class="font-label-md text-label-md text-on-surface">Khoai Tây Chiên Truffle</h3>
-                            <p class="text-caption text-secondary">Vừa</p>
-                            <p class="font-body-md text-body-md text-primary mt-1">1x 55.000đ</p>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Right Column: Order Summary -->
     <div class="lg:col-span-5 lg:sticky lg:top-24 space-y-md">
         <section class="bg-surface-container-lowest rounded-xl p-md shadow-[0px_4px_20px_rgba(0,0,0,0.12)] border-2 border-primary-container/10">
             <h2 class="font-headline-md text-headline-md mb-md">Tóm tắt đơn hàng</h2>
-            <div class="flex gap-sm mb-md">
-                <div class="relative flex-grow">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-secondary">confirmation_number</span>
-                    <input class="w-full pl-10 pr-sm py-2 bg-surface-container rounded-lg border-none focus:ring-2 focus:ring-primary text-body-md" placeholder="Nhập mã giảm giá" type="text">
+            <p class="text-caption text-secondary mb-sm">{{ restaurant.name }}</p>
+            <div class="space-y-sm border-b border-outline-variant pb-md mb-md">
+                {% for item in cart.items %}
+                <div class="flex gap-sm items-center">
+                    <div class="w-14 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-surface-container">
+                        {% if item.dish.image %}
+                        <img class="w-full h-full object-cover" alt="{{ item.dish.name }}" src="{{ item.dish.image }}">
+                        {% endif %}
+                    </div>
+                    <div class="flex-grow min-w-0">
+                        <p class="font-label-md text-label-md truncate">{{ item.dish.name }}</p>
+                        <p class="text-caption text-secondary">{{ item.quantity }} x {{ "{:,.0f}".format(item.price|float).replace(',', '.') }}đ</p>
+                    </div>
+                    <span class="font-label-md text-primary whitespace-nowrap">{{ "{:,.0f}".format((item.price * item.quantity)|float).replace(',', '.') }}đ</span>
                 </div>
-                <button class="bg-primary-container text-on-primary-container px-md py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">Áp dụng</button>
-            </div>
-            <div class="space-y-xs border-b border-outline-variant pb-md mb-md">
-                <div class="flex justify-between items-center text-body-md">
-                    <span class="text-secondary">Tạm tính</span>
-                    <span class="text-on-surface">240.000đ</span>
-                </div>
-                <div class="flex justify-between items-center text-body-md">
-                    <span class="text-secondary">Phí giao hàng (3.2km)</span>
-                    <span class="text-on-surface">22.000đ</span>
-                </div>
-                <div class="flex justify-between items-center text-body-md text-primary">
-                    <span>Giảm giá voucher</span>
-                    <span>- 30.000đ</span>
-                </div>
+                {% endfor %}
             </div>
             <div class="flex justify-between items-center mb-lg">
                 <span class="font-headline-md text-headline-md">Tổng thanh toán</span>
-                <span class="font-headline-lg text-headline-lg text-primary">232.000đ</span>
+                <span class="font-headline-lg text-headline-lg text-primary">{{ "{:,.0f}".format(cart_total|float).replace(',', '.') }}đ</span>
             </div>
-            <button class="w-full py-md bg-[#FF4F00] text-white rounded-xl font-bold text-body-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-sm" id="placeOrder">
-                <span>Đặt hàng ngay</span>
+            <p id="checkout-error" class="hidden rounded-lg bg-error-container text-on-error-container px-sm py-sm text-body-md mb-sm"></p>
+            <button type="submit" form="checkout-form" id="placeOrder"
+                class="w-full py-md bg-[#FF4F00] text-white rounded-xl font-bold text-body-lg shadow-lg hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-sm">
+                <span>Tiếp tục thanh toán</span>
                 <span class="material-symbols-outlined">arrow_forward</span>
             </button>
             <div class="mt-md flex items-center justify-center gap-xs text-secondary">
                 <span class="material-symbols-outlined text-[18px]">verified_user</span>
-                <p class="text-caption">Thanh toán an toàn với mã hóa SSL</p>
+                <p class="text-caption">Thông tin được lưu cùng đơn hàng và thanh toán an toàn.</p>
             </div>
         </section>
-        <div class="bg-surface-container p-sm rounded-lg flex items-center gap-sm">
-            <div class="p-xs bg-white rounded-full">
-                <span class="material-symbols-outlined text-primary">support_agent</span>
-            </div>
-            <div>
-                <p class="font-label-md text-label-md">Cần hỗ trợ?</p>
-                <p class="text-caption text-secondary">Liên hệ tổng đài 1900 xxxx</p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Success Modal -->
-<div class="fixed inset-0 z-[100] hidden flex items-center justify-center px-gutter" id="successModal">
-    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
-    <div class="relative bg-white p-lg rounded-2xl max-w-sm w-full text-center shadow-2xl scale-90 transition-transform duration-300">
-        <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-md">
-            <span class="material-symbols-outlined text-4xl text-green-600" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-        </div>
-        <h3 class="font-headline-md text-headline-md mb-xs">Đặt hàng thành công!</h3>
-        <p class="text-secondary text-body-md mb-lg">Mã đơn hàng: #CC-89421. Tài xế sẽ sớm liên hệ với bạn.</p>
-        <button class="w-full py-sm bg-primary text-white rounded-lg font-bold" onclick="window.location.reload()">Theo dõi đơn hàng</button>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script>
+    const checkoutForm = document.getElementById('checkout-form');
     const placeOrderBtn = document.getElementById('placeOrder');
-    const successModal = document.getElementById('successModal');
+    const checkoutError = document.getElementById('checkout-error');
 
-    placeOrderBtn.addEventListener('click', () => {
-        placeOrderBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang xử lý...';
+    checkoutForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        checkoutError.classList.add('hidden');
+
+        if (!checkoutForm.reportValidity()) return;
+
+        placeOrderBtn.disabled = true;
         placeOrderBtn.classList.add('opacity-80', 'pointer-events-none');
+        placeOrderBtn.innerHTML = '<span class="material-symbols-outlined animate-spin">sync</span> Đang tạo đơn...';
 
-        setTimeout(() => {
-            successModal.classList.remove('hidden');
-            setTimeout(() => {
-                successModal.querySelector('div:last-child').classList.remove('scale-90');
-                successModal.querySelector('div:last-child').classList.add('scale-100');
-            }, 10);
-        }, 1500);
+        const payload = Object.fromEntries(new FormData(checkoutForm).entries());
+
+        try {
+            const response = await fetch('/api/payment/{{ restaurant.id }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+            const result = await response.json();
+
+            if (!response.ok || !result.payment_url) {
+                throw new Error(result.message || 'Không thể tạo thanh toán. Vui lòng thử lại.');
+            }
+            window.location.href = result.payment_url;
+        } catch (error) {
+            checkoutError.textContent = error.message;
+            checkoutError.classList.remove('hidden');
+            placeOrderBtn.disabled = false;
+            placeOrderBtn.classList.remove('opacity-80', 'pointer-events-none');
+            placeOrderBtn.innerHTML = '<span>Tiếp tục thanh toán</span><span class="material-symbols-outlined">arrow_forward</span>';
+        }
     });
 </script>
 {% endblock %}

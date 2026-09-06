@@ -88,6 +88,13 @@ const suggestions = [
 //     console.log(rests);
 // }
 
+async function loadTopRecommendations() {
+    const res = await fetch('/api/dishes/top-recommendations');
+    if (!res.ok) return [];
+    const data = await res.json();
+    return data.data || [];
+}
+
 async function loadRestaurants(){
     const res = await fetch('/api/restaurants/');
     if (!res.ok) {
@@ -145,35 +152,36 @@ function renderHeroSection(period) {
 }
 
 
-function renderSuggestions(containerId,data) {
+function renderSuggestions(containerId, data) {
     const container = document.getElementById(containerId);
-    if (!container) return;
+    if (!container || !data || data.length === 0) return;
     container.innerHTML = '';
     data.forEach(s => {
         const div = document.createElement('div');
-        div.className = `group relative overflow-hidden rounded-2xl bg-white shadow-sm hover:shadow-xl transition-all h-64 ${s.colspan || ''}`;
+        div.className = 'min-w-[240px] md:min-w-[260px] snap-start shrink-0 cursor-pointer group relative overflow-hidden rounded-2xl bg-white shadow-[0px_4px_20px_rgba(0,0,0,0.05)] hover:shadow-xl hover:-translate-y-2 transition-all duration-300 h-64';
+        div.onclick = () => {
+
+            if (s.restaurant_id) {
+                window.location.href = `/restaurants/${s.restaurant_id}`;
+            }
+        };
         div.innerHTML = `
-            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" src="${s.img}" alt="${s.alt}">
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end ${s.big ? 'p-6' : 'p-4'} text-white">
-                ${s.badge ? `
-                <div class="flex items-center gap-2 mb-1">
-                    <span class="bg-primary px-2 py-0.5 rounded text-[10px] font-bold">${s.badge}</span>
-                    <p class="font-label-md text-caption text-white/80">${s.tag}</p>
-                </div>` : `<p class="font-label-md text-caption text-white/80">${s.tag}</p>`}
-                <h3 class="${s.big ? 'font-headline-lg text-headline-lg' : 'font-headline-md text-headline-md'} leading-tight">${s.name}</h3>
-                <div class="flex ${s.big ? 'justify-between items-end' : 'justify-between items-center'} mt-2">
-                    <div>
-                        <span class="font-bold text-primary-fixed ${s.big ? 'text-2xl' : ''}">${s.price}</span>
-                        ${s.old_price ? `<span class="text-white/60 line-through ml-2 text-sm">${s.old_price}</span>` : ''}
-                    </div>
-                    ${s.big
-                        ? `<button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold hover:scale-105 transition-transform shadow-lg">Thêm vào giỏ</button>`
-                        : `<button class="bg-white/20 backdrop-blur-md p-2 rounded-full hover:bg-white/40 transition-colors"><span class="material-symbols-outlined">add</span></button>`}
+            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                 src="${s.image || ''}" 
+                 onerror="this.src='https://png.pngtree.com/png-vector/20210623/ourmid/pngtree-pho-noodle-vietnamese-food-png-png-image_3508276.jpg'" 
+                 alt="${s.name}">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-end p-4 text-white">
+                <h3 class="font-headline-md text-headline-md leading-tight line-clamp-1 group-hover:text-primary-fixed transition-colors">${s.name}</h3>
+                <div class="mt-2">
+                    <span class="font-bold text-primary-fixed text-lg">${Number(s.price || 0).toLocaleString('vi-VN')}đ</span>
                 </div>
             </div>`;
+
+
         container.appendChild(div);
     });
 }
+
 
 let restaurantCardTemplate = null;
 

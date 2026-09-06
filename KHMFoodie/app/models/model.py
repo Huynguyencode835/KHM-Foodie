@@ -107,6 +107,17 @@ class Status(RoleEnum):
     COMPLETED = "Completed"
     CANCELLED = "Cancelled"
 
+class OrderStatus(RoleEnum):
+    PENDING_PAYMENT = "Pending Payment"
+    PAYMENT_FAILED = "Payment Failed"
+    PAID = "Paid"
+    CONFIRMED = "Confirmed"
+    PREPARING = "Preparing"
+    DELIVERING = "Delivering"
+    COMPLETED = "Completed"
+    CANCELLED = "Cancelled"
+
+
 class Dish(Base):
     __tablename__ = 'dish'
     description = Column(String(500), nullable=True)
@@ -229,7 +240,14 @@ class Order(Base):
     delivery_address = Column(String(300), nullable=True)
 
     shipping_fee = Column(Numeric(12, 0), nullable=False, default=0)
+    discount_amount = Column(Numeric(12, 0), nullable=False, default=0)
     total_amount = Column(Numeric(12, 0), nullable=False, default=0)
+    payment_deadline = Column(DateTime, nullable=True)
+
+    # MoMo payment tracking (thay cho bảng PaymentTransaction riêng)
+    momo_order_id = Column(String(100), unique=True, nullable=True)
+    momo_request_id = Column(String(100), nullable=True)
+    paid_by = Column(String(150), nullable=True, default="")
 
     user = relationship('User', backref=backref('orders', lazy=True))
     restaurant = relationship('Restaurant', backref=backref('orders', lazy=True))
@@ -239,12 +257,6 @@ class Order(Base):
         backref='order',
         lazy=True,
         cascade='all, delete-orphan'
-    )
-    payment_transactions = relationship(
-        'PaymentTransaction',
-        backref='order',
-        lazy=True,
-        order_by=lambda: PaymentTransaction.created_at.desc()
     )
 
     def __str__(self):
@@ -265,34 +277,6 @@ class OrderItem(Base):
         return f"OrderItem({self.order_id}, {self.dish_id})"
 
 
-class PaymentTransaction(Base):
-    __tablename__ = 'payment_transaction'
-    __table_args__ = (
-        UniqueConstraint('vnp_txn_ref', name='uq_payment_transaction_vnp_txn_ref'),
-    )
-
-    order_id = Column(Integer, ForeignKey('orders.id'), nullable=False)
-
-    gateway = Column(String(50), nullable=False, default='VNPAY')
-    vnp_txn_ref = Column(String(100), nullable=False)
-    amount = Column(Numeric(12, 0), nullable=False)
-    status = Column(String(50), nullable=False, default='CREATED')
-
-    ip_addr = Column(String(50), nullable=True)
-    payment_url = Column(Text, nullable=True)
-    vnp_transaction_no = Column(String(100), nullable=True)
-    vnp_response_code = Column(String(20), nullable=True)
-    vnp_transaction_status = Column(String(20), nullable=True)
-    bank_code = Column(String(50), nullable=True)
-    bank_tran_no = Column(String(100), nullable=True)
-    card_type = Column(String(50), nullable=True)
-    pay_date = Column(String(20), nullable=True)
-    raw_response = Column(Text, nullable=True)
-    completed_at = Column(DateTime, nullable=True)
-
-    def __str__(self):
-        return f"PaymentTransaction({self.vnp_txn_ref}, {self.status})"
-
 
 class SystemConfig(Base):
     __tablename__ = 'system_config'
@@ -306,6 +290,65 @@ class RestaurantConfig(Base):
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), primary_key=True)
     max_cart_items = Column(Integer, nullable=False)
     restaurant = relationship('Restaurant')
+
+
+class Review(Base):
+    __tablename__ = 'review'
+    __table_args__ = (
+        UniqueConstraint('user_id', 'restaurant_id', name='uq_review_user_restaurant'),
+    )
+    
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
+    order_id = Column(Integer, ForeignKey('orders.id'), nullable=True)
+
+    # Override Base.name: a review has no name of its own
+    name = Column(String(150), nullable=True)
+
+    rating = Column(Integer, nullable=False)  # 1-5 stars
+    comment = Column(String(1000), nullable=True)
+    
+    # Timestamps inherited from Base: created_at, created_updated_at, active
+    user = relationship('User', backref='reviews', lazy=True)
+    restaurant = relationship('Restaurant', backref='reviews', lazy=True)
+    order = relationship('Order', backref='review', uselist=False, lazy=True)
+    images = relationship('ReviewImage', backref='review', lazy=True, cascade='all, delete-orphan')
+
+    def __str__(self):
+        return f"Review({self.id}, rating={self.rating}, user_id={self.user_id})"
+
+
+class ReviewImage(db.Model):
+    __tablename__ = 'review_image'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    review_id = Column(Integer, ForeignKey('review.id', ondelete='CASCADE'), nullable=False)
+    image_url = Column(String(300), nullable=False)
+    uploaded_at = Column(DateTime, default=datetime.utcnow)
+
+    def __str__(self):
+        return f"ReviewImage({self.id}, review_id={self.review_id})"
+
+
+class AssociationRule(db.Model):
+    __tablename__ = 'association_rules'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=True)
+    antecedent_dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
+    consequent_dish_id = Column(Integer, ForeignKey('dish.id'), nullable=False)
+
+    support = Column(Float, nullable=False)
+    confidence = Column(Float, nullable=False)
+    lift = Column(Float, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    restaurant = relationship('Restaurant', backref=backref('association_rules', lazy=True))
+    antecedent_dish = relationship('Dish', foreign_keys=[antecedent_dish_id], backref=backref('antecedent_rules', lazy=True))
+    consequent_dish = relationship('Dish', foreign_keys=[consequent_dish_id], backref=backref('consequent_rules', lazy=True))
+
+    def __str__(self):
+        return f"AssociationRule({self.antecedent_dish_id} -> {self.consequent_dish_id}, lift={self.lift:.2f})"
 
 
 def hash_password(raw_password: str) -> str:

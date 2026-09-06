@@ -92,7 +92,7 @@
 
             <!-- Order Details -->
             <div class="p-md md:p-lg">
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-lg">
                     <div class="space-y-md">
                         <div>
@@ -173,6 +173,10 @@
                         <span class="font-body-md text-body-md text-secondary">Phí giao hàng</span>
                         <span id="detail-shipping-fee" class="font-body-md text-body-md text-on-background"></span>
                     </div>
+                    <div id="detail-discount-wrap" class="hidden justify-between items-center">
+                        <span class="font-body-md text-body-md text-secondary">Giảm giá</span>
+                        <span id="detail-discount" class="font-body-md text-body-md text-primary"></span>
+                    </div>
                     <div class="flex justify-between items-center pt-xs">
                         <h3 class="font-label-md text-label-md text-secondary uppercase tracking-wider">Tổng
                             thanh toán</h3>
@@ -184,19 +188,28 @@
 
         <!-- Action Buttons -->
         <div class="mt-lg flex flex-col md:flex-row items-center gap-md">
+            <!-- Review Button (shown only if order is COMPLETED) -->
+            <div id="review-button-section" class="hidden w-full md:flex-1">
+                <a id="review-link" href="#"
+                    class="w-full bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all hover:shadow-lg active:scale-95 duration-150 flex items-center justify-center gap-sm">
+                    <span class="material-symbols-outlined">rate_review</span>
+                    Đánh giá nhà hàng
+                </a>
+            </div>
+
             <div id="action-positive" class="hidden w-full md:flex-1 md:flex items-center gap-md">
                 <button
                     class="w-full md:flex-1 bg-primary text-on-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-container transition-all hover:shadow-lg active:scale-95 duration-150 flex items-center justify-center gap-sm">
                     <span class="material-symbols-outlined">track_changes</span>
                     Theo dõi đơn hàng
                 </button>
-                <button
+                <button id="btn-chat-restaurant" onclick="chatWithRestaurant()"
                     class="w-full md:flex-1 bg-surface-container-high text-on-surface-variant py-2 px-md rounded-lg font-label-md text-label-md hover:bg-surface-container-highest transition-all active:scale-95 duration-150 flex items-center justify-center gap-sm">
                     <span class="material-symbols-outlined">chat_bubble</span>
                     Chat với nhà hàng
                 </button>
             </div>
-            <a href="/"
+            <a id="action-explore-btn" href="/"
                 class="w-full md:flex-1 bg-surface-container-lowest text-primary border-2 border-primary py-2 px-md rounded-lg font-label-md text-label-md hover:bg-primary-fixed transition-all active:scale-95 duration-150 text-center">
                 Tiếp tục khám phá
             </a>
@@ -318,6 +331,8 @@
         }
     }
 
+    let orderRestaurantId = null;
+
     async function loadOrder() {
         const pathParts = window.location.pathname.split('/');
         const orderId = pathParts[pathParts.length - 1];
@@ -325,102 +340,143 @@
         try {
             await loadingState.run(async () => {
                 const res = await fetch('/api/orders_customer/' + orderId);
-            if (!res.ok) throw new Error('Not found');
-            const json = await res.json();
-            if (!json.success || !json.data) throw new Error('No data');
+                if (!res.ok) throw new Error('Not found');
+                const json = await res.json();
+                if (!json.success || !json.data) throw new Error('No data');
 
-            const order = json.data;
-            const statusInfo = getStatusInfo(order.status);
+                const order = json.data;
+                orderRestaurantId = order.restaurant?.id || null;
+                const statusInfo = getStatusInfo(order.status);
 
-            // Status hero
-            const iconWrap = document.getElementById('status-icon-wrap');
-            iconWrap.classList.add(statusInfo.is_terminal_negative ? 'bg-error-fixed' : 'bg-primary-fixed');
-            const iconEl = document.getElementById('status-icon');
-            iconEl.textContent = statusInfo.icon;
-            iconEl.classList.add(statusInfo.is_terminal_negative ? 'text-error' : 'text-primary');
-            document.getElementById('status-title').textContent = statusInfo.title;
-            document.getElementById('status-subtitle').textContent = statusInfo.subtitle;
+                // Status hero
+                const iconWrap = document.getElementById('status-icon-wrap');
+                iconWrap.classList.add(statusInfo.is_terminal_negative ? 'bg-error-fixed' : 'bg-primary-fixed');
+                const iconEl = document.getElementById('status-icon');
+                iconEl.textContent = statusInfo.icon;
+                iconEl.classList.add(statusInfo.is_terminal_negative ? 'text-error' : 'text-primary');
+                document.getElementById('status-title').textContent = statusInfo.title;
+                document.getElementById('status-subtitle').textContent = statusInfo.subtitle;
 
-            // Timeline
-            const timelineSection = document.getElementById('timeline-section');
-            if (statusInfo.is_terminal_negative) {
-                timelineSection.classList.add('hidden');
-            } else {
-                timelineSection.classList.remove('hidden');
-                renderTimeline(statusInfo.step);
-            }
-
-            // Order code
-            document.getElementById('detail-order-code').textContent = '#' + String(order.id).padStart(5, '0');
-
-            // Restaurant
-            if (order.restaurant) {
-                const restEl = document.getElementById('detail-restaurant');
-                restEl.classList.remove('hidden');
-                document.getElementById('detail-restaurant-name').textContent = order.restaurant.name;
-                if (order.restaurant.cover_image) {
-                    const img = document.getElementById('detail-restaurant-img');
-                    img.src = order.restaurant.cover_image;
-                    img.alt = order.restaurant.name;
-                    img.classList.remove('hidden');
+                // Timeline
+                const timelineSection = document.getElementById('timeline-section');
+                if (statusInfo.is_terminal_negative) {
+                    timelineSection.classList.add('hidden');
+                } else {
+                    timelineSection.classList.remove('hidden');
+                    renderTimeline(statusInfo.step);
                 }
-            }
 
-            // Note
-            if (order.note) {
-                document.getElementById('detail-note-wrap').classList.remove('hidden');
-                document.getElementById('detail-note').textContent = order.note;
-            }
+                // Order code
+                document.getElementById('detail-order-code').textContent = '#' + String(order.id).padStart(5, '0');
 
-            // Rejection reason
-            if (order.rejection_reason) {
-                document.getElementById('detail-rejection-wrap').classList.remove('hidden');
-                document.getElementById('detail-rejection').textContent = order.rejection_reason;
-            }
+                // Restaurant
+                if (order.restaurant) {
+                    const restEl = document.getElementById('detail-restaurant');
+                    restEl.classList.remove('hidden');
+                    document.getElementById('detail-restaurant-name').textContent = order.restaurant.name;
+                    if (order.restaurant.cover_image) {
+                        const img = document.getElementById('detail-restaurant-img');
+                        img.src = order.restaurant.cover_image;
+                        img.alt = order.restaurant.name;
+                        img.classList.remove('hidden');
+                    }
+                }
 
-            // Address
-            document.getElementById('detail-customer-name').textContent = order.customer_name || '';
-            document.getElementById('detail-address').textContent = order.delivery_address || 'Chưa có địa chỉ';
-            if (order.customer_phone) {
-                document.getElementById('detail-phone').textContent = order.customer_phone;
-                document.getElementById('detail-phone').classList.remove('hidden');
-            }
+                // Note
+                if (order.note) {
+                    document.getElementById('detail-note-wrap').classList.remove('hidden');
+                    document.getElementById('detail-note').textContent = order.note;
+                }
 
-            // Totals
-            document.getElementById('detail-shipping-fee').textContent = money(order.shipping_fee);
-            document.getElementById('detail-total').textContent = money(order.total_amount);
+                // Rejection reason
+                if (order.rejection_reason) {
+                    document.getElementById('detail-rejection-wrap').classList.remove('hidden');
+                    document.getElementById('detail-rejection').textContent = order.rejection_reason;
+                }
 
-            // Items
-            if (order.items && order.items.length > 0) {
-                const itemsWrap = document.getElementById('detail-items-wrap');
-                itemsWrap.classList.remove('hidden');
-                document.getElementById('detail-items-count').textContent = order.items.length + ' món ăn';
+                // Address
+                document.getElementById('detail-customer-name').textContent = order.customer_name || '';
+                document.getElementById('detail-address').textContent = order.delivery_address || 'Chưa có địa chỉ';
+                if (order.customer_phone) {
+                    document.getElementById('detail-phone').textContent = order.customer_phone;
+                    document.getElementById('detail-phone').classList.remove('hidden');
+                }
 
-                const listEl = document.getElementById('detail-items-list');
-                listEl.innerHTML = order.items.map(item => `
-                    <div class="flex items-center justify-between py-xs px-xs">
-                        <div class="flex items-center gap-sm">
-                            ${item.dish_image ? `<img src="${item.dish_image}" alt="${item.dish_name}" class="w-10 h-10 rounded-md object-cover" />` : ''}
-                            <div>
-                                <p class="font-body-md text-body-md text-on-background">${item.dish_name || ''}</p>
-                                <p class="font-label-md text-label-md text-secondary">x${item.quantity}</p>
+                // Totals
+                document.getElementById('detail-shipping-fee').textContent = money(order.shipping_fee);
+                if (order.discount_amount) {
+                    document.getElementById('detail-discount').textContent = '-' + money(order.discount_amount);
+                    document.getElementById('detail-discount-wrap').classList.remove('hidden');
+                    document.getElementById('detail-discount-wrap').classList.add('flex');
+                }
+                document.getElementById('detail-total').textContent = money(order.total_amount);
+
+                // Items
+                if (order.items && order.items.length > 0) {
+                    const itemsWrap = document.getElementById('detail-items-wrap');
+                    itemsWrap.classList.remove('hidden');
+                    document.getElementById('detail-items-count').textContent = order.items.length + ' món ăn';
+
+                    const listEl = document.getElementById('detail-items-list');
+                    listEl.innerHTML = order.items.map(item => `
+                        <div class="flex items-center justify-between py-xs px-xs">
+                            <div class="flex items-center gap-sm">
+                                ${item.dish_image ? `<img src="${item.dish_image}" alt="${item.dish_name}" class="w-10 h-10 rounded-md object-cover" />` : ''}
+                                <div>
+                                    <p class="font-body-md text-body-md text-on-background">${item.dish_name || ''}</p>
+                                    <p class="font-label-md text-label-md text-secondary">x${item.quantity}</p>
+                                </div>
                             </div>
+                            <p class="font-body-md text-body-md text-on-background">${money(item.subtotal)}</p>
                         </div>
-                        <p class="font-body-md text-body-md text-on-background">${money(item.subtotal)}</p>
-                    </div>
-                `).join('');
-            }
+                    `).join('');
+                }
 
-            // Action buttons
-            if (!statusInfo.is_terminal_negative) {
-                document.getElementById('action-positive').classList.remove('hidden');
-                document.getElementById('action-positive').classList.add('md:flex');
-            }
+                // Action buttons
+                if (!statusInfo.is_terminal_negative) {
+                    document.getElementById('action-positive').classList.remove('hidden');
+                    document.getElementById('action-positive').classList.add('md:flex');
+                }
 
-                showState('content');
+                // Review button (show only if order is COMPLETED)
+                if (order.status === 'Completed') {
+                    const reviewSection = document.getElementById('review-button-section');
+                    const reviewLink = document.getElementById('review-link');
+                    reviewSection.classList.remove('hidden');
+                    reviewLink.href = `/restaurants/${order.restaurant.id}?tab=reviews&order_id=${order.id}`;
+                }
+
+                if (order.status === 'Pending Payment') {
+                    const exploreBtn = document.getElementById('action-explore-btn');
+                    exploreBtn.textContent = 'Tiếp tục thanh toán';
+                    exploreBtn.href = '/payment-countdown/' + order.id;
+                }
             });
-        } catch (e) {
+            showState('content');
+        }
+        catch (e) {
             showState('error');
+        }
+    }
+
+
+
+    async function chatWithRestaurant() {
+        if (!orderRestaurantId) return;
+        const pathParts = window.location.pathname.split('/');
+        const orderId = pathParts[pathParts.length - 1];
+        try {
+            const res = await fetch('/api/chats/direct', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ other_user_id: orderRestaurantId, order_id: orderId })
+            });
+            const data = await res.json();
+            if (res.ok && data.chatId) {
+                window.location.href = '/chat?chatId=' + data.chatId;
+            }
+        } catch (err) {
+            console.error('Lỗi tạo chat:', err);
         }
     }
 

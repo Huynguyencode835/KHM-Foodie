@@ -1,9 +1,10 @@
 from app.dao.restaurantsDao import RestaurantsDao
 from flask import jsonify, render_template, request, current_app
-from flask import jsonify, render_template, request
 from flask_login import current_user
-from app.models.model import UserRole
+from app.models.model import UserRole, DiscountType
 from app.dao.dishesDao import DishesDao
+from app.dao.vouchersDao import VouchersDao
+from app.models.model import VoucherDish, Voucher
 from app.service.notificationByFCM import send_push_notification
 
 
@@ -72,14 +73,36 @@ class RestaurantsController:
 
         pagination = DishesDao.get_list_dishes_by_restaurant(restaurant_id, page, per_page, category, keyword)
 
+        dish_ids = [d.id for d in pagination.items]
+        voucher_by_dish = {}
+        if dish_ids:
+            links = VoucherDish.query.join(Voucher).filter(
+                VoucherDish.dish_id.in_(dish_ids),
+                Voucher.active == True
+            ).all()
+            for link in links:
+                if link.voucher.is_valid_now():
+                    voucher_by_dish[link.dish_id] = link.voucher
+
         data = []
         for d in pagination.items:
+            original_price = float(d.price) if d.price is not None else None
+            voucher = voucher_by_dish.get(d.id)
+            final_price = float(voucher.apply_discount(original_price)) if voucher and original_price is not None else original_price
+
             data.append({
                 "id": d.id,
                 "name": d.name,
                 "category": d.category.value if d.category else None,
                 "description": d.description,
-                "price": float(d.price) if d.price is not None else None,
+                "price": original_price,
+                "original_price": original_price,
+                "final_price": final_price,
+                "voucher_code": voucher.code if voucher else None,
+                "voucher_label": (
+                    f"-{voucher.discount_value:g}%" if voucher.discount_type == DiscountType.PERCENTAGE
+                    else f"-{voucher.discount_value:,.0f}đ"
+                ) if voucher else None,
                 "image": d.image,
                 "active": d.active
             })
@@ -93,6 +116,30 @@ class RestaurantsController:
             "has_next": pagination.has_next,
             "has_prev": pagination.has_prev
         }), 200
+
+    @staticmethod
+    def get_active_vouchers(restaurant_id):
+        vouchers = VouchersDao.get_public_order_vouchers(restaurant_id)
+
+        data = []
+        for v in vouchers:
+            if v.discount_type == DiscountType.PERCENTAGE:
+                label = f"Giảm {v.discount_value:g}%"
+                if v.max_discount:
+                    label += f" (tối đa {v.max_discount:,.0f}đ)"
+            else:
+                label = f"Giảm {v.discount_value:,.0f}đ"
+
+            data.append({
+                "code": v.code,
+                "name": v.name,
+                "description": v.description,
+                "label": label,
+                "minimum_order": v.minimum_order,
+                "end_date": v.end_date.isoformat() + "Z" if v.end_date else None,
+            })
+
+        return jsonify({"items": data}), 200
 
     @staticmethod
     def open_restaurant(restaurant_id):
@@ -126,6 +173,14 @@ class RestaurantsController:
             "is_open": restaurant.status
         }), 200
 
+    @staticmethod
+    def get_recommended_dishes(restaurant_id):
+        dish_id = request.args.get("dish_id", type=int)
+        recommendations = RestaurantsDao.get_recommended_dishes(restaurant_id, dish_id)
+
+        return jsonify({
+            "data": recommendations
+        }), 200
 
     @staticmethod
     def index(restaurant_id):

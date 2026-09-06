@@ -7,6 +7,8 @@ from flask_login import login_user, logout_user, login_required, current_user
 from app.service.notificationByFCM import send_push_notification
 import cloudinary.uploader
 from app.service.notificationByEmail import send_account_registration_email, send_restaurant_registration_pending_email 
+from app.extensions import mint_firebase_custom_token
+
 
 class LoginController:
 
@@ -35,12 +37,14 @@ class LoginController:
             return jsonify({"message": "Tên đăng nhập hoặc mật khẩu không đúng"}), 401
 
         login_user(user, remember=remember)
+        firebase_token = mint_firebase_custom_token(user.id)
 
         redirect_url = '/admin/' if user.role == UserRole.ADMIN else '/'
         flash(f"Chào mừng trở lại, {user.name}!", "success")
         return jsonify({
             "message": "Login successful",
             "redirect": redirect_url,
+            "firebase_token": firebase_token,
             "user": {
                 "id": user.id,
                 "name": user.name,

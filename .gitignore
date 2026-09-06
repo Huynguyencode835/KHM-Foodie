@@ -33,4 +33,6 @@ stitch-assets/
 
 # Scratch & agent docs
 .scratch/
+.agents/
 RULES.md
+
