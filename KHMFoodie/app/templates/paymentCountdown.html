@@ -83,6 +83,16 @@
                 </div>
             </div>
 
+            <!-- Chat with Restaurant -->
+            <div class="space-y-sm mb-lg text-left">
+                <button id="chatRestaurantBtn"
+                    class="w-full py-md bg-surface-container-high text-on-surface-variant rounded-xl font-bold text-body-lg hover:bg-surface-container-highest active:scale-95 transition-all flex items-center justify-center gap-sm border border-outline-variant"
+                    onclick="chatWithRestaurant()">
+                    <span class="material-symbols-outlined">chat_bubble</span>
+                    <span>Nhắn tin với nhà hàng</span>
+                </button>
+            </div>
+
             <!-- Action Buttons -->
             <div class="space-y-sm">
                 <p id="pay-error" class="hidden rounded-lg bg-error-container text-on-error-container px-sm py-sm text-body-md text-left"></p>
@@ -133,6 +143,7 @@
     const ORDER_ID = {{ order_id }};
     const PAYMENT_DURATION = 15 * 60 * 1000; // 15 minutes in ms
     let countdownInterval = null;
+    let orderRestaurantId = null;
 
     function formatPrice(value) {
         return Math.round(value || 0).toLocaleString('vi-VN') + 'đ';
@@ -226,6 +237,9 @@
 
             const order = json.data;
 
+            // Store restaurant ID for chat functionality
+            orderRestaurantId = order.restaurant?.id || null;
+
             // If order is not PENDING_PAYMENT, show expired
             if (order.status !== 'Pending Payment') {
                 showState('expired');
@@ -268,6 +282,23 @@
     });
 
     document.getElementById('payBtn').addEventListener('click', proceedToPayment);
+
+    async function chatWithRestaurant() {
+        if (!orderRestaurantId) return;
+        try {
+            const res = await fetch('/api/chats/direct', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ other_user_id: orderRestaurantId, order_id: ORDER_ID })
+            });
+            const data = await res.json();
+            if (res.ok && data.chatId) {
+                window.location.href = '/chat?chatId=' + data.chatId;
+            }
+        } catch (err) {
+            console.error('Lỗi tạo chat:', err);
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', loadOrder);
 </script>

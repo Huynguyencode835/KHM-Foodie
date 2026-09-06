@@ -10,6 +10,7 @@ from app.routes.routes_API.ordersRoute import orders_api
 from app.routes.routes_API.dishesRoute import dishes_api
 from app.routes.routes_API.OrderForCustomerRoute import orderCustomer_api
 from app.routes.routes_API.reviewRoute import review_api
+from app.routes.routes_API.chatRoute import chat_api
 
 
 def route_api(app):
@@ -25,4 +26,5 @@ def route_api(app):
     app.register_blueprint(orders_api, url_prefix="/api/orders")
     app.register_blueprint(orderCustomer_api, url_prefix="/api/orders_customer")
     app.register_blueprint(review_api, url_prefix="/api/reviews")
+    app.register_blueprint(chat_api, url_prefix="/api/chats")
 
