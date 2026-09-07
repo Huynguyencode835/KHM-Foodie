@@ -1,5 +1,7 @@
 from app.dao.restaurantsDao import RestaurantsDao
-from flask import jsonify, request, render_template
+from flask import jsonify, request, render_template, redirect, url_for
+from flask_login import current_user
+from app.models.model import UserRole
 
 
 class SearchController:
@@ -55,6 +57,12 @@ class SearchController:
 
     @staticmethod
     def search_web():
+        if current_user.is_authenticated:
+            if current_user.role == UserRole.ADMIN:
+                return redirect('/admin/')
+            elif current_user.role == UserRole.RESTAURANT:
+                return redirect(url_for('me_bp.me_page'))
+
         keyword = request.args.get('q', '').strip()
         tab = request.args.get('tab', 'restaurants')
         page = request.args.get('page', 1, type=int)

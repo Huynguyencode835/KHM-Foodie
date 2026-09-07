@@ -527,7 +527,7 @@
 
             await loadVouchers();
         } catch (err) {
-            alert(err.message || "Lỗi kết nối máy chủ");
+            (window.showToast || showToast)(err.message || "Lỗi kết nối máy chủ", "error");
         }
     }
 

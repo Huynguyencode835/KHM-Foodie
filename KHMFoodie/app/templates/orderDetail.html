@@ -315,7 +315,7 @@
         const deliveryAddress = document.getElementById('delivery-address').value.trim();
 
         if (!customerName || !customerPhone || !deliveryAddress) {
-            alert('Vui lòng điền đầy đủ họ tên, số điện thoại và địa chỉ giao hàng');
+            (window.showToast || showToast)('Vui lòng điền đầy đủ họ tên, số điện thoại và địa chỉ giao hàng', 'warning');
             return;
         }
 
@@ -341,7 +341,7 @@
             const data = await res.json();
 
             if (!res.ok || !data.success) {
-                alert(data.message || 'Đặt hàng thất bại');
+                (window.showToast || showToast)(data.message || 'Đặt hàng thất bại', 'error');
                 btn.innerHTML = '<span>Đặt hàng ngay</span><span class="material-symbols-outlined">arrow_forward</span>';
                 btn.classList.remove('opacity-80', 'pointer-events-none');
                 return;
@@ -350,7 +350,7 @@
             window.location.href = `/payment-countdown/${data.order_id}`;
 
         } catch (e) {
-            alert('Có lỗi xảy ra, vui lòng thử lại');
+            (window.showToast || showToast)('Có lỗi xảy ra, vui lòng thử lại', 'error');
             btn.innerHTML = '<span>Đặt hàng ngay</span><span class="material-symbols-outlined">arrow_forward</span>';
             btn.classList.remove('opacity-80', 'pointer-events-none');
         }

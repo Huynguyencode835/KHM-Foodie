@@ -90,7 +90,7 @@ async function startDirectChat(otherUserId) {
     });
     const data = await res.json();
     if (!res.ok) {
-        alert(data.error || "Không tạo được cuộc trò chuyện");
+        (window.showToast || showToast)(data.error || "Không tạo được cuộc trò chuyện", "error");
         return;
     }
     openChat(data.chatId);
@@ -190,7 +190,7 @@ async function sendMessage() {
         msgInput.value = "";
     } catch (err) {
         console.error("Gửi tin nhắn thất bại:", err);
-        alert("Không gửi được tin nhắn, thử lại sau.");
+        (window.showToast || showToast)("Không gửi được tin nhắn, thử lại sau.", "error");
     }
 }
 

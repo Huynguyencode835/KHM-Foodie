@@ -2,6 +2,7 @@ from app import oauth
 from flask import url_for, redirect
 from flask_login import login_user, logout_user
 from app.dao.userDao import add_user, check_userEmail
+from app.models.model import UserRole
 
 class LogInSignInGoogleControler:
 
@@ -29,4 +30,8 @@ class LogInSignInGoogleControler:
 
         login_user(user)
 
+        if user.role == UserRole.ADMIN:
+            return redirect('/admin/')
+        elif user.role == UserRole.RESTAURANT:
+            return redirect('/me')
         return redirect("/")

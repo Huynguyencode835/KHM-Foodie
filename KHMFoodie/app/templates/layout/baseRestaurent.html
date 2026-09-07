@@ -227,7 +227,7 @@
                     <span class="material-symbols-outlined">restaurant</span>
                 </div>
                 <div>
-                    <a href="/">
+                    <a href="{{ '/admin/' if current_user.role.value == 'Admin' else '/me' }}">
                         <h2 class="font-headline-md text-headline-md text-primary font-bold">CraveConnect</h2>
                     </a>
                     <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Trung tâm điều
@@ -349,12 +349,6 @@
                         </button>
                         <span id="notif-badge"
                             class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center hidden">0</span>
-                    </div>
-                    <div class="relative">
-                        <button
-                            class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">shopping_cart</button>
-                        <span
-                            class="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
                     </div>
                     {% if current_user.is_authenticated %}
 
@@ -559,7 +553,7 @@
                     closeConfirmModal();
                 } catch (err) {
                     toggleBtn.innerHTML = previousHtml;
-                    alert(err.message || 'L\u1ed7i k\u1ebft n\u1ed1i \u0111\u1ebfn m\u00e1y ch\u1ee7');
+                    (window.showToast || showToast)(err.message || 'Lỗi kết nối đến máy chủ', 'error');
                 } finally {
                     toggleBtn.disabled = false;
                     if (confirmBtn) {

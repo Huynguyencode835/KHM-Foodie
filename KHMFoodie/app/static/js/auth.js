@@ -72,7 +72,7 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
     };
 
     if (!data.name || !data.username || !data.email || !data.phone || !data.password || !data.confirm_password) {
-        alert('Vui lòng điền đầy đủ thông tin');
+        window.showToast('Vui lòng điền đầy đủ thông tin', 'warning');
         return;
     }
 
@@ -90,10 +90,10 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
         if (res.ok) {
             window.location.href = '/login';
         } else {
-            alert(result.message || 'Đăng ký thất bại');
+            window.showToast(result.message || 'Đăng ký thất bại', 'error');
         }
     } catch (err) {
-        alert('Lỗi kết nối đến máy chủ');
+        window.showToast('Lỗi kết nối đến máy chủ', 'error');
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;

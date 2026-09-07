@@ -1,19 +1,19 @@
 from flask import Blueprint
-from flask_login import login_required
-
 from app.controllers.paymentController import PaymentController
+from app.middleware import role_required
+from app.models.model import UserRole
 
 payment_api = Blueprint("payment_api", __name__)
 
 payment_api.add_url_rule(
     "/<int:restaurant_id>",
-    view_func=login_required(PaymentController.create_payment),
+    view_func=role_required(UserRole.CUSTOMER)(PaymentController.create_payment),
     methods=["POST"]
 )
 
 payment_api.add_url_rule(
     "/pay/<int:order_id>",
-    view_func=login_required(PaymentController.pay_existing_order),
+    view_func=role_required(UserRole.CUSTOMER)(PaymentController.pay_existing_order),
     methods=["POST"]
 )
 

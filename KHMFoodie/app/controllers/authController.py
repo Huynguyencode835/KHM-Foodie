@@ -39,7 +39,12 @@ class LoginController:
         login_user(user, remember=remember)
         firebase_token = mint_firebase_custom_token(user.id)
 
-        redirect_url = '/admin/' if user.role == UserRole.ADMIN else '/'
+        if user.role == UserRole.ADMIN:
+            redirect_url = '/admin/'
+        elif user.role == UserRole.RESTAURANT:
+            redirect_url = '/me'
+        else:
+            redirect_url = '/'
         flash(f"Chào mừng trở lại, {user.name}!", "success")
         return jsonify({
             "message": "Login successful",
