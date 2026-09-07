@@ -502,5 +502,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') hideRecommendationModal();
     });
+
+    document.getElementById('checkout-btn')?.addEventListener('click', () => {
+        if (restaurantId) {
+            window.location.href = `/order-detail/${restaurantId}`;
+        }
+    });
 });
 
