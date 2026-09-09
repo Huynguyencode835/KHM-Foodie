@@ -261,7 +261,7 @@
                 st.hasMore = data.has_more;
             }
         } catch (e) {
-            window.showToast("Lỗi kết nối", "error");
+            showToast("Lỗi kết nối", "error");
         }
         st.loading = false;
     }
@@ -350,15 +350,15 @@
                 .then(({ ok, data }) => {
                     setLoading(approveBtn, false);
                     if (!ok) {
-                        window.showToast(data.message || "Lỗi", "error");
+                        showToast(data.message, "error");
                         return;
                     }
                     popCard(card, data.order && data.order.status);
-                    window.showToast(data.message || "Đã xử lý", "success");
+                    showToast(data.message, "success");
                 })
                 .catch(() => {
                     setLoading(approveBtn, false);
-                    window.showToast("Lỗi kết nối", "error");
+                    showToast("Lỗi kết nối", "error");
                 });
             return;
         }
@@ -407,13 +407,13 @@
             .then(({ ok, data }) => {
                 setLoading(btn, false);
                 if (!ok) {
-                    window.showToast(data.message || "Lỗi", "error");
+                    showToast(data.message, "error");
                     return;
                 }
                 closeRejectModal();
                 const card = document.querySelector(`[data-order-card][data-order-id="${orderId}"]`);
                 if (card) popCard(card, null);
-                window.showToast(data.message, "success");
+                showToast(data.message, "success");
             })
             .catch(() => {
                 setLoading(btn, false);

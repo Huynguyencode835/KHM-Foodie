@@ -522,12 +522,12 @@
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || "Xóa voucher thất bại");
+                throw new Error(data.message);
             }
 
             await loadVouchers();
         } catch (err) {
-            (window.showToast || showToast)(err.message || "Lỗi kết nối máy chủ", "error");
+            showToast(err.message, "error");
         }
     }
 

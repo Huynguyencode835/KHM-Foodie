@@ -23,7 +23,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
     const remember = document.querySelector('input[type="checkbox"]')?.checked || false;
 
     if (!username || !password) {
-        window.showToast('Vui lòng nhập tên đăng nhập và mật khẩu', 'warning');
+        showToast('Vui lòng nhập tên đăng nhập và mật khẩu', 'warning');
         return;
     }
 
@@ -48,10 +48,10 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
             console.log(data.firebase_token)
             window.location.href = data.redirect || '/';
         } else {
-            window.showToast(data.message || 'Đăng nhập thất bại', 'error');
+            showToast(data.message, 'error');
         }
     } catch (err) {
-        window.showToast('Lỗi kết nối đến máy chủ', 'error');
+        showToast('Lỗi kết nối đến máy chủ', 'error');
     } finally {
         btn.innerText = originalText;
         btn.disabled = false;
@@ -72,7 +72,7 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
     };
 
     if (!data.name || !data.username || !data.email || !data.phone || !data.password || !data.confirm_password) {
-        window.showToast('Vui lòng điền đầy đủ thông tin', 'warning');
+        showToast('Vui lòng điền đầy đủ thông tin', 'warning');
         return;
     }
 
@@ -90,10 +90,10 @@ document.getElementById('registerForm')?.addEventListener('submit', async (e) =>
         if (res.ok) {
             window.location.href = '/login';
         } else {
-            window.showToast(result.message || 'Đăng ký thất bại', 'error');
+            showToast(result.message, 'error');
         }
     } catch (err) {
-        window.showToast('Lỗi kết nối đến máy chủ', 'error');
+        showToast('Lỗi kết nối đến máy chủ', 'error');
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;

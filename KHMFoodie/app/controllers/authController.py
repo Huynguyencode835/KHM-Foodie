@@ -40,7 +40,7 @@ class LoginController:
         firebase_token = mint_firebase_custom_token(user.id)
 
         if user.role == UserRole.ADMIN:
-            redirect_url = '/admin/'
+            redirect_url = '/admin/restaurants/pending'
         elif user.role == UserRole.RESTAURANT:
             redirect_url = '/me'
         else:
@@ -205,6 +205,18 @@ class LoginController:
                                    "Nhà hàng của bạn đang chờ được duyệt. Chúng tôi sẽ thông báo khi có kết quả.")
         except Exception as e:
             current_app.logger.error(f"Gửi notification đăng ký nhà hàng thất bại: {e}")
+
+        admins = UserDao.get_admin_users()
+        for admin in admins:
+            try:
+                send_push_notification(
+                    admin.id,
+                    "Có nhà hàng mới đăng ký!",
+                    f"Nhà hàng '{name}' vừa đăng ký đối tác và đang chờ được phê duyệt.",
+                    data={"url": "/admin/restaurants/pending", "type": "restaurant_pending"}
+                )
+            except Exception as e:
+                current_app.logger.error(f"Gửi notification cho admin {admin.id} thất bại: {e}")
 
         send_restaurant_registration_pending_email(
             recipient=email,

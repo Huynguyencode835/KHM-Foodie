@@ -30,8 +30,6 @@ class LogInSignInGoogleControler:
 
         login_user(user)
 
-        if user.role == UserRole.ADMIN:
-            return redirect('/admin/')
-        elif user.role == UserRole.RESTAURANT:
+        if user.role == UserRole.RESTAURANT:
             return redirect('/me')
         return redirect("/")
