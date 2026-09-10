@@ -112,10 +112,10 @@
                                 <li>{{ it.quantity }}x {{ it.name }}</li>
                                 {% endfor %}
                             </ul>
-                            <p class="text-xs text-secondary mt-1">{{ o['items_count'] }} món / {{ o['subtotal']|int }}d</p>
+                            <p class="text-xs text-secondary mt-1">{{ o['items_count'] }} món / {{ "{:,.0f}".format(o['subtotal']).replace(',', '.') }} đ</p>
                         </div>
                         <div class="flex justify-between items-center">
-                            <p class="font-bold text-primary">{{ o['total_amount']|int }}d</p>
+                            <p class="font-bold text-primary">{{ "{:,.0f}".format(o['total_amount']).replace(',', '.') }} đ</p>
                             {% if st.name in ('PAID', 'PREPARING') %}
                             <div class="flex gap-2">
                                 <button class="reject-order-btn p-2 text-error rounded-lg transition-all"

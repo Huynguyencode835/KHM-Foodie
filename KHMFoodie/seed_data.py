@@ -1,5 +1,6 @@
 import json
 import os
+import random
 import sys
 
 # Ensure UTF-8 output encoding on Windows console
@@ -24,6 +25,13 @@ from sqlalchemy import text
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 RESTAURANTS_JSON = os.path.join(BASE_DIR, "app", "data", "restaurants.json")
 DISHES_JSON = os.path.join(BASE_DIR, "app", "data", "dishes.json")
+
+
+def random_date_in_range(days=30):
+    """Sinh thời điểm ngẫu nhiên trong khoảng từ `days` ngày trước đến hiện tại (UTC)."""
+    now = datetime.utcnow()
+    random_seconds = random.randint(0, int(days * 86400))
+    return now - timedelta(seconds=random_seconds)
 
 
 def seed(app=None):
@@ -209,74 +217,91 @@ def _seed_orders(restaurant_map):
     db.session.flush()
 
     # Voucher mẫu cho nhà hàng test (quan_trua_ngon)
-    rest_test = restaurant_map["quan_trua_ngon"]
-    vouchers = [
-        Voucher(
-            name="Giam 10% toi da 50k",
-            code="QUANTRUANGON10",
-            description="Giam 10% don hang, toi da 50k",
-            discount_type=DiscountType.PERCENTAGE,
-            discount_value=10,
-            minimum_order=100000,
-            max_discount=50000,
-            start_date=datetime.utcnow() - timedelta(days=30),
-            end_date=datetime.utcnow() + timedelta(days=30),
-            usage_limit=1000,
-            used_count=5,
-            restaurant_id=rest_test.id,
-        ),
-        Voucher(
-            name="Giam 30k",
-            code="QUANTRUANGON30",
-            description="Giam 30k don hang tu 150k",
-            discount_type=DiscountType.FIXED_AMOUNT,
-            discount_value=30000,
-            minimum_order=150000,
-            max_discount=None,
-            start_date=datetime.utcnow() - timedelta(days=30),
-            end_date=datetime.utcnow() + timedelta(days=30),
-            usage_limit=1000,
-            used_count=3,
-            restaurant_id=rest_test.id,
-        ),
-    ]
-    db.session.add_all(vouchers)
-    db.session.flush()
+    rest_test = restaurant_map.get("quan_trua_ngon")
+    vouchers = []
+    if rest_test:
+        vouchers = [
+            Voucher(
+                name="Giam 10% toi da 50k",
+                code="QUANTRUANGON10",
+                description="Giam 10% don hang, toi da 50k",
+                discount_type=DiscountType.PERCENTAGE,
+                discount_value=10,
+                minimum_order=100000,
+                max_discount=50000,
+                start_date=datetime.utcnow() - timedelta(days=60),
+                end_date=datetime.utcnow() + timedelta(days=60),
+                usage_limit=1000,
+                used_count=15,
+                restaurant_id=rest_test.id,
+            ),
+            Voucher(
+                name="Giam 30k",
+                code="QUANTRUANGON30",
+                description="Giam 30k don hang tu 150k",
+                discount_type=DiscountType.FIXED_AMOUNT,
+                discount_value=30000,
+                minimum_order=150000,
+                max_discount=None,
+                start_date=datetime.utcnow() - timedelta(days=60),
+                end_date=datetime.utcnow() + timedelta(days=60),
+                usage_limit=1000,
+                used_count=10,
+                restaurant_id=rest_test.id,
+            ),
+        ]
+        db.session.add_all(vouchers)
+        db.session.flush()
 
-    # Đơn hàng cho 2 nhà hàng approved: quan_trua_ngon & goc_trua_van_phong
-    # spec: (restaurant_username, status, customer_idx, ship_fee, voucher_idx, note, days_ago)
-    order_specs = [
-        ("quan_trua_ngon", Status.PAID, 0, 20000, 0, "Giao gio hanh chinh", 0),
-        ("quan_trua_ngon", Status.PAID, 1, 20000, 1, None, 1),
-        ("quan_trua_ngon", Status.PAID, 2, 15000, None, "Them it tuong ot", 2),
-        ("quan_trua_ngon", Status.PAID, 3, 25000, 0, None, 3),
-        ("quan_trua_ngon", Status.CONFIRMED, 1, 20000, None, None, 1),
-        ("quan_trua_ngon", Status.CONFIRMED, 2, 15000, 1, "Giao trua 11h30", 2),
-        ("quan_trua_ngon", Status.PREPARING, 0, 20000, None, None, 0),
-        ("quan_trua_ngon", Status.PREPARING, 3, 15000, 0, None, 1),
-        ("quan_trua_ngon", Status.DELIVERING, 2, 20000, None, None, 0),
-        ("quan_trua_ngon", Status.DELIVERING, 1, 25000, 1, None, 2),
-        ("quan_trua_ngon", Status.COMPLETED, 0, 20000, None, None, 5),
-        ("quan_trua_ngon", Status.CANCELLED, 3, 0, None, "Nha hang het nguyen lieu", 4),
-        ("quan_trua_ngon", Status.PENDING_PAYMENT, 1, 20000, None, None, 0),
-        ("goc_trua_van_phong", Status.PAID, 2, 15000, None, None, 1),
-        ("goc_trua_van_phong", Status.CONFIRMED, 3, 20000, None, None, 2),
-        ("goc_trua_van_phong", Status.PREPARING, 0, 15000, None, None, 0),
-        ("goc_trua_van_phong", Status.DELIVERING, 1, 20000, None, None, 1),
-        ("goc_trua_van_phong", Status.COMPLETED, 2, 15000, None, None, 6),
-        ("goc_trua_van_phong", Status.CANCELLED, 3, 0, None, "Khach huy don", 3),
+    statuses_pool = [
+        Status.COMPLETED, Status.COMPLETED, Status.COMPLETED, Status.COMPLETED,
+        Status.COMPLETED, Status.COMPLETED, Status.PAID, Status.PAID,
+        Status.PREPARING, Status.DELIVERING, Status.CONFIRMED, Status.CANCELLED
+    ]
+    notes_pool = [
+        "Giao giờ hành chính", "Giao trưa 11h30", "Thêm ít tương ớt",
+        "Để ở quầy lễ tân", "Gọi trước khi giao 5 phút", None, None, None
+    ]
+    rejection_reasons = [
+        "Nhà hàng hết nguyên liệu", "Khách đổi ý hủy đơn", "Quá giờ giao hàng", "Không liên lạc được khách"
     ]
 
     orders_created = 0
-    for username, status, cust_idx, ship_fee, voucher_idx, note, days_ago in order_specs:
-        restaurant = restaurant_map[username]
+
+    # 1. Tạo các đơn hàng mẫu theo cấu hình cụ thể với ngày random trong 30 ngày
+    order_specs = [
+        ("quan_trua_ngon", Status.PAID, 0, 20000, 0, "Giao gio hanh chinh"),
+        ("quan_trua_ngon", Status.PAID, 1, 20000, 1, None),
+        ("quan_trua_ngon", Status.PAID, 2, 15000, None, "Them it tuong ot"),
+        ("quan_trua_ngon", Status.PAID, 3, 25000, 0, None),
+        ("quan_trua_ngon", Status.CONFIRMED, 1, 20000, None, None),
+        ("quan_trua_ngon", Status.CONFIRMED, 2, 15000, 1, "Giao trua 11h30"),
+        ("quan_trua_ngon", Status.PREPARING, 0, 20000, None, None),
+        ("quan_trua_ngon", Status.PREPARING, 3, 15000, 0, None),
+        ("quan_trua_ngon", Status.DELIVERING, 2, 20000, None, None),
+        ("quan_trua_ngon", Status.DELIVERING, 1, 25000, 1, None),
+        ("quan_trua_ngon", Status.COMPLETED, 0, 20000, None, None),
+        ("quan_trua_ngon", Status.CANCELLED, 3, 0, None, "Nha hang het nguyen lieu"),
+        ("quan_trua_ngon", Status.PENDING_PAYMENT, 1, 20000, None, None),
+        ("goc_trua_van_phong", Status.PAID, 2, 15000, None, None),
+        ("goc_trua_van_phong", Status.CONFIRMED, 3, 20000, None, None),
+        ("goc_trua_van_phong", Status.PREPARING, 0, 15000, None, None),
+        ("goc_trua_van_phong", Status.DELIVERING, 1, 20000, None, None),
+        ("goc_trua_van_phong", Status.COMPLETED, 2, 15000, None, None),
+        ("goc_trua_van_phong", Status.CANCELLED, 3, 0, None, "Khach huy don"),
+    ]
+
+    for username, status, cust_idx, ship_fee, voucher_idx, note in order_specs:
+        restaurant = restaurant_map.get(username)
+        if not restaurant:
+            continue
         customer = customer_users[cust_idx]
         dishes = Dish.query.filter_by(restaurant_id=restaurant.id).order_by(Dish.id).all()
         if not dishes:
             continue
 
-        voucher = vouchers[voucher_idx] if voucher_idx is not None else None
-        chosen = dishes[:3]
+        voucher = vouchers[voucher_idx] if (voucher_idx is not None and voucher_idx < len(vouchers)) else None
+        chosen = dishes[:min(3, len(dishes))]
         items = []
         subtotal = 0
         for i, dish in enumerate(chosen):
@@ -293,7 +318,7 @@ def _seed_orders(restaurant_map):
                     discount = min(discount, voucher.max_discount)
             else:
                 discount = min(voucher.discount_value, subtotal)
-        total = subtotal - discount + ship_fee
+        total = max(0, subtotal - discount + ship_fee)
 
         rejection_reason = note if status == Status.CANCELLED else None
         order = Order(
@@ -310,14 +335,72 @@ def _seed_orders(restaurant_map):
             shipping_fee=ship_fee,
             total_amount=total,
             rejection_reason=rejection_reason,
-            created_at=datetime.utcnow(),
+            created_at=random_date_in_range(days=30),
         )
         order.items = items
         db.session.add(order)
         orders_created += 1
 
+    # 2. Tạo thêm các đơn hàng ngẫu nhiên rải đều trong 30 ngày cho các nhà hàng để biểu đồ báo cáo đầy đủ
+    for r_username, restaurant in restaurant_map.items():
+        dishes = Dish.query.filter_by(restaurant_id=restaurant.id).all()
+        if not dishes:
+            continue
+        # quan_trua_ngon tạo nhiều đơn hơn để xem dashboard báo cáo thật đẹp
+        num_orders = random.randint(30, 45) if r_username == "quan_trua_ngon" else random.randint(4, 8)
+        for _ in range(num_orders):
+            customer = random.choice(customer_users)
+            st = random.choice(statuses_pool)
+            ship_fee = random.choice([15000, 20000, 25000, 30000])
+            note = random.choice(notes_pool)
+            rejection_reason = random.choice(rejection_reasons) if st == Status.CANCELLED else None
+
+            sample_size = min(random.randint(1, 4), len(dishes))
+            chosen_dishes = random.sample(dishes, sample_size)
+            items = []
+            subtotal = 0
+            for dish in chosen_dishes:
+                qty = random.randint(1, 3)
+                unit_price = float(dish.price)
+                subtotal += unit_price * qty
+                items.append(OrderItem(name=dish.name, dish_id=dish.id, unit_price=unit_price, quantity=qty))
+
+            voucher = None
+            if vouchers and random.random() < 0.35 and r_username == "quan_trua_ngon":
+                voucher = random.choice(vouchers)
+
+            discount = 0
+            if voucher:
+                if voucher.discount_type == DiscountType.PERCENTAGE:
+                    discount = subtotal * voucher.discount_value / 100
+                    if voucher.max_discount is not None:
+                        discount = min(discount, voucher.max_discount)
+                else:
+                    discount = min(voucher.discount_value, subtotal)
+            total = max(0, subtotal - discount + ship_fee)
+
+            order = Order(
+                name=f"DH-{orders_created + 1:05d}",
+                user_id=customer.id,
+                restaurant_id=restaurant.id,
+                voucher_id=voucher.id if voucher else None,
+                status=st,
+                note=note,
+                customer_name=customer.name,
+                customer_phone=customer.phonenumber,
+                customer_email=customer.email,
+                delivery_address=customer.address,
+                shipping_fee=ship_fee,
+                total_amount=total,
+                rejection_reason=rejection_reason,
+                created_at=random_date_in_range(days=30),
+            )
+            order.items = items
+            db.session.add(order)
+            orders_created += 1
+
     db.session.commit()
-    print(f"✅ Đã tạo {orders_created} đơn hàng test.")
+    print(f"✅ Đã tạo {orders_created} đơn hàng test rải đều trong 30 ngày.")
 
 
 def _seed_orders_full_status(restaurant_map):
@@ -335,7 +418,9 @@ def _seed_orders_full_status(restaurant_map):
     db.session.add(test_customer)
     db.session.flush()
 
-    rest_test = restaurant_map["quan_trua_ngon"]
+    rest_test = restaurant_map.get("quan_trua_ngon")
+    if not rest_test:
+        return
 
     voucher = Voucher(
         name="Giam 10% toi da 50k",
@@ -345,8 +430,8 @@ def _seed_orders_full_status(restaurant_map):
         discount_value=10,
         minimum_order=100000,
         max_discount=50000,
-        start_date=datetime.utcnow() - timedelta(days=30),
-        end_date=datetime.utcnow() + timedelta(days=30),
+        start_date=datetime.utcnow() - timedelta(days=60),
+        end_date=datetime.utcnow() + timedelta(days=60),
         usage_limit=1000,
         used_count=1,
         restaurant_id=rest_test.id,
@@ -359,21 +444,21 @@ def _seed_orders_full_status(restaurant_map):
         print("⚠ Không có món ăn cho nhà hàng test, bỏ qua seed order đủ trạng thái.")
         return
 
-    # spec: (status, ship_fee, dùng voucher?, note, rejection_reason, days_ago)
+    # spec: (status, ship_fee, dùng voucher?, note, rejection_reason)
     order_specs = [
-        (Status.PENDING_PAYMENT, 20000, False, None, None, 0),
-        (Status.PAYMENT_FAILED, 20000, False, None, "Thanh toan that bai tu cong VNPAY", 0),
-        (Status.PAID, 20000, True, "Giao gio hanh chinh", None, 1),
-        (Status.CONFIRMED, 15000, False, "Giao truoc 12h", None, 2),
-        (Status.PREPARING, 20000, True, None, None, 1),
-        (Status.DELIVERING, 25000, False, None, None, 0),
-        (Status.COMPLETED, 20000, True, None, None, 5),
-        (Status.CANCELLED, 0, False, "Khach doi y", "Khach huy don truoc khi xac nhan", 3),
+        (Status.PENDING_PAYMENT, 20000, False, None, None),
+        (Status.PAYMENT_FAILED, 20000, False, None, "Thanh toan that bai tu cong VNPAY"),
+        (Status.PAID, 20000, True, "Giao gio hanh chinh", None),
+        (Status.CONFIRMED, 15000, False, "Giao truoc 12h", None),
+        (Status.PREPARING, 20000, True, None, None),
+        (Status.DELIVERING, 25000, False, None, None),
+        (Status.COMPLETED, 20000, True, None, None),
+        (Status.CANCELLED, 0, False, "Khach doi y", "Khach huy don truoc khi xac nhan"),
     ]
 
     orders_created = 0
-    for status, ship_fee, use_voucher, note, rejection_reason, days_ago in order_specs:
-        chosen = dishes[:3]
+    for status, ship_fee, use_voucher, note, rejection_reason in order_specs:
+        chosen = dishes[:min(3, len(dishes))]
         items = []
         subtotal = 0
         for i, dish in enumerate(chosen):
@@ -392,7 +477,7 @@ def _seed_orders_full_status(restaurant_map):
             else:
                 discount = min(applied_voucher.discount_value, subtotal)
 
-        total = subtotal - discount + ship_fee
+        total = max(0, subtotal - discount + ship_fee)
 
         order = Order(
             name=f"DH-TEST-{orders_created + 1:03d}",
@@ -408,15 +493,58 @@ def _seed_orders_full_status(restaurant_map):
             shipping_fee=ship_fee,
             total_amount=total,
             rejection_reason=rejection_reason,
-            created_at=datetime.utcnow(),
+            created_at=random_date_in_range(days=30),
         )
         order.items = items
         db.session.add(order)
 
         orders_created += 1
 
+    # Tạo thêm các đơn hàng của ngày hôm nay (today) chia đều 3 trạng thái pipeline (PAID, PREPARING, COMPLETED) cho quan_trua_ngon
+    today_pipeline_statuses = [
+        Status.PAID, Status.PAID, Status.PAID, Status.PAID,
+        Status.PREPARING, Status.PREPARING, Status.PREPARING,
+        Status.COMPLETED, Status.COMPLETED, Status.COMPLETED
+    ]
+    now = datetime.utcnow()
+    for idx, st in enumerate(today_pipeline_statuses):
+        sample_size = min(random.randint(1, 3), len(dishes))
+        chosen = random.sample(dishes, sample_size)
+        items = []
+        subtotal = 0
+        for i, dish in enumerate(chosen):
+            qty = random.randint(1, 2)
+            unit_price = float(dish.price)
+            subtotal += unit_price * qty
+            items.append(OrderItem(name=dish.name, dish_id=dish.id, unit_price=unit_price, quantity=qty))
+
+        ship_fee = 20000
+        total = subtotal + ship_fee
+
+        # Rải rác trong các giờ của ngày hôm nay (từ vài phút trước đến vài tiếng trước)
+        created_today = now - timedelta(minutes=random.randint(5, 480))
+
+        order = Order(
+            name=f"DH-TODAY-{idx + 1:03d}",
+            user_id=test_customer.id,
+            restaurant_id=rest_test.id,
+            voucher_id=None,
+            status=st,
+            note="Đơn hôm nay",
+            customer_name=test_customer.name,
+            customer_phone=test_customer.phonenumber,
+            customer_email=test_customer.email,
+            delivery_address=test_customer.address,
+            shipping_fee=ship_fee,
+            total_amount=total,
+            created_at=created_today,
+        )
+        order.items = items
+        db.session.add(order)
+        orders_created += 1
+
     db.session.commit()
-    print(f"✅ Đã tạo user '{test_customer.username}' và {orders_created} đơn hàng đủ 8 trạng thái.")
+    print(f"✅ Đã tạo user '{test_customer.username}' và {orders_created} đơn hàng (bao gồm 10 đơn hôm nay chia đều 3 trạng thái).")
 
 
 if __name__ == "__main__":
