@@ -143,9 +143,9 @@ async function fetchRecommendations(dishId) {
                     <p class="font-headline-md text-primary font-bold text-sm mt-0.5">${formatPrice(dish.price)}</p>
                 </div>
             </div>
-            <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
+            <button class="shrink-0 py-1.5 px-3 bg-surface-container-highest text-primary rounded-lg text-sm font-semibold hover:bg-primary hover:text-white active:scale-95 transition-all flex items-center gap-1 shadow-xs"
                 onclick="addToCart(${dish.id}, this, false)">
-                <span class="material-symbols-outlined text-sm">add</span> Thêm
+                <span class="material-symbols-outlined text-[16px] leading-none">add</span> Thêm
             </button>
         </div>
     `).join('');
@@ -215,8 +215,8 @@ async function addToCart(dishId, button, triggerRecommendation = true) {
         await refreshCart();
 
         // Trạng thái đã thêm thành công (V xanh)
-        button.className = 'shrink-0 py-xs px-md bg-green-500/20 text-green-600 rounded-lg font-label-md flex items-center gap-xs transition-all';
-        button.innerHTML = '<span class="material-symbols-outlined text-sm">check</span> Đã thêm';
+        button.className = 'shrink-0 py-1.5 px-3 bg-green-500/20 text-green-600 rounded-xl text-sm font-semibold flex items-center gap-1 transition-all shadow-xs';
+        button.innerHTML = '<span class="material-symbols-outlined text-[16px] leading-none">check</span> Đã thêm';
 
         // Gợi ý món ăn kèm nếu có (chỉ trigger khi thêm từ thực đơn chính)
         if (triggerRecommendation) {
@@ -351,16 +351,16 @@ function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào', showActi
     container.innerHTML = dishes.map(d => {
         const hasVoucher = d.voucher_code && d.final_price !== undefined && d.final_price !== null && d.final_price < d.original_price;
         const priceBlock = hasVoucher ? `
-            <span class="flex flex-col leading-tight">
-                <span class="text-caption text-secondary line-through">${(d.original_price || 0).toLocaleString('vi-VN')}đ</span>
-                <span class="font-headline-md text-primary whitespace-nowrap">${(d.final_price || 0).toLocaleString('vi-VN')}đ</span>
+            <span class="flex flex-col leading-tight min-w-0">
+                <span class="text-caption text-secondary line-through truncate">${(d.original_price || 0).toLocaleString('vi-VN')}đ</span>
+                <span class="text-[17px] font-bold text-primary whitespace-nowrap">${(d.final_price || 0).toLocaleString('vi-VN')}đ</span>
             </span>
-        ` : `<span class="font-headline-md text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>`;
+        ` : `<span class="text-[17px] font-bold text-primary whitespace-nowrap">${(d.price || 0).toLocaleString('vi-VN')}đ</span>`;
         return `
-        <div class="bg-surface-container-lowest rounded-xl shadow-lg border border-transparent hover:border-primary-fixed hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden group flex flex-col ${d.active ? '' : 'dish-disabled'}">
-            <div class="h-40 bg-cover rounded-xl bg-center relative" style="background-image: url('${d.image || ''}')">
+        <div class="bg-surface-container-lowest rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.06)] border border-outline-variant/20 hover:border-primary-fixed hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden group flex flex-col ${d.active ? '' : 'dish-disabled'}">
+            <div class="h-40 bg-cover bg-center relative" style="background-image: url('${d.image || ''}')">
                 <img src="${d.image || ''}" onerror="this.parentElement.style.backgroundImage='url(https://png.pngtree.com/png-vector/20210623/ourmid/pngtree-pho-noodle-vietnamese-food-png-png-image_3508276.jpg)'" class="hidden">
-                ${hasVoucher ? `<span class="absolute top-2 right-2 bg-primary text-white text-caption font-bold px-xs py-[2px] rounded-full z-10">${escapeHtml(d.voucher_label || '')}</span>` : ''}
+                ${hasVoucher ? `<span class="absolute top-2 right-2 bg-primary text-white text-caption font-bold px-2 py-0.5 rounded-full z-10 shadow-xs">${escapeHtml(d.voucher_label || '')}</span>` : ''}
                 ${showAction ? '' : `
                 <label class="dish-select-label absolute top-2 left-2 w-6 h-6 rounded-full bg-white shadow cursor-pointer z-10" title="Chọn để xóa">
                     <input type="checkbox" class="dish-select-input sr-only">
@@ -368,22 +368,24 @@ function renderDishes(dishes, emptyMessage = 'Chưa có món ăn nào', showActi
                 </label>
                 `}
             </div>
-            <div class="p-sm flex flex-col flex-1">
-                <h3 class="font-headline-lg font-bold line-clamp-1">${d.name}</h3>
-                <span class="text-caption text-secondary mb-xs">${d.category || ''}</span>
-                <p class="text-sm text-gray-500 italic line-clamp-2 mb-sm flex-1">${d.description || ''}</p>
+            <div class="p-4 flex flex-col flex-1 justify-between">
+                <div>
+                    <h3 class="font-headline-md text-[16px] font-bold text-on-surface line-clamp-1 group-hover:text-primary transition-colors">${d.name}</h3>
+                    <span class="text-caption text-secondary block mt-0.5">${d.category || ''}</span>
+                    <p class="text-caption text-secondary/90 italic line-clamp-2 mt-1 mb-3">${d.description || ''}</p>
+                </div>
                 ${showAction ? `
-                <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
+                <div class="flex items-center justify-between gap-2 pt-2.5 border-t border-outline-variant/15 mt-auto">
                     ${priceBlock}
-                    <button class="shrink-0 py-xs px-md bg-surface-container-highest text-primary rounded-lg font-label-md hover:bg-primary hover:text-white transition-all flex items-center gap-xs"
+                    <button class="shrink-0 py-1.5 px-3.5 bg-surface-container-highest text-primary rounded-xl text-sm font-semibold hover:bg-primary hover:text-white active:scale-95 transition-all flex items-center gap-1 shadow-xs"
                         onclick="addToCart(${d.id}, this)">
-                        <span class="material-symbols-outlined text-sm">add</span> Thêm
+                        <span class="material-symbols-outlined text-[16px] leading-none">add</span> Thêm
                     </button>
                 </div>
                 ` : `
-                <div class="flex items-center justify-between gap-sm pt-xs border-t border-outline-variant/10">
+                <div class="flex items-center justify-between gap-2 pt-2.5 border-t border-outline-variant/15 mt-auto">
                     ${priceBlock}
-                    <div class="flex items-center gap-sm shrink-0">
+                    <div class="flex items-center gap-2 shrink-0">
                         <label class="dish-toggle relative inline-flex items-center cursor-pointer" title="Bật / tắt món ăn">
                             <input type="checkbox" class="dish-toggle-input sr-only" ${d.active ? 'checked' : ''}>
                             <span class="dish-toggle-track w-10 h-5 bg-secondary-fixed rounded-full relative transition-colors">

@@ -31,19 +31,7 @@
 {% block page_title %}Thống kê báo cáo{% endblock %}
 {% block page_description %}Xem tổng quan doanh thu và hiệu quả kinh doanh của nhà hàng.{% endblock %}
 
-{% block itemHeader %}
-<div class="flex items-center space-x-3 cursor-pointer">
-    <div class="text-right hidden sm:block">
-        <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
-        <p class="text-caption text-secondary">Quản lý</p>
-    </div>
-    <a href="/me">
-        <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
-            <img class="w-full h-full object-cover" alt="{{ current_user.name }}" src="{{ current_user.avatar }}">
-        </div>
-    </a>
-</div>
-{% endblock %}
+
 
 {% block content %}
 <div class="w-full p-gutter min-h-full">
@@ -63,16 +51,11 @@
                 <input type="date" id="endDate" value="{{ default_end }}"
                     class="border border-outline-variant rounded-lg px-3 py-2 text-body-md focus:outline-none focus:ring-2 focus:ring-primary">
             </div>
-            <div class="flex items-center gap-2 flex-wrap">
-                <button type="button" onclick="setRange(7)" class="px-3 py-2 rounded-lg text-label-md bg-surface-container hover:bg-surface-variant transition-colors">7 ngày</button>
-                <button type="button" onclick="setRange(30)" class="px-3 py-2 rounded-lg text-label-md bg-primary-container text-on-primary-container font-bold">30 ngày</button>
-                <button type="button" onclick="setRange(90)" class="px-3 py-2 rounded-lg text-label-md bg-surface-container hover:bg-surface-variant transition-colors">90 ngày</button>
+            <div class="flex items-center gap-2 flex-wrap" id="rangeButtons">
+                <button type="button" data-range="7" onclick="setRange(7)" class="range-btn px-3 py-2 rounded-lg text-label-md bg-surface-container text-on-surface hover:bg-surface-variant transition-all">7 ngày</button>
+                <button type="button" data-range="30" onclick="setRange(30)" class="range-btn px-3 py-2 rounded-lg text-label-md bg-primary-container text-on-primary-container font-bold transition-all">30 ngày</button>
+                <button type="button" data-range="90" onclick="setRange(90)" class="range-btn px-3 py-2 rounded-lg text-label-md bg-surface-container text-on-surface hover:bg-surface-variant transition-all">90 ngày</button>
             </div>
-            <button type="submit"
-                class="ml-auto px-6 py-2.5 rounded-lg bg-primary text-on-primary font-label-md hover:opacity-90 transition-opacity flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px]">search</span>
-                Xem báo cáo
-            </button>
         </form>
 
         <!-- Stat Cards -->
@@ -209,12 +192,56 @@
         };
     }
 
+    const ACTIVE_RANGE_CLASSES = ['bg-primary-container', 'text-on-primary-container', 'font-bold'];
+    const INACTIVE_RANGE_CLASSES = ['bg-surface-container', 'text-on-surface', 'hover:bg-surface-variant'];
+
+    function formatLocalDate(d) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function updateRangeButtons(activeDays) {
+        document.querySelectorAll('.range-btn').forEach(btn => {
+            const range = parseInt(btn.getAttribute('data-range'), 10);
+            if (activeDays !== null && range === activeDays) {
+                btn.classList.add(...ACTIVE_RANGE_CLASSES);
+                btn.classList.remove(...INACTIVE_RANGE_CLASSES);
+            } else {
+                btn.classList.remove(...ACTIVE_RANGE_CLASSES);
+                btn.classList.add(...INACTIVE_RANGE_CLASSES);
+            }
+        });
+    }
+
+    function checkMatchingRange() {
+        const startVal = document.getElementById('startDate').value;
+        const endVal = document.getElementById('endDate').value;
+        if (!startVal || !endVal) {
+            updateRangeButtons(null);
+            return;
+        }
+        const todayStr = formatLocalDate(new Date());
+        if (endVal === todayStr) {
+            const startD = new Date(startVal + 'T00:00:00');
+            const endD = new Date(endVal + 'T00:00:00');
+            const diffDays = Math.round((endD - startD) / (1000 * 60 * 60 * 24));
+            if ([7, 30, 90].includes(diffDays)) {
+                updateRangeButtons(diffDays);
+                return;
+            }
+        }
+        updateRangeButtons(null);
+    }
+
     function setRange(days) {
         const end = new Date();
         const start = new Date();
         start.setDate(end.getDate() - days);
-        document.getElementById('startDate').value = start.toISOString().split('T')[0];
-        document.getElementById('endDate').value = end.toISOString().split('T')[0];
+        document.getElementById('startDate').value = formatLocalDate(start);
+        document.getElementById('endDate').value = formatLocalDate(end);
+        updateRangeButtons(days);
         loadAll();
     }
 
@@ -503,10 +530,18 @@
         loadCategoryChart();
     }
 
+    function onDateChange() {
+        checkMatchingRange();
+        loadAll();
+    }
+
     document.getElementById('reportFilter').addEventListener('submit', function(e) {
         e.preventDefault();
         loadAll();
     });
+
+    document.getElementById('startDate').addEventListener('change', onDateChange);
+    document.getElementById('endDate').addEventListener('change', onDateChange);
 
     loadAll();
 </script>

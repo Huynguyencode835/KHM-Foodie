@@ -126,11 +126,15 @@ def seed(app=None):
             if not restaurant_obj:
                 continue
 
+            # Thêm 3 số 0 vào giá tiền món ăn (nhân 1000 sang VNĐ)
+            raw_price = float(d.get("price", 0))
+            price = raw_price * 1000 if raw_price < 1000 else raw_price
+
             new_dish = Dish(
                 name=d["name"],
                 description=d.get("description"),
                 image=d.get("image"),
-                price=d["price"],
+                price=price,
                 category=DishCategory[d["category"]],
                 restaurant=restaurant_obj
             )
@@ -213,8 +217,8 @@ def _seed_orders(restaurant_map):
             description="Giam 10% don hang, toi da 50k",
             discount_type=DiscountType.PERCENTAGE,
             discount_value=10,
-            minimum_order=100,
-            max_discount=50,
+            minimum_order=100000,
+            max_discount=50000,
             start_date=datetime.utcnow() - timedelta(days=30),
             end_date=datetime.utcnow() + timedelta(days=30),
             usage_limit=1000,
@@ -226,8 +230,8 @@ def _seed_orders(restaurant_map):
             code="QUANTRUANGON30",
             description="Giam 30k don hang tu 150k",
             discount_type=DiscountType.FIXED_AMOUNT,
-            discount_value=30,
-            minimum_order=150,
+            discount_value=30000,
+            minimum_order=150000,
             max_discount=None,
             start_date=datetime.utcnow() - timedelta(days=30),
             end_date=datetime.utcnow() + timedelta(days=30),
@@ -242,24 +246,24 @@ def _seed_orders(restaurant_map):
     # Đơn hàng cho 2 nhà hàng approved: quan_trua_ngon & goc_trua_van_phong
     # spec: (restaurant_username, status, customer_idx, ship_fee, voucher_idx, note, days_ago)
     order_specs = [
-        ("quan_trua_ngon", Status.PAID, 0, 20, 0, "Giao gio hanh chinh", 0),
-        ("quan_trua_ngon", Status.PAID, 1, 20, 1, None, 1),
-        ("quan_trua_ngon", Status.PAID, 2, 15, None, "Them it tuong ot", 2),
-        ("quan_trua_ngon", Status.PAID, 3, 25, 0, None, 3),
-        ("quan_trua_ngon", Status.CONFIRMED, 1, 20, None, None, 1),
-        ("quan_trua_ngon", Status.CONFIRMED, 2, 15, 1, "Giao trua 11h30", 2),
-        ("quan_trua_ngon", Status.PREPARING, 0, 20, None, None, 0),
-        ("quan_trua_ngon", Status.PREPARING, 3, 15, 0, None, 1),
-        ("quan_trua_ngon", Status.DELIVERING, 2, 20, None, None, 0),
-        ("quan_trua_ngon", Status.DELIVERING, 1, 25, 1, None, 2),
-        ("quan_trua_ngon", Status.COMPLETED, 0, 20, None, None, 5),
+        ("quan_trua_ngon", Status.PAID, 0, 20000, 0, "Giao gio hanh chinh", 0),
+        ("quan_trua_ngon", Status.PAID, 1, 20000, 1, None, 1),
+        ("quan_trua_ngon", Status.PAID, 2, 15000, None, "Them it tuong ot", 2),
+        ("quan_trua_ngon", Status.PAID, 3, 25000, 0, None, 3),
+        ("quan_trua_ngon", Status.CONFIRMED, 1, 20000, None, None, 1),
+        ("quan_trua_ngon", Status.CONFIRMED, 2, 15000, 1, "Giao trua 11h30", 2),
+        ("quan_trua_ngon", Status.PREPARING, 0, 20000, None, None, 0),
+        ("quan_trua_ngon", Status.PREPARING, 3, 15000, 0, None, 1),
+        ("quan_trua_ngon", Status.DELIVERING, 2, 20000, None, None, 0),
+        ("quan_trua_ngon", Status.DELIVERING, 1, 25000, 1, None, 2),
+        ("quan_trua_ngon", Status.COMPLETED, 0, 20000, None, None, 5),
         ("quan_trua_ngon", Status.CANCELLED, 3, 0, None, "Nha hang het nguyen lieu", 4),
-        ("quan_trua_ngon", Status.PENDING_PAYMENT, 1, 20, None, None, 0),
-        ("goc_trua_van_phong", Status.PAID, 2, 15, None, None, 1),
-        ("goc_trua_van_phong", Status.CONFIRMED, 3, 20, None, None, 2),
-        ("goc_trua_van_phong", Status.PREPARING, 0, 15, None, None, 0),
-        ("goc_trua_van_phong", Status.DELIVERING, 1, 20, None, None, 1),
-        ("goc_trua_van_phong", Status.COMPLETED, 2, 15, None, None, 6),
+        ("quan_trua_ngon", Status.PENDING_PAYMENT, 1, 20000, None, None, 0),
+        ("goc_trua_van_phong", Status.PAID, 2, 15000, None, None, 1),
+        ("goc_trua_van_phong", Status.CONFIRMED, 3, 20000, None, None, 2),
+        ("goc_trua_van_phong", Status.PREPARING, 0, 15000, None, None, 0),
+        ("goc_trua_van_phong", Status.DELIVERING, 1, 20000, None, None, 1),
+        ("goc_trua_van_phong", Status.COMPLETED, 2, 15000, None, None, 6),
         ("goc_trua_van_phong", Status.CANCELLED, 3, 0, None, "Khach huy don", 3),
     ]
 
@@ -306,7 +310,7 @@ def _seed_orders(restaurant_map):
             shipping_fee=ship_fee,
             total_amount=total,
             rejection_reason=rejection_reason,
-            created_at=datetime.utcnow() - timedelta(days=days_ago),
+            created_at=datetime.utcnow(),
         )
         order.items = items
         db.session.add(order)
@@ -339,8 +343,8 @@ def _seed_orders_full_status(restaurant_map):
         description="Giam 10% don hang, toi da 50k",
         discount_type=DiscountType.PERCENTAGE,
         discount_value=10,
-        minimum_order=100,
-        max_discount=50,
+        minimum_order=100000,
+        max_discount=50000,
         start_date=datetime.utcnow() - timedelta(days=30),
         end_date=datetime.utcnow() + timedelta(days=30),
         usage_limit=1000,
@@ -357,13 +361,13 @@ def _seed_orders_full_status(restaurant_map):
 
     # spec: (status, ship_fee, dùng voucher?, note, rejection_reason, days_ago)
     order_specs = [
-        (Status.PENDING_PAYMENT, 20, False, None, None, 0),
-        (Status.PAYMENT_FAILED, 20, False, None, "Thanh toan that bai tu cong VNPAY", 0),
-        (Status.PAID, 20, True, "Giao gio hanh chinh", None, 1),
-        (Status.CONFIRMED, 15, False, "Giao truoc 12h", None, 2),
-        (Status.PREPARING, 20, True, None, None, 1),
-        (Status.DELIVERING, 25, False, None, None, 0),
-        (Status.COMPLETED, 20, True, None, None, 5),
+        (Status.PENDING_PAYMENT, 20000, False, None, None, 0),
+        (Status.PAYMENT_FAILED, 20000, False, None, "Thanh toan that bai tu cong VNPAY", 0),
+        (Status.PAID, 20000, True, "Giao gio hanh chinh", None, 1),
+        (Status.CONFIRMED, 15000, False, "Giao truoc 12h", None, 2),
+        (Status.PREPARING, 20000, True, None, None, 1),
+        (Status.DELIVERING, 25000, False, None, None, 0),
+        (Status.COMPLETED, 20000, True, None, None, 5),
         (Status.CANCELLED, 0, False, "Khach doi y", "Khach huy don truoc khi xac nhan", 3),
     ]
 
@@ -404,7 +408,7 @@ def _seed_orders_full_status(restaurant_map):
             shipping_fee=ship_fee,
             total_amount=total,
             rejection_reason=rejection_reason,
-            created_at=datetime.utcnow() - timedelta(days=days_ago),
+            created_at=datetime.utcnow(),
         )
         order.items = items
         db.session.add(order)
