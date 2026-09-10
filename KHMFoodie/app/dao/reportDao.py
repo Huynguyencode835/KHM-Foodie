@@ -120,18 +120,26 @@ class ReportDao:
             Order.status.in_([Status.PAID, Status.PREPARING, Status.COMPLETED]),
         ).group_by(
             Dish.category
-        ).order_by(
-            func.sum(OrderItem.unit_price * OrderItem.quantity).desc()
         ).all()
 
-        return [
-            {
-                "category": r.category.value if r.category else "Khác",
+        revenue_map = {
+            (r.category.value if r.category else "Khác"): {
                 "revenue": float(r.revenue),
                 "quantity": r.quantity,
             }
             for r in rows
-        ]
+        }
+
+        result = []
+        for cat in DishCategory:
+            data = revenue_map.get(cat.value, {"revenue": 0, "quantity": 0})
+            result.append({
+                "category": cat.value,
+                "revenue": data["revenue"],
+                "quantity": data["quantity"],
+            })
+
+        return sorted(result, key=lambda x: x["revenue"], reverse=True)
 
     @staticmethod
     def get_order_status_distribution(restaurant_id, start_date, end_date):
