@@ -1,0 +1,513 @@
+{% extends "layout/baseRestaurent.html" %}
+
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+    .stat-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+    .stat-card:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,0,0,0.12); }
+    .report-section { animation: fadeInUp 0.5s ease forwards; opacity: 0; }
+    .report-section:nth-child(1) { animation-delay: 0.1s; }
+    .report-section:nth-child(2) { animation-delay: 0.2s; }
+    .report-section:nth-child(3) { animation-delay: 0.3s; }
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .chart-type-select {
+        border: 1px solid var(--color-outline-variant, #e2e2e2);
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.75rem;
+        font-size: 0.875rem;
+        background-color: #fff;
+        cursor: pointer;
+    }
+    .chart-type-select:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(169, 49, 0, 0.25);
+    }
+</style>
+{% endblock %}
+
+{% block page_title %}Thống kê báo cáo{% endblock %}
+{% block page_description %}Xem tổng quan doanh thu và hiệu quả kinh doanh của nhà hàng.{% endblock %}
+
+{% block itemHeader %}
+<div class="flex items-center space-x-3 cursor-pointer">
+    <div class="text-right hidden sm:block">
+        <p class="text-label-md font-bold leading-tight">{{ current_user.name }}</p>
+        <p class="text-caption text-secondary">Quản lý</p>
+    </div>
+    <a href="/me">
+        <div class="w-10 h-10 rounded-full border-2 border-primary overflow-hidden">
+            <img class="w-full h-full object-cover" alt="{{ current_user.name }}" src="{{ current_user.avatar }}">
+        </div>
+    </a>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="w-full p-gutter min-h-full">
+    <div class="max-w-[1600px] mx-auto space-y-6">
+
+        <!-- Filter -->
+        <form id="reportFilter"
+            class="flex flex-col gap-3 lg:flex-row lg:items-center bg-surface-container-lowest rounded-xl p-4 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">calendar_today</span>
+                <label class="text-label-md text-on-surface">Từ ngày</label>
+                <input type="date" id="startDate" value="{{ default_start }}"
+                    class="border border-outline-variant rounded-lg px-3 py-2 text-body-md focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div class="flex items-center gap-2">
+                <label class="text-label-md text-on-surface">đến ngày</label>
+                <input type="date" id="endDate" value="{{ default_end }}"
+                    class="border border-outline-variant rounded-lg px-3 py-2 text-body-md focus:outline-none focus:ring-2 focus:ring-primary">
+            </div>
+            <div class="flex items-center gap-2 flex-wrap">
+                <button type="button" onclick="setRange(7)" class="px-3 py-2 rounded-lg text-label-md bg-surface-container hover:bg-surface-variant transition-colors">7 ngày</button>
+                <button type="button" onclick="setRange(30)" class="px-3 py-2 rounded-lg text-label-md bg-primary-container text-on-primary-container font-bold">30 ngày</button>
+                <button type="button" onclick="setRange(90)" class="px-3 py-2 rounded-lg text-label-md bg-surface-container hover:bg-surface-variant transition-colors">90 ngày</button>
+            </div>
+            <button type="submit"
+                class="ml-auto px-6 py-2.5 rounded-lg bg-primary text-on-primary font-label-md hover:opacity-90 transition-opacity flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">search</span>
+                Xem báo cáo
+            </button>
+        </form>
+
+        <!-- Stat Cards -->
+        <div class="report-section grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-emerald-600">payments</span>
+                    </div>
+                    <span class="text-label-md text-secondary">Tổng doanh thu</span>
+                </div>
+                <p id="statRevenue" class="font-headline-lg text-headline-lg text-on-surface font-bold">0đ</p>
+                <p id="statCompletedRevenue" class="text-caption text-secondary mt-1">Hoàn thành: 0đ</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-blue-600">receipt_long</span>
+                    </div>
+                    <span class="text-label-md text-secondary">Tổng đơn hàng</span>
+                </div>
+                <p id="statTotalOrders" class="font-headline-lg text-headline-lg text-on-surface font-bold">0</p>
+                <p id="statCompletedOrders" class="text-caption text-secondary mt-1">Hoàn thành: 0</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+                <div class="flex items-center gap-3 mb-3">
+                    <span class="text-label-md text-secondary">Giá trị đơn trung bình</span>
+                </div>
+                <p id="statAvgOrder" class="font-headline-lg text-headline-lg text-on-surface font-bold">0đ</p>
+            </div>
+            <div class="stat-card bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+                <div class="flex items-center gap-3 mb-3">
+                    <div class="w-10 h-10 rounded-xl bg-red-100 flex items-center justify-center">
+                        <span class="material-symbols-outlined text-red-600">cancel</span>
+                    </div>
+                    <span class="text-label-md text-secondary">Đơn bị huỷ</span>
+                </div>
+                <p id="statCancelled" class="font-headline-lg text-headline-lg text-on-surface font-bold">0</p>
+            </div>
+        </div>
+
+        <!-- Revenue Chart -->
+        <div class="report-section bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+            <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+                <h3 class="font-headline-md text-headline-md text-on-surface font-bold">Doanh thu theo ngày</h3>
+                <div class="flex items-center gap-2">
+                    <label for="revenueChartType" class="text-label-md text-secondary">Loại biểu đồ</label>
+                    <select id="revenueChartType" class="chart-type-select" onchange="renderRevenueChart()">
+                        <option value="combo" selected>Cột + Đường</option>
+                        <option value="bar">Cột</option>
+                        <option value="line">Đường</option>
+                        <option value="area">Vùng (Area)</option>
+                    </select>
+                </div>
+            </div>
+            <div class="relative" style="height: 320px;">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Two columns: Top dishes + Category revenue -->
+        <div class="report-section grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Top Dishes -->
+            <div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+                <h3 class="font-headline-md text-headline-md text-on-surface font-bold mb-4">Top món bán chạy</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead>
+                            <tr class="border-b border-outline-variant">
+                                <th class="pb-3 text-label-md text-secondary font-semibold">#</th>
+                                <th class="pb-3 text-label-md text-secondary font-semibold">Món ăn</th>
+                                <th class="pb-3 text-label-md text-secondary font-semibold text-right">Đã bán</th>
+                                <th class="pb-3 text-label-md text-secondary font-semibold text-right">Doanh thu</th>
+                            </tr>
+                        </thead>
+                        <tbody id="topDishesBody">
+                            <tr><td colspan="4" class="py-8 text-center text-secondary">Đang tải...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Category Revenue -->
+            <div class="bg-surface-container-lowest rounded-xl p-5 shadow-[0px_4px_20px_rgba(0,0,0,0.05)]">
+                <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+                    <h3 class="font-headline-md text-headline-md text-on-surface font-bold">Doanh thu theo danh mục</h3>
+                    <div class="flex items-center gap-2">
+                        <label for="categoryChartType" class="text-label-md text-secondary">Loại biểu đồ</label>
+                        <select id="categoryChartType" class="chart-type-select" onchange="renderCategoryChart()">
+                            <option value="doughnut" selected>Tròn (Doughnut)</option>
+                            <option value="pie">Bánh (Pie)</option>
+                            <option value="bar">Cột ngang</option>
+                            <option value="polarArea">Polar Area</option>
+                            <option value="radar">Radar</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="relative" style="height: 300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div id="categoryLegend" class="mt-4 space-y-2"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const API_BASE = '/api/reports';
+    let revenueChart = null;
+    let categoryChart = null;
+
+    // Cache last fetched data so switching chart type doesn't re-fetch from server
+    let lastRevenueData = null;
+    let lastCategoryData = null;
+
+    const COLORS = [
+        '#a93100', '#059669', '#2563eb', '#d97706',
+        '#dc2626', '#7c3aed', '#0891b2', '#be185d',
+        '#65a30d', '#ea580c'
+    ];
+
+    function formatCurrency(val) {
+        return new Intl.NumberFormat('vi-VN').format(val) + 'đ';
+    }
+
+    function getParams() {
+        return {
+            start_date: document.getElementById('startDate').value + 'T00:00:00',
+            end_date: document.getElementById('endDate').value + 'T23:59:59',
+        };
+    }
+
+    function setRange(days) {
+        const end = new Date();
+        const start = new Date();
+        start.setDate(end.getDate() - days);
+        document.getElementById('startDate').value = start.toISOString().split('T')[0];
+        document.getElementById('endDate').value = end.toISOString().split('T')[0];
+        loadAll();
+    }
+
+    async function loadSummary() {
+        const params = new URLSearchParams(getParams());
+        try {
+            const res = await fetch(`${API_BASE}/summary?${params}`);
+            const json = await res.json();
+            if (!json.success) return;
+            const d = json.data;
+            document.getElementById('statRevenue').textContent = formatCurrency(d.total_revenue);
+            document.getElementById('statCompletedRevenue').textContent = 'Hoàn thành: ' + formatCurrency(d.completed_revenue);
+            document.getElementById('statTotalOrders').textContent = d.total_orders;
+            document.getElementById('statCompletedOrders').textContent = 'Hoàn thành: ' + d.completed_orders;
+            document.getElementById('statAvgOrder').textContent = formatCurrency(d.avg_order_value);
+            document.getElementById('statCancelled').textContent = d.cancelled_orders;
+        } catch (e) {
+            console.error('loadSummary error:', e);
+        }
+    }
+
+    async function loadRevenueChart() {
+        const params = new URLSearchParams(getParams());
+        try {
+            const res = await fetch(`${API_BASE}/revenue-chart?${params}`);
+            const json = await res.json();
+            if (!json.success) return;
+            lastRevenueData = json.data;
+            renderRevenueChart();
+        } catch (e) {
+            console.error('loadRevenueChart error:', e);
+        }
+    }
+
+    function renderRevenueChart() {
+        if (!lastRevenueData) return;
+        const data = lastRevenueData;
+        const type = document.getElementById('revenueChartType').value;
+
+        const labels = data.map(d => {
+            const dt = new Date(d.date);
+            return dt.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+        });
+        const revenues = data.map(d => d.revenue);
+        const orders = data.map(d => d.order_count);
+
+        if (revenueChart) revenueChart.destroy();
+
+        let datasets;
+        let chartType;
+
+        if (type === 'combo') {
+            chartType = 'bar';
+            datasets = [
+                {
+                    label: 'Doanh thu (đ)',
+                    data: revenues,
+                    backgroundColor: 'rgba(169, 49, 0, 0.7)',
+                    borderColor: '#a93100',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                    yAxisID: 'y',
+                },
+                {
+                    label: 'Số đơn',
+                    data: orders,
+                    type: 'line',
+                    borderColor: '#2563eb',
+                    backgroundColor: 'rgba(37, 99, 235, 0.1)',
+                    pointBackgroundColor: '#2563eb',
+                    tension: 0.3,
+                    yAxisID: 'y1',
+                }
+            ];
+        } else if (type === 'bar') {
+            chartType = 'bar';
+            datasets = [{
+                label: 'Doanh thu (đ)',
+                data: revenues,
+                backgroundColor: 'rgba(169, 49, 0, 0.7)',
+                borderColor: '#a93100',
+                borderWidth: 1,
+                borderRadius: 4,
+                yAxisID: 'y',
+            }];
+        } else if (type === 'line') {
+            chartType = 'line';
+            datasets = [{
+                label: 'Doanh thu (đ)',
+                data: revenues,
+                borderColor: '#a93100',
+                backgroundColor: 'rgba(169, 49, 0, 0.15)',
+                pointBackgroundColor: '#a93100',
+                tension: 0.3,
+                fill: false,
+                yAxisID: 'y',
+            }];
+        } else if (type === 'area') {
+            chartType = 'line';
+            datasets = [{
+                label: 'Doanh thu (đ)',
+                data: revenues,
+                borderColor: '#a93100',
+                backgroundColor: 'rgba(169, 49, 0, 0.25)',
+                pointBackgroundColor: '#a93100',
+                tension: 0.3,
+                fill: true,
+                yAxisID: 'y',
+            }];
+        }
+
+        const hasSecondAxis = type === 'combo';
+
+        revenueChart = new Chart(document.getElementById('revenueChart'), {
+            type: chartType,
+            data: { labels, datasets },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { position: 'top' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                if (ctx.dataset.label === 'Số đơn') return 'Đơn hàng: ' + ctx.raw;
+                                return 'Doanh thu: ' + formatCurrency(ctx.raw);
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        position: 'left',
+                        ticks: { callback: v => formatCurrency(v) }
+                    },
+                    ...(hasSecondAxis ? {
+                        y1: {
+                            beginAtZero: true,
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                        }
+                    } : {})
+                }
+            }
+        });
+    }
+
+    async function loadTopDishes() {
+        const params = new URLSearchParams(getParams());
+        params.set('limit', '10');
+        try {
+            const res = await fetch(`${API_BASE}/top-dishes?${params}`);
+            const json = await res.json();
+            const tbody = document.getElementById('topDishesBody');
+            if (!json.success || !json.data.length) {
+                tbody.innerHTML = '<tr><td colspan="4" class="py-8 text-center text-secondary">Không có dữ liệu</td></tr>';
+                return;
+            }
+            tbody.innerHTML = json.data.map((d, i) => `
+                <tr class="border-b border-outline-variant/50 hover:bg-surface-container-low transition-colors">
+                    <td class="py-3 text-label-md font-bold text-primary">${i + 1}</td>
+                    <td class="py-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg overflow-hidden bg-surface-container shrink-0">
+                                ${d.image ? `<img src="${d.image}" class="w-full h-full object-cover" alt="${d.name}">` :
+                                '<span class="material-symbols-outlined w-full h-full flex items-center justify-center text-secondary">restaurant</span>'}
+                            </div>
+                            <div>
+                                <p class="text-body-md font-semibold text-on-surface">${d.name}</p>
+                                <p class="text-caption text-secondary">${formatCurrency(d.price)}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3 text-right text-label-md font-bold text-on-surface">${d.total_quantity}</td>
+                    <td class="py-3 text-right text-label-md font-bold text-emerald-600">${formatCurrency(d.total_revenue)}</td>
+                </tr>
+            `).join('');
+        } catch (e) {
+            console.error('loadTopDishes error:', e);
+        }
+    }
+
+    async function loadCategoryChart() {
+        const params = new URLSearchParams(getParams());
+        try {
+            const res = await fetch(`${API_BASE}/category-revenue?${params}`);
+            const json = await res.json();
+            if (!json.success || !json.data.length) {
+                lastCategoryData = null;
+                document.getElementById('categoryLegend').innerHTML = '<p class="text-secondary text-center">Không có dữ liệu</p>';
+                if (categoryChart) { categoryChart.destroy(); categoryChart = null; }
+                return;
+            }
+            lastCategoryData = json.data;
+            renderCategoryChart();
+        } catch (e) {
+            console.error('loadCategoryChart error:', e);
+        }
+    }
+
+    function renderCategoryChart() {
+        if (!lastCategoryData) return;
+        const data = lastCategoryData;
+        const type = document.getElementById('categoryChartType').value;
+        const labels = data.map(d => d.category);
+        const revenues = data.map(d => d.revenue);
+
+        if (categoryChart) categoryChart.destroy();
+
+        let chartType = type;
+        let datasetConfig = {
+            data: revenues,
+            backgroundColor: COLORS.slice(0, data.length),
+            borderWidth: 2,
+            borderColor: '#ffffff',
+        };
+        let indexAxis = undefined;
+
+        if (type === 'bar') {
+            chartType = 'bar';
+            indexAxis = 'y'; // horizontal bar
+            datasetConfig = {
+                label: 'Doanh thu',
+                data: revenues,
+                backgroundColor: COLORS.slice(0, data.length),
+                borderRadius: 4,
+            };
+        } else if (type === 'radar') {
+            datasetConfig = {
+                label: 'Doanh thu',
+                data: revenues,
+                backgroundColor: 'rgba(169, 49, 0, 0.2)',
+                borderColor: '#a93100',
+                pointBackgroundColor: '#a93100',
+            };
+        }
+
+        categoryChart = new Chart(document.getElementById('categoryChart'), {
+            type: chartType,
+            data: { labels, datasets: [datasetConfig] },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: indexAxis,
+                plugins: {
+                    legend: { display: type === 'radar' },
+                    tooltip: {
+                        callbacks: {
+                            label: function(ctx) {
+                                const total = revenues.reduce((a, b) => a + b, 0);
+                                const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+                                const label = ctx.label || labels[ctx.dataIndex];
+                                return label + ': ' + formatCurrency(ctx.raw) + ' (' + pct + '%)';
+                            }
+                        }
+                    }
+                },
+                scales: (type === 'bar') ? {
+                    x: { beginAtZero: true, ticks: { callback: v => formatCurrency(v) } }
+                } : (type === 'radar') ? {
+                    r: { beginAtZero: true }
+                } : {}
+            }
+        });
+
+        const total = revenues.reduce((a, b) => a + b, 0);
+        document.getElementById('categoryLegend').innerHTML = data.map((d, i) => {
+            const pct = total > 0 ? ((d.revenue / total) * 100).toFixed(1) : 0;
+            return `
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 rounded-full shrink-0" style="background:${COLORS[i % COLORS.length]}"></div>
+                    <span class="text-body-md text-on-surface flex-1">${d.category}</span>
+                    <span class="text-label-md font-bold text-on-surface">${formatCurrency(d.revenue)}</span>
+                    <span class="text-caption text-secondary">${pct}%</span>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function loadAll() {
+        loadSummary();
+        loadRevenueChart();
+        loadTopDishes();
+        loadCategoryChart();
+    }
+
+    document.getElementById('reportFilter').addEventListener('submit', function(e) {
+        e.preventDefault();
+        loadAll();
+    });
+
+    loadAll();
+</script>
+{% endblock %}

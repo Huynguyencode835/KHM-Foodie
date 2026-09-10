@@ -15,6 +15,7 @@ from app.routes.ordersRoute import orders_bp
 from app.routes.restaurantMenuRoute import restaurantMenu_bp
 from app.routes.OrderForCustomerRoute import orderCustomer_bp
 from app.routes.chatRoute import chat_bp
+from app.routes.reportRoute import report_bp
 
 
 def route_web(app):
@@ -41,3 +42,4 @@ def route_web(app):
     app.register_blueprint(payment_bp, url_prefix="/payment")
     app.register_blueprint(restaurantMenu_bp, url_prefix='/')
     app.register_blueprint(chat_bp, url_prefix='/chat')
+    app.register_blueprint(report_bp, url_prefix='/restaurants')
