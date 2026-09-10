@@ -181,7 +181,7 @@ if (saveBtn) {
             });
             const result = await res.json();
             if (res.ok) {
-                alert(result.message || 'Cập nhật thành công!');
+                showToast(result.message, 'success');
                 saveBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Đã lưu thành công';
                 saveBtn.classList.add('bg-green-600');
                 saveBtn.classList.remove('bg-primary');
@@ -192,12 +192,12 @@ if (saveBtn) {
                     saveBtn.disabled = false;
                 }, 2000);
             } else {
-                alert(result.message || 'Lưu thất bại');
+                showToast(result.message, 'error');
                 saveBtn.innerHTML = originalContent;
                 saveBtn.disabled = false;
             }
         } catch (err) {
-            alert('Lỗi kết nối đến máy chủ');
+            showToast('Lỗi kết nối đến máy chủ', 'error');
             saveBtn.innerHTML = originalContent;
             saveBtn.disabled = false;
         }
@@ -228,7 +228,7 @@ if (customerSaveBtn) {
             });
             const result = await res.json();
             if (res.ok) {
-                alert(result.message || 'Cập nhật thành công!');
+                showToast(result.message, 'success');
                 customerSaveBtn.innerHTML = '<span class="material-symbols-outlined">check_circle</span> Đã lưu thành công';
                 customerSaveBtn.classList.add('bg-green-600');
                 customerSaveBtn.classList.remove('bg-primary');
@@ -239,12 +239,12 @@ if (customerSaveBtn) {
                     customerSaveBtn.disabled = false;
                 }, 2000);
             } else {
-                alert(result.message || 'Lưu thất bại');
+                showToast(result.message, 'error');
                 customerSaveBtn.innerHTML = originalContent;
                 customerSaveBtn.disabled = false;
             }
         } catch (err) {
-            alert('Lỗi kết nối đến máy chủ');
+            showToast('Lỗi kết nối đến máy chủ', 'error');
             customerSaveBtn.innerHTML = originalContent;
             customerSaveBtn.disabled = false;
         }

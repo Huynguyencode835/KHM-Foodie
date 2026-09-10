@@ -1,5 +1,9 @@
 {% extends "layout/baseCustomer.html" %}
 
+{% if current_user.is_authenticated and current_user.role.value == 'Admin' %}
+{% block header %}{% endblock %}
+{% endif %}
+
 {% block content %}
 <!-- Main Content -->
 <main class="flex-grow max-w-[1000px] mx-auto w-full px-gutter py-xl">
@@ -7,7 +11,19 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-lg">
         <div>
             <nav class="flex items-center gap-2 text-caption text-secondary/70 mb-2">
-                <a class="hover:text-primary transition-colors" href="#">Trang chủ</a>
+                {% if current_user.is_authenticated and current_user.role.value == 'Admin' %}
+                <a class="hover:text-primary transition-colors flex items-center gap-1 font-medium text-primary" href="/admin/">
+                    <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                    Quản trị hệ thống
+                </a>
+                {% elif current_user.is_authenticated and current_user.role.value == 'Restaurant' %}
+                <a class="hover:text-primary transition-colors flex items-center gap-1" href="/me">
+                    <span class="material-symbols-outlined text-[16px]">arrow_back</span>
+                    Kênh nhà hàng
+                </a>
+                {% else %}
+                <a class="hover:text-primary transition-colors" href="/">Trang chủ</a>
+                {% endif %}
                 <span class="material-symbols-outlined text-[14px]">chevron_right</span>
                 <span class="text-on-surface-variant font-medium">Thông báo</span>
             </nav>
@@ -59,7 +75,7 @@
         <div class="space-y-4" id="notification-list"></div>
         <div class="hidden flex-col items-center justify-center py-32 text-center bg-surface-container-lowest rounded-3xl border-2 border-dashed border-outline-variant/50"
             id="empty-state">
-            <div class="w-24 h-24 bg-surface-container rounded-full flex items-center justify-center mb-6 shadow-sm">
+            <div class="w-24 h-24 mx-auto bg-surface-container rounded-full flex items-center justify-center mb-6 shadow-sm">
                 <span class="material-symbols-outlined text-[48px] text-outline opacity-40">notifications_off</span>
             </div>
             <h3 class="font-headline-lg text-headline-md text-on-surface mb-3">Bạn đã cập nhật hết rồi!</h3>
@@ -134,10 +150,12 @@
         if (!notifications || notifications.length === 0) {
             list.innerHTML = "";
             empty.classList.remove("hidden");
+            empty.classList.add("flex");
             return;
         }
 
         empty.classList.add("hidden");
+        empty.classList.remove("flex");
         list.innerHTML = notifications.map(n => {
             const isRead = n.is_read;
             const icon = n.data?.icon || "notifications";

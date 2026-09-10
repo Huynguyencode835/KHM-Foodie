@@ -1,4 +1,6 @@
-from flask import render_template
+from flask import render_template, redirect, url_for
+from flask_login import current_user
+from app.models.model import UserRole
 
 
 class NotificationController:
@@ -6,5 +8,5 @@ class NotificationController:
     def index():
         return render_template(
             "notification.html",
-            title="Chi tiết nhà hàng"
+            title="Thông báo"
         )

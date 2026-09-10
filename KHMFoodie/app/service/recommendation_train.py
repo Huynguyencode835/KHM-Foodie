@@ -1,6 +1,21 @@
 import json
 import logging
 import os
+import sys
+
+# Ensure UTF-8 output encoding on Windows console
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+
+# Ensure project root is on sys.path if run directly as a script
+project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
 import pandas as pd
 from typing import Dict, List, Optional, Tuple
 from mlxtend.preprocessing import TransactionEncoder

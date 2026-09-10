@@ -208,6 +208,82 @@
             background: #e6beb2;
             border-radius: 10px;
         }
+
+        /* Bảo vệ Sidebar và Header không bị Bootstrap 4 (trang Admin) phá vỡ style */
+        aside {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif !important;
+        }
+        aside *, aside *::before, aside *::after {
+            box-sizing: border-box;
+        }
+        aside a, aside a:visited {
+            color: #5c4037;
+            text-decoration: none !important;
+        }
+        aside a:hover, aside a:focus {
+            text-decoration: none !important;
+        }
+        aside p, aside h2 {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        aside .sidebar-link {
+            color: #5c4037 !important;
+            text-decoration: none !important;
+            display: flex !important;
+            align-items: center !important;
+        }
+        aside .sidebar-link:hover {
+            color: #5c4037 !important;
+            background-color: #e1e3e4 !important;
+            text-decoration: none !important;
+        }
+        aside .sidebar-link.bg-primary-container {
+            background-color: #d34000 !important;
+            color: #fffbff !important;
+        }
+        aside .sidebar-link.bg-primary-container:hover {
+            background-color: #d34000 !important;
+            color: #fffbff !important;
+        }
+        aside .sidebar-link.bg-primary-container span {
+            color: #fffbff !important;
+        }
+        aside .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined' !important;
+            font-style: normal;
+            text-transform: none;
+            line-height: 1;
+            display: inline-block;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        header h1, header h2, header p {
+            margin-top: 0 !important;
+            margin-bottom: 0 !important;
+        }
+        header a, header a:hover {
+            text-decoration: none !important;
+            color: inherit;
+        }
+        /* Khôi phục màu sắc thương hiệu CraveConnect khỏi bị Bootstrap !important ghi đè */
+        .bg-primary, aside .bg-primary, header .bg-primary {
+            background-color: #a93100 !important;
+        }
+        .text-primary, aside .text-primary, header .text-primary, aside h2.text-primary, h2.text-primary {
+            color: #a93100 !important;
+        }
+        .text-on-primary, aside .text-on-primary, header .text-on-primary {
+            color: #ffffff !important;
+        }
+        .text-on-surface-variant, aside .text-on-surface-variant, header .text-on-surface-variant {
+            color: #5c4037 !important;
+        }
+        .border-primary, aside .border-primary {
+            border-color: #a93100 !important;
+        }
     </style>
 </head>
 
@@ -223,14 +299,14 @@
         class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col p-sm space-y-base z-50">
         <div class="px-sm py-md">
             <div class="flex items-center space-x-3 mb-xs">
-                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary">
-                    <span class="material-symbols-outlined">restaurant</span>
+                <div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary" style="background-color: #a93100 !important; color: #ffffff !important;">
+                    <span class="material-symbols-outlined" style="color: #ffffff !important;">restaurant</span>
                 </div>
                 <div>
-                    <a href="/">
-                        <h2 class="font-headline-md text-headline-md text-primary font-bold">CraveConnect</h2>
+                    <a href="{{ '/admin/restaurants/pending' if current_user.role.value == 'Admin' else '/me' }}">
+                        <h2 class="font-headline-md text-headline-md text-primary font-bold" style="color: #a93100 !important;">CraveConnect</h2>
                     </a>
-                    <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Trung tâm điều
+                    <p class="text-[10px] uppercase tracking-wider text-on-surface-variant font-bold" style="color: #5c4037 !important;">Trung tâm điều
                         hành</p>
                 </div>
             </div>
@@ -238,7 +314,6 @@
         <nav class="flex-grow flex flex-col space-y-1">
             {% if current_user.role.value == 'Admin' %}
             {% set sidebar_menu_items = [
-            ('dashboard', 'Dashboard', 'dashboard', '/admin/'),
             ('users', 'Người dùng', 'people', '/admin/user/'),
             ('restaurants', 'Nhà hàng', 'storefront', '/admin/restaurant/'),
             ('dishes', 'Món ăn', 'restaurant_menu', '/admin/dish/'),
@@ -349,21 +424,14 @@
                         <span id="notif-badge"
                             class="absolute -top-0.5 -right-0.5 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center hidden">0</span>
                     </div>
-                    <div class="relative">
-                        <button
-                            class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-surface-variant rounded-full transition-all duration-150">shopping_cart</button>
-                        <span
-                            class="absolute top-1 right-1 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full">3</span>
-                    </div>
-                    {% if current_user.is_authenticated %}
-
+                    {% if current_user.is_authenticated and current_user.role.value != 'Admin' %}
                     <a href="/me">
                         <div class="w-10 h-10 rounded-full border-2 border-outline-variant overflow-hidden">
                             <img class="w-full h-full object-cover" alt="{{ current_user.name }}"
                                 src="{{ current_user.avatar }}">
                         </div>
                     </a>
-                    {% else %}
+                    {% elif not current_user.is_authenticated %}
                     <a href="/login"
                         class="hidden md:flex bg-primary text-on-primary px-6 py-2 rounded-full font-label-md text-label-md hover:opacity-90 scale-95 hover:scale-100 transition-transform duration-150">Tài
                         khoản</a>
@@ -441,6 +509,32 @@
     </main>
 
     {% block scripts %}{% endblock %}
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+    <script>
+        window.FIREBASE_VAPID_KEY = "{{ config.FIREBASE_VAPID_KEY }}";
+        {% if current_user.is_authenticated %}
+        if (!localStorage.getItem('user_id')) {
+            localStorage.setItem('user_id', '{{ current_user.id }}');
+        }
+        {% endif %}
+    </script>
+    {% if current_user.is_authenticated %}
+    <meta name="user-authenticated" content="true">
+    <meta name="user-id" content="{{ current_user.id }}">
+    {% endif %}
+    {% if firebase_token %}
+    <script>
+        window.__FIREBASE_TOKEN__ = "{{ firebase_token }}";
+    </script>
+    {% endif %}
+    <script src="{{ url_for('static', filename='firebase-config.js') }}"></script>
+    <script src="{{ url_for('static', filename='firebase-chat-core.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notifications.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/flashToast.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/api.js') }}"></script>
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <script>
             // --- Active sidebar bằng JavaScript ---
@@ -551,14 +645,14 @@
                         headers: { 'Content-Type': 'application/json' }
                     });
                     const result = await res.json().catch(() => ({}));
-                    if (!res.ok) throw new Error(result.message || 'C\u1eadp nh\u1eadt tr\u1ea1ng th\u00e1i th\u1ea5t b\u1ea1i');
+                    if (!res.ok) throw new Error(result.message);
 
                     toggleBtn.innerHTML = previousHtml;
                     renderRestaurantStatus(Boolean(result.is_open));
                     closeConfirmModal();
                 } catch (err) {
                     toggleBtn.innerHTML = previousHtml;
-                    alert(err.message || 'L\u1ed7i k\u1ebft n\u1ed1i \u0111\u1ebfn m\u00e1y ch\u1ee7');
+                    showToast(err.message, 'error');
                 } finally {
                     toggleBtn.disabled = false;
                     if (confirmBtn) {

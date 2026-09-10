@@ -4,23 +4,38 @@ from app.models.model import UserRole, CuisineType
 
 
 def index():
+    if current_user.is_authenticated:
+        if current_user.role == UserRole.ADMIN:
+            return redirect('/admin/')
+        elif current_user.role == UserRole.RESTAURANT:
+            return redirect(url_for('me_bp.me_page'))
     return render_template('homePage.html', title='KHM Foodie', description='Welcome to KHM Foodie! Explore the best food in Cambodia.')
 
 def login_page():
     if current_user.is_authenticated:
+        if current_user.role == UserRole.ADMIN:
+            return redirect('/admin/')
+        elif current_user.role == UserRole.RESTAURANT:
+            return redirect(url_for('me_bp.me_page'))
         return redirect(url_for('home_bp.index'))
     return render_template('loginPage.html')
 
 def register_page():
     if current_user.is_authenticated:
+        if current_user.role == UserRole.ADMIN:
+            return redirect('/admin/')
+        elif current_user.role == UserRole.RESTAURANT:
+            return redirect(url_for('me_bp.me_page'))
         return redirect(url_for('home_bp.index'))
     return render_template('registerPage.html')
 
 def register_page_restaurant():
-    if current_user.is_authenticated and current_user.role != UserRole.RESTAURANT:
+    if current_user.is_authenticated:
+        if current_user.role == UserRole.RESTAURANT:
+            return redirect(url_for('me_bp.me_page'))
+        elif current_user.role == UserRole.ADMIN:
+            return redirect('/admin/')
         return redirect(url_for('home_bp.index'))
-    if current_user.is_authenticated and current_user.role == UserRole.RESTAURANT:
-        return redirect(url_for('home_bp.me_page'))
     return render_template('registerPageRestaurant.html')
 
 def me_page():
@@ -74,9 +89,17 @@ def promotions_page():
 
 @login_required
 def order_detail_page(restaurant_id):
+    if current_user.role == UserRole.ADMIN:
+        return redirect('/admin/')
+    elif current_user.role == UserRole.RESTAURANT:
+        return redirect(url_for('me_bp.me_page'))
     return render_template('orderDetail.html', restaurant_id=restaurant_id)
 
 
 @login_required
 def payment_countdown_page(order_id):
+    if current_user.role == UserRole.ADMIN:
+        return redirect('/admin/')
+    elif current_user.role == UserRole.RESTAURANT:
+        return redirect(url_for('me_bp.me_page'))
     return render_template('paymentCountdown.html', order_id=order_id)

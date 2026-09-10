@@ -1,7 +1,8 @@
 from app.extensions import db
-from app.models.model import Dish, DishCategory, CartItems, VoucherDish ,AssociationRule
+from app.models.model import Dish, DishCategory, CartItems, VoucherDish, AssociationRule
 from sqlalchemy import or_, func
 from sqlalchemy.exc import SQLAlchemyError, IntegrityError
+
 
 
 class DishesDao:

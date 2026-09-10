@@ -1,5 +1,15 @@
 import json
 import os
+import sys
+
+# Ensure UTF-8 output encoding on Windows console
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+
 from datetime import datetime, timedelta
 from app import create_app
 from app.extensions import db
@@ -20,9 +30,28 @@ def seed(app=None):
     if app is None:
         app = create_app()
     with app.app_context():
-        db.session.execute(text("SET FOREIGN_KEY_CHECKS=0"))
-        db.session.commit()
-        db.drop_all()
+        if db.engine.dialect.name == 'postgresql':
+            with db.engine.connect() as conn:
+                conn.execute(text("""
+                    DO $$ DECLARE
+                        r RECORD;
+                    BEGIN
+                        FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
+                            EXECUTE 'DROP TABLE IF EXISTS ' || quote_ident(r.tablename) || ' CASCADE';
+                        END LOOP;
+                        FOR r IN (SELECT typname FROM pg_type t JOIN pg_enum e ON t.oid = e.enumtypid GROUP BY typname) LOOP
+                            EXECUTE 'DROP TYPE IF EXISTS ' || quote_ident(r.typname) || ' CASCADE';
+                        END LOOP;
+                    END $$;
+                """))
+                conn.commit()
+        elif db.engine.dialect.name == 'mysql':
+            db.session.execute(text("SET FOREIGN_KEY_CHECKS=0"))
+            db.session.commit()
+            db.drop_all()
+        else:
+            db.drop_all()
+
         db.create_all()
 
         if User.query.first():
