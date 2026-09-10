@@ -51,9 +51,9 @@ function renderVoucherOffers(vouchers) {
 async function copyVoucherCode(code) {
     try {
         await navigator.clipboard.writeText(code);
-        window.showToast?.(`Đã sao chép mã ${code}`, 'success');
+        showToast(`Đã sao chép mã ${code}`, 'success');
     } catch (e) {
-        window.showToast?.(`Không thể sao chép, mã của bạn là: ${code}`, 'error');
+        showToast(`Không thể sao chép, mã của bạn là: ${code}`, 'error');
     }
 }
 
@@ -205,7 +205,7 @@ async function addToCart(dishId, button, triggerRecommendation = true) {
 
         if (!res.ok) {
             const err = await res.json().catch(() => ({}));
-            window.showToast(err.message, 'error');
+            showToast(err.message, 'error');
             button.innerHTML = originalHtml;
             button.className = originalClass;
             button.disabled = false;
@@ -234,7 +234,7 @@ async function addToCart(dishId, button, triggerRecommendation = true) {
         }, 1000);
 
     } catch (error) {
-        window.showToast(error.message, 'error');
+        showToast(error.message, 'error');
         button.innerHTML = originalHtml;
         button.className = originalClass;
         button.disabled = false;
@@ -254,7 +254,7 @@ async function changeCartItemQuantity(cartItemId, newQuantity) {
 
     if (!res.ok) {
         const err = await res.json().catch(() => ({}));
-        window.showToast(err.message || 'Không thể cập nhật giỏ hàng', 'error');
+        showToast(err.message, 'error');
         return;
     }
     await refreshCart();

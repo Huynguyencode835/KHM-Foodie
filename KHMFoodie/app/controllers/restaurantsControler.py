@@ -1,5 +1,5 @@
 from app.dao.restaurantsDao import RestaurantsDao
-from flask import jsonify, render_template, request, current_app
+from flask import jsonify, render_template, request, current_app, redirect, url_for
 from flask_login import current_user
 from app.models.model import UserRole, DiscountType
 from app.dao.dishesDao import DishesDao
@@ -184,6 +184,11 @@ class RestaurantsController:
 
     @staticmethod
     def index(restaurant_id):
+        if current_user.is_authenticated:
+            if current_user.role == UserRole.ADMIN:
+                return redirect('/admin/')
+            elif current_user.role == UserRole.RESTAURANT:
+                return redirect(url_for('me_bp.me_page'))
         return render_template(
             "restaurantDetail.html",
             title="Chi tiết nhà hàng"

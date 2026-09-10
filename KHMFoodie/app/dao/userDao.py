@@ -20,6 +20,10 @@ class UserDao:
         return User.query.get(int(user_id))
 
     @staticmethod
+    def get_admin_users():
+        return User.query.filter_by(role=UserRole.ADMIN, active=True).all()
+
+    @staticmethod
     def update_profile(user_id, data):
         user = User.query.get(int(user_id))
         if not user:

@@ -7,7 +7,7 @@ from app.extensions import db
 from app.dao.cartDao import CartDao
 from app.dao.orderDao import OrderDao
 from app.dao.restaurantsDao import RestaurantsDao
-from app.models.model import Order, Status
+from app.models.model import Order, Status, UserRole
 from app.service.momoService import create_momo_payment, verify_momo_signature
 from app.service.vnpayService import build_vnpay_url, verify_vnpay_signature, get_order_id_from_txn_ref
 from app.service.notificationByEmail import send_order_payment_success_email
@@ -29,6 +29,11 @@ class PaymentController:
     @staticmethod
     @login_required
     def checkout(restaurant_id):
+        if current_user.role == UserRole.ADMIN:
+            return redirect('/admin/')
+        elif current_user.role == UserRole.RESTAURANT:
+            return redirect(url_for('me_bp.me_page'))
+
         restaurant = RestaurantsDao.get_restaurant_by_id(restaurant_id)
         cart = CartDao.get_cart_by_user_and_restaurant(current_user.id, restaurant_id)
         if not restaurant or not cart or not cart.items:

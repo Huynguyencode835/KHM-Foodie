@@ -12,6 +12,8 @@ class AdminSecureView(ModelView):
 
     def inaccessible_callback(self, name, **kwargs):
         if current_user.is_authenticated:
+            if current_user.role == UserRole.RESTAURANT:
+                return redirect(url_for('me_bp.me_page'))
             return redirect(url_for('home_bp.index'))
         return redirect(url_for('login_bp.login_page'))
 
@@ -22,6 +24,8 @@ class AdminSecureIndexView(AdminIndexView):
 
     def inaccessible_callback(self, name, **kwargs):
         if current_user.is_authenticated:
+            if current_user.role == UserRole.RESTAURANT:
+                return redirect(url_for('me_bp.me_page'))
             return redirect(url_for('home_bp.index'))
         return redirect(url_for('login_bp.login_page'))
 
