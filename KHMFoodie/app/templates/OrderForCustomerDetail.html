@@ -340,8 +340,10 @@
         try {
             await loadingState.run(async () => {
                 const res = await fetch('/api/orders_customer/' + orderId);
+                
                 if (!res.ok) throw new Error('Not found');
                 const json = await res.json();
+                console.log(json);
                 if (!json.success || !json.data) throw new Error('No data');
 
                 const order = json.data;
@@ -451,10 +453,11 @@
                     exploreBtn.textContent = 'Tiếp tục thanh toán';
                     exploreBtn.href = '/payment-countdown/' + order.id;
                 }
+
+                showState('content');
             });
-            showState('content');
-        }
-        catch (e) {
+        } catch (e) {
+            console.error('Lỗi tải đơn hàng:', e);
             showState('error');
         }
     }

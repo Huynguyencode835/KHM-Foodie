@@ -501,11 +501,11 @@
             if (!res.ok) {
                 throw new Error(getApiErrorMessage(data, "Lưu voucher thất bại"));
             }
-
+            showToast("Tạo voucher thành công", "success");
             closeModal();
             await loadVouchers();
         } catch (err) {
-            setFormError(err.message || "Lỗi kết nối máy chủ");
+            showToast("Lỗi không xác định", "error");
         } finally {
             els.submitBtn.disabled = false;
             els.submitBtn.textContent = originalText;
@@ -522,12 +522,12 @@
             const data = await res.json();
 
             if (!res.ok) {
-                throw new Error(data.message || "Xóa voucher thất bại");
+                throw new Error(data.message);
             }
 
             await loadVouchers();
         } catch (err) {
-            alert(err.message || "Lỗi kết nối máy chủ");
+            showToast(err.message, "error");
         }
     }
 

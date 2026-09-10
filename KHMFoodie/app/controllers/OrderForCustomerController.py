@@ -1,6 +1,7 @@
-from flask import render_template, jsonify, request
+from flask import render_template, jsonify, request, redirect, url_for
 from flask_login import current_user, login_required
 from app.dao.ordersDao import OrdersDao
+from app.models.model import UserRole
 
 class OrderForCustomerController:
 
@@ -36,10 +37,18 @@ class OrderForCustomerController:
         
     @staticmethod
     def index():
+        if current_user.role == UserRole.ADMIN:
+            return redirect('/admin/')
+        elif current_user.role == UserRole.RESTAURANT:
+            return redirect(url_for('me_bp.me_page'))
         return render_template("OrderForCustomer.html")
 
     @staticmethod
     def order_detail_page(order_id):
+        if current_user.role == UserRole.ADMIN:
+            return redirect('/admin/')
+        elif current_user.role == UserRole.RESTAURANT:
+            return redirect(url_for('me_bp.me_page'))
         return render_template("OrderForCustomerDetail.html", order_id=order_id)
 
     @staticmethod

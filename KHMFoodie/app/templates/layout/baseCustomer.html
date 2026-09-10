@@ -185,6 +185,8 @@
         {% endif %}
         {% endwith %}
     </div>
+    {% block header %}
+    {% if not (current_user.is_authenticated and current_user.role.value == 'Admin') %}
     <!-- TopNavBar -->
     <header
         class="bg-surface dark:bg-surface-dim docked full-width top-0 z-50 shadow-[0px_4px_20px_rgba(0,0,0,0.05)] sticky transition-all duration-300">
@@ -196,14 +198,12 @@
             </div>
 
             <!-- Central Navigation Links -->
-            <nav class="hidden md:flex items-center space-x-8">
-                <a class="text-primary dark:text-primary-fixed border-b-2 border-primary font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
-                    href="#">Khám phá</a>
-                <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
-                    href="#">Ưu đãi</a>
-                <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
+            <nav id="customer-nav" class="hidden md:flex items-center space-x-8">
+                <a id="nav-explore" class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
+                    href="/">Khám phá</a>
+                <a id="nav-orders" class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
                     href="/order_customer">Đơn hàng</a>
-                <a class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
+                <a id="nav-chat" class="text-secondary dark:text-secondary-fixed-dim font-label-md text-label-md hover:text-primary-container transition-colors duration-200"
                     href="/chat">Nhắn tin</a>
             </nav>
 
@@ -240,6 +240,8 @@
             </div>
         </div>
     </header>
+    {% endif %}
+    {% endblock %}
     <main class="max-w-container-max mx-auto px-gutter py-md space-y-xl">
         <!-- Hero Section: AI suggestions based on time of day -->
         {% block content %}{% endblock %}
@@ -385,9 +387,58 @@
                 card.style.transform = 'translateY(0)';
             });
         });
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const pathname = window.location.pathname;
+
+            const navExplore = document.getElementById('nav-explore');
+            const navOrders = document.getElementById('nav-orders');
+            const navChat = document.getElementById('nav-chat');
+
+            const activeClass = ['text-primary', 'dark:text-primary-fixed', 'border-b-2', 'border-primary', 'font-semibold'];
+            const inactiveClass = ['text-secondary', 'dark:text-secondary-fixed-dim'];
+
+            const navItems = [
+                { el: navExplore, active: (pathname === '/') },
+                { el: navOrders, active: pathname.startsWith('/order_customer') },
+                { el: navChat, active: pathname.startsWith('/chat') }
+            ];
+
+            function setActiveNav(targetEl) {
+                navItems.forEach(item => {
+                    if (!item.el) return;
+                    if (item.el === targetEl) {
+                        item.el.classList.add(...activeClass);
+                        item.el.classList.remove(...inactiveClass);
+                    } else {
+                        item.el.classList.remove(...activeClass);
+                        item.el.classList.add(...inactiveClass);
+                    }
+                });
+            }
+
+            const activeItem = navItems.find(item => item.active);
+            if (activeItem && activeItem.el) {
+                setActiveNav(activeItem.el);
+            } else {
+                navItems.forEach(item => {
+                    if (item.el) {
+                        item.el.classList.remove(...activeClass);
+                        item.el.classList.add(...inactiveClass);
+                    }
+                });
+            }
+
+            if (navExplore) {
+                navExplore.addEventListener('click', function (e) {
+                    if (window.location.pathname === '/') {
+                        e.preventDefault();
+                        history.pushState(null, null, ' ');
+                        setActiveNav(navExplore);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            }
+
             const searchInput = document.getElementById('header-search-input');
             const searchIcon = document.getElementById('header-search-icon');
 

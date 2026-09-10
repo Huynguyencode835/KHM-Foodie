@@ -15,7 +15,7 @@
 <div id="hero-section"></div>
 
 <!-- Section 'Gợi ý cho bạn' -->
-<section class="space-y-sm">
+<section id="suggestions-section" class="space-y-sm scroll-mt-24">
 
     <div class="flex justify-between items-end">
         <h2 class="font-headline-lg text-headline-lg text-on-surface">Gợi ý AI cho bạn</h2>
@@ -75,7 +75,7 @@
             });
         } catch (error) {
             console.error('Không thể tải dữ liệu trang chủ:', error);
-            window.showToast?.('Không thể tải danh sách nhà hàng', 'error');
+            showToast('Không thể tải danh sách nhà hàng', 'error');
         }
 
         const btnSuggLeft = document.getElementById('suggestion-scroll-left');

@@ -14,7 +14,7 @@ class DishesDao:
             Dish.id.in_(dish_ids),
             Dish.restaurant_id == restaurant_id,
             Dish.active == True
-        ).all()
+        ).order_by(Dish.created_at.desc()).all()
 
     @staticmethod
     def get_list_dishes_by_restaurant(restaurant_id, page=1, per_page=12, category=None, keyword=None):
@@ -26,7 +26,7 @@ class DishesDao:
             Dish.price,
             Dish.image,
             Dish.active
-        ).filter_by(restaurant_id=restaurant_id)
+        ).order_by(Dish.created_at.desc()).filter_by(restaurant_id=restaurant_id)
 
         if category and category != 'all':
             category_enum = next((c for c in DishCategory if c.value == category), None)
