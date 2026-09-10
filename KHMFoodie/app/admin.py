@@ -1,5 +1,5 @@
 from flask import redirect, url_for
-from flask_admin import AdminIndexView
+from flask_admin import AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from wtforms.validators import NumberRange
@@ -28,6 +28,10 @@ class AdminSecureIndexView(AdminIndexView):
                 return redirect(url_for('me_bp.me_page'))
             return redirect(url_for('home_bp.index'))
         return redirect(url_for('login_bp.login_page'))
+
+    @expose('/')
+    def index(self):
+        return redirect('/admin/restaurants/pending')
 
 
 class UserAdmin(AdminSecureView):

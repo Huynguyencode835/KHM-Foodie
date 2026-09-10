@@ -314,22 +314,20 @@
         <nav class="flex-grow flex flex-col space-y-1">
             {% if current_user.role.value == 'Admin' %}
             {% set sidebar_menu_items = [
+            ('pending-approval', 'Duyệt nhà hàng', 'approval', '/admin/restaurants/pending'),
             ('users', 'Người dùng', 'people', '/admin/user/'),
             ('restaurants', 'Nhà hàng', 'storefront', '/admin/restaurant/'),
             ('dishes', 'Món ăn', 'restaurant_menu', '/admin/dish/'),
-            ('pending-approval', 'Duyệt nhà hàng', 'approval', '/admin/restaurants/pending'),
             ('settings', 'Cấu hình hệ thống', 'settings', '/admin/systemconfig/'),
             ] %}
             {% else %}
             {% set sidebar_menu_items = [
-            ('dashboard', 'Tổng quan', 'dashboard', '#'),
             ('orders', 'Đơn hàng', 'receipt_long', '/restaurants/orders'),
             ('menu', 'Thực đơn', 'restaurant_menu', '/restaurant_menu'),
-            ('reviews', 'Đánh giá', 'star', '#'),
             ('promotions', 'Khuyến mãi', 'local_offer', '/promotions'),
             ('analytics', 'Thống kê', 'insights', '#'),
             ('chat', 'Tin nhắn', 'chat', '/chat'),
-            ('settings', 'Cài đặt', 'settings', '#'),
+            ('profile', 'Thông tin nhà hàng', 'storefront', '/me'),
             ] %}
             {% endif %}
 
