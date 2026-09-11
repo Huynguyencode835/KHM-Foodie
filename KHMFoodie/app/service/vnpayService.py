@@ -1,15 +1,4 @@
-"""Tích hợp cổng thanh toán VNPay (song song với MoMo).
 
-Port từ cliniconlineapi/services/vnpay.py + verifyVNPay.py của project
-ClinicOnline, giữ nguyên thuật toán ký HMAC-SHA512 (sort params, urlencode,
-ký), nhưng:
-- Đọc cấu hình qua os.getenv (theo pattern _get_required_env dùng chung với
-  momoService.py) thay vì Django settings.
-- Nhúng order_id vào vnp_TxnRef kèm timestamp (f"{order_id}_{int(time.time())}")
-  ngay trong build_vnpay_url, để không cần thêm cột DB nào tra cứu lại đơn
-  hàng từ callback (giống cách ClinicOnline nhúng appointment_id).
-- Thêm get_order_id_from_txn_ref để controller không phải tự parse chuỗi.
-"""
 import os
 import time
 import hashlib

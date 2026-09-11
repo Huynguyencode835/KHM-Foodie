@@ -298,7 +298,7 @@ def send_order_payment_success_email(recipient, order_id, total_amount,
         restaurant_name (str, optional): Tên nhà hàng đặt món.
         order_url       (str, optional): Link tới trang chi tiết đơn hàng.
     """
-    order_url = order_url or f"{BASE_URL}/orders/{order_id}"
+    order_url = order_url or f"{BASE_URL}/order_customer/"
 
     body_lines = [
         f"Cảm ơn bạn đã đặt món trên KHM Foodie! Đơn hàng <b>#{order_id}</b> của bạn đã được "
